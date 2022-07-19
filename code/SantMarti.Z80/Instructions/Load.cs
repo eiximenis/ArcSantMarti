@@ -7,7 +7,7 @@ using SantMarti.Z80.Extensions;
 
 namespace SantMarti.Z80.Instructions
 {
-    public static class LD
+    public static class Load
     {
 
         /// <summary>
@@ -18,7 +18,7 @@ namespace SantMarti.Z80.Instructions
         {
             var opcode = instruction.Opcode;
             var source = opcode & 0b00_000_111;
-            var dest = opcode & 0b00_111_000;
+            var dest = (opcode & 0b00_111_000) >> 3;
             processor.SetByteRegister(dest, processor.GetByteRegister(source));
         }
     }

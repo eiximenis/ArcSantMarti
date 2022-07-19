@@ -10,30 +10,33 @@ namespace SantMarti.Z80.Extensions
     {
         public static byte GetByteRegister(this Z80Processor processor, int regId)
         {
+            ref var registers = ref processor.Registers.Main;
             return regId switch
             {
-                0b000 => processor.Registers.B,
-                0b001 => processor.Registers.C,
-                0b010 => processor.Registers.D,
-                0b011 => processor.Registers.E,
-                0b100 => processor.Registers.H,
-                0b101 => processor.Registers.L,
-                0b111 => processor.Registers.A,
+                0b000 => registers.B,
+                0b001 => registers.C,
+                0b010 => registers.D,
+                0b011 => registers.E,
+                0b100 => registers.H,
+                0b101 => registers.L,
+                0b111 => registers.A,
                 _ => 0x00
             };
         }
 
         public static void SetByteRegister(this Z80Processor processor, int regId, byte value)
         {
+            ref var registers = ref processor.Registers.Main;
+
             switch (regId)
             {
-                case 0b000: processor.Registers.B = value; break;
-                case 0b001: processor.Registers.C = value; break;
-                case 0b010: processor.Registers.D = value; break;
-                case 0b011: processor.Registers.E = value; break;
-                case 0b100: processor.Registers.H = value; break;
-                case 0b101: processor.Registers.L = value; break;
-                case 0b111: processor.Registers.A = value; break;
+                case 0b000: registers.B = value; break;
+                case 0b001: registers.C = value; break;
+                case 0b010: registers.D = value; break;
+                case 0b011: registers.E = value; break;
+                case 0b100: registers.H = value; break;
+                case 0b101: registers.L = value; break;
+                case 0b111: registers.A = value; break;
                 default: break;
             }
         }

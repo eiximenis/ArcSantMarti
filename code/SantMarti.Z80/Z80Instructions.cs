@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SantMarti.Z80.Instructions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,8 @@ namespace SantMarti.Z80
             _fdcbPrefixed = CreateFDCBPrefixedInstructions().ToArray();
         }
 
+        public Instruction this[byte opcode] => _unprefixed[opcode];
+
         private IEnumerable<Instruction> CreateUnprefixedInstructions()
         {
             var unprefixed = new List<Instruction>();
@@ -44,7 +47,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0x5, "DEC B", 4));
             unprefixed.Add(new Instruction(0x6, "LD B,n", 7));
             unprefixed.Add(new Instruction(0x7, "RLCA", 4));
-            unprefixed.Add(new Instruction(0x8, "EX AF, AF'", 4));
+            unprefixed.Add(new Instruction(0x8, "EX AF, AF'", 4, Exchange.EXAFAF2));
             unprefixed.Add(new Instruction(0x9, "ADD HL,BC", 11));
             unprefixed.Add(new Instruction(0xa, "LD A,(BC)", 7));
             unprefixed.Add(new Instruction(0xb, "DEC BC", 6));
@@ -105,56 +108,56 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0x3e, "LD A,n", 7));
             unprefixed.Add(new Instruction(0x3f, "CCF", 4));
 
-            unprefixed.Add(new Instruction(0x40, "LD B,B", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x41, "LD B,C", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x42, "LD B,D", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x43, "LD B,E", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x44, "LD B,H", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x45, "LD B,L", 4, Instructions.LD.LDXY));
+            unprefixed.Add(new Instruction(0x40, "LD B,B", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x41, "LD B,C", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x42, "LD B,D", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x43, "LD B,E", 4, Load.LDXY));    
+            unprefixed.Add(new Instruction(0x44, "LD B,H", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x45, "LD B,L", 4, Load.LDXY));
             unprefixed.Add(new Instruction(0x46, "LD B,(HL)", 7));
-            unprefixed.Add(new Instruction(0x47, "LD B,A", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x48, "LD C,B", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x49, "LD C,C", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x4a, "LD C,D", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x4b, "LD C,E", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x4c, "LD C,H", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x4d, "LD C,L", 4, Instructions.LD.LDXY));
+            unprefixed.Add(new Instruction(0x47, "LD B,A", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x48, "LD C,B", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x49, "LD C,C", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x4a, "LD C,D", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x4b, "LD C,E", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x4c, "LD C,H", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x4d, "LD C,L", 4, Load.LDXY));
             unprefixed.Add(new Instruction(0x4e, "LD C,(HL)", 7));
-            unprefixed.Add(new Instruction(0x4f, "LD C,A", 4, Instructions.LD.LDXY));
+            unprefixed.Add(new Instruction(0x4f, "LD C,A", 4, Load.LDXY));
 
-            unprefixed.Add(new Instruction(0x50, "LD D,B", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x51, "LD D,C", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x52, "LD D,D", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x53, "LD D,E", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x54, "LD D,H", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x55, "LD D,L", 4, Instructions.LD.LDXY));
+            unprefixed.Add(new Instruction(0x50, "LD D,B", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x51, "LD D,C", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x52, "LD D,D", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x53, "LD D,E", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x54, "LD D,H", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x55, "LD D,L", 4, Load.LDXY));
             unprefixed.Add(new Instruction(0x56, "LD D,(HL)", 7));
-            unprefixed.Add(new Instruction(0x57, "LD D,A", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x58, "LD E,B", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x59, "LD E,C", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x5a, "LD E,D", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x5b, "LD E,E", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x5c, "LD E,H", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x5d, "LD E,L", 4, Instructions.LD.LDXY));
+            unprefixed.Add(new Instruction(0x57, "LD D,A", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x58, "LD E,B", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x59, "LD E,C", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x5a, "LD E,D", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x5b, "LD E,E", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x5c, "LD E,H", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x5d, "LD E,L", 4, Load.LDXY));
             unprefixed.Add(new Instruction(0x5e, "LD E,(HL)", 7));
-            unprefixed.Add(new Instruction(0x5f, "LD E,A", 4, Instructions.LD.LDXY));
+            unprefixed.Add(new Instruction(0x5f, "LD E,A", 4, Load.LDXY));
 
-            unprefixed.Add(new Instruction(0x60, "LD H,B", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x61, "LD H,C", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x62, "LD H,D", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x63, "LD H,E", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x64, "LD H,H", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x65, "LD H,L", 4, Instructions.LD.LDXY));
+            unprefixed.Add(new Instruction(0x60, "LD H,B", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x61, "LD H,C", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x62, "LD H,D", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x63, "LD H,E", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x64, "LD H,H", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x65, "LD H,L", 4, Load.LDXY));
             unprefixed.Add(new Instruction(0x66, "LD H,(HL)", 7));
-            unprefixed.Add(new Instruction(0x67, "LD H,A", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x68, "LD L,B", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x69, "LD L,C", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x6a, "LD L,D", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x6b, "LD L,E", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x6c, "LD L,H", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x6d, "LD L,L", 4, Instructions.LD.LDXY));
+            unprefixed.Add(new Instruction(0x67, "LD H,A", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x68, "LD L,B", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x69, "LD L,C", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x6a, "LD L,D", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x6b, "LD L,E", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x6c, "LD L,H", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x6d, "LD L,L", 4, Load.LDXY));
             unprefixed.Add(new Instruction(0x6e, "LD L,(HL)", 7));
-            unprefixed.Add(new Instruction(0x6f, "LD L,A", 4, Instructions.LD.LDXY));
+            unprefixed.Add(new Instruction(0x6f, "LD L,A", 4, Load.LDXY));
 
             unprefixed.Add(new Instruction(0x70, "LD (HL),B", 7));
             unprefixed.Add(new Instruction(0x71, "LD (HL),C", 7));
@@ -164,14 +167,14 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0x75, "LD (HL),L", 7));
             unprefixed.Add(new Instruction(0x76, "HALT", 4));
             unprefixed.Add(new Instruction(0x77, "LD (HL),A", 7));
-            unprefixed.Add(new Instruction(0x78, "LD A,B", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x79, "LD A,C", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x7a, "LD A,D", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x7b, "LD A,E", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x7c, "LD A,H", 4, Instructions.LD.LDXY));
-            unprefixed.Add(new Instruction(0x7d, "LD A,L", 4, Instructions.LD.LDXY));
+            unprefixed.Add(new Instruction(0x78, "LD A,B", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x79, "LD A,C", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x7a, "LD A,D", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x7b, "LD A,E", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x7c, "LD A,H", 4, Load.LDXY));
+            unprefixed.Add(new Instruction(0x7d, "LD A,L", 4, Load.LDXY));
             unprefixed.Add(new Instruction(0x7e, "LD A,(HL)", 7));
-            unprefixed.Add(new Instruction(0x7f, "LD A,A", 4, Instructions.LD.LDXY));
+            unprefixed.Add(new Instruction(0x7f, "LD A,A", 4, Load.LDXY));
 
             unprefixed.Add(new Instruction(0x80, "ADD A,B", 4));
             unprefixed.Add(new Instruction(0x81, "ADD A,C", 4));
@@ -267,7 +270,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xd6, "SUB n", 7));
             unprefixed.Add(new Instruction(0xd7, "RST 10", 11));
             unprefixed.Add(new Instruction(0xd8, "RET C", 11));
-            unprefixed.Add(new Instruction(0xd9, "EXX", 4));
+            unprefixed.Add(new Instruction(0xd9, "EXX", 4, Exchange.EXX));
             unprefixed.Add(new Instruction(0xda, "JP C,nn", 10));
             unprefixed.Add(new Instruction(0xdb, "IN A,(n)", 11));
             unprefixed.Add(new Instruction(0xdc, "CALL C,nn", 17));
@@ -286,7 +289,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xe8, "RET PE", 11));
             unprefixed.Add(new Instruction(0xe9, "JP (HL)", 4));
             unprefixed.Add(new Instruction(0xea, "JP PE,nn", 10));
-            unprefixed.Add(new Instruction(0xeb, "EX DE,HL", 4));
+            unprefixed.Add(new Instruction(0xeb, "EX DE,HL", 4, Exchange.EXDEHL));
             unprefixed.Add(new Instruction(0xec, "CALL PE,nn", 17));
             unprefixed.Add(new Instruction(0xed, "-- ED --", 0));       // ED Prefix
             unprefixed.Add(new Instruction(0xee, "XOR n", 7));
@@ -312,7 +315,6 @@ namespace SantMarti.Z80
 
             return unprefixed;
         }
-
         private IEnumerable<Instruction> CreateCBPrefixedInstructions()
         {
             var cbPrefixed = new List<Instruction>();
@@ -591,8 +593,6 @@ namespace SantMarti.Z80
 
             return cbPrefixed;
         }
-
-
         private IEnumerable<Instruction> CreateEDPrefixedInstructions()
         {
             var edPrefixed = new List<Instruction>();
@@ -685,7 +685,6 @@ namespace SantMarti.Z80
 
             return edPrefixed;
         }
-
         private IEnumerable<Instruction> CreateDDPrefixedInstructions()
         {
 
@@ -899,7 +898,6 @@ namespace SantMarti.Z80
             fdPrefixed.Add(new Instruction(0xf9, "LD SP,IY", 10));
             return fdPrefixed;
         }
-
         private IEnumerable<Instruction> CreateDDCBPrefixedInstructions()
         {
             var ddcbPrefixed = new List<Instruction>();
@@ -1188,7 +1186,6 @@ namespace SantMarti.Z80
 
             return ddcbPrefixed;
         }
-
         private IEnumerable<Instruction> CreateFDCBPrefixedInstructions()
         {
             var fdcbPrefixed = new List<Instruction>();
@@ -1467,9 +1464,6 @@ namespace SantMarti.Z80
             fdcbPrefixed.Add(new Instruction(0xff, "SET 7,(IY+d)->A", 23));
             return fdcbPrefixed;
         }
-
-
-
         private Instruction[] AddMissingNOPs(IEnumerable<Instruction> source)
         {
             var array = new Instruction[256];
@@ -1487,7 +1481,6 @@ namespace SantMarti.Z80
             }
             return array;
         }
-
         private Instruction[] AddMissingUnprefixed(IEnumerable<Instruction> source, Instruction[] unprefixed)
         {
             var array = new Instruction[256];
