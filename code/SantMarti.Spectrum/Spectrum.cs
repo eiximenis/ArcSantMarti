@@ -1,12 +1,12 @@
-﻿using SanMarti.Spectrum.Memory;
-using SanMarti.Z80;
+﻿using SantMarti.Spectrum.Memory;
+using SantMarti.Z80;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SanMarti.Spectrum
+namespace SantMarti.Spectrum
 {
     public class Spectrum
     {

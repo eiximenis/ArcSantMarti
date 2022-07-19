@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SanMarti.Z80.Extensions
+namespace SantMarti.Z80.Extensions
 {
     public static class Z80ProcessorExtensions
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SanMarti.Z80.Memory
+namespace SantMarti.Z80.Memory
 {
     public class RamMemory
     {

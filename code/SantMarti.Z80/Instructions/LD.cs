@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SanMarti.Z80.Extensions;
+using SantMarti.Z80.Extensions;
 
-namespace SanMarti.Z80.Instructions
+namespace SantMarti.Z80.Instructions
 {
     public static class LD
     {
