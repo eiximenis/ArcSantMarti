@@ -30,8 +30,7 @@ namespace SantMarti.Z80.Assembler
 
         public void LD(string dest, string source)
         {
-            var builder = new LDBuilder(dest, source);
-            _bytes.AddRange(builder.Build());
+            _bytes.AddRange(LDBuilder.Build(dest, source));
         }
 
         public void EXX()
@@ -39,10 +38,14 @@ namespace SantMarti.Z80.Assembler
             _bytes.Add(Z80Opcodes.EXX);
         }
 
-        public void ADDAN(byte value)
+        public void ADD(string source, string target)
         {
-            _bytes.Add(Z80Opcodes.ADD_AN);
-            _bytes.Add(value);
+            _bytes.AddRange(ADDBuilder.ADD(source, target));
+        }
+
+        public void ADDA(byte value)
+        {
+            _bytes.AddRange(ADDBuilder.ADDAN(value));
         }
 
     }

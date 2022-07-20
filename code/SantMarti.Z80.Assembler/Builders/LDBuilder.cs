@@ -7,18 +7,10 @@ using System.Threading.Tasks;
 
 namespace SantMarti.Z80.Assembler.Builders
 {
-    public class LDBuilder 
+    public static class LDBuilder 
     {
-        private readonly string _dest;
-        private readonly string _source;
 
-        public LDBuilder(string dest, string source)
-        {
-            _dest= dest;
-            _source = source;
-        }
-
-        public byte[] Build() => BuildBytes(_dest, _source);
+        public static byte[] Build(string dest, string source) => BuildBytes(dest, source);
 
         private static byte[] BuildBytes(string dest, string source)
         {            
@@ -32,7 +24,7 @@ namespace SantMarti.Z80.Assembler.Builders
 
         }
 
-        public static byte[] BuildFromLine(string keyword, string restLine)
+        public static byte[]? BuildFromLine(string keyword, string restLine)
         {
             var operands = restLine.Split(',');
             var target = operands[0].Trim();

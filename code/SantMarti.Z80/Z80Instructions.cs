@@ -250,7 +250,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xc3, "JP nn", 10));
             unprefixed.Add(new Instruction(0xc4, "CALL NZ,nn", 17));
             unprefixed.Add(new Instruction(0xc5, "PUSH BC", 11));
-            unprefixed.Add(new Instruction(0xc6, "ADD A,n", 7));
+            unprefixed.Add(new Instruction(0xc6, "ADD A,n", 7, Add.AddAN));
             unprefixed.Add(new Instruction(0xc7, "RST 00", 11));
             unprefixed.Add(new Instruction(0xc8, "RET Z", 11));
             unprefixed.Add(new Instruction(0xc9, "RET", 10));

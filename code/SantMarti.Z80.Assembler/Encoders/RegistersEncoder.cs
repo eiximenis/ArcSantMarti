@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SantMarti.Z80.Assembler.Encoders
 {
-    static class RegistersEncoder
+    public static class RegistersEncoder
     {
         public static byte RegisterNameToBinaryValue(string reg) => reg switch
         {

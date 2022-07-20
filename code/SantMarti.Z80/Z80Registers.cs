@@ -14,14 +14,40 @@ namespace SantMarti.Z80
     [Flags]
     public enum Z80Flags : byte
     {
-        C = 1 << 0,     // Carry: Set if the result did not fit in the register
-        N = 1 << 1,     // Subtract: Set if the last operation was a subtraction
-        PV = 1 << 2,    // Parity or Overflow: Parity set if even number of bits set / Overflow set if the 2-complement result does not fit in the register
-        F3 = 1 << 3,    // Undocumented (Copy of bit 3)
-        H = 1 << 4,     // Half Carry: Carry from bit 3 to bit 4
-        F5 = 1 << 5,    // Undocumented (Copy of bit 5)
-        Z =  1 << 6,    // Set if the value is zero
-        S = 1 << 7      // Set if the 2-complement value is negative (copy of MSB)
+        /// <summary>
+        /// Carry: Set if the result did not fit in the register
+        /// </summary>
+        C = 1 << 0,
+        /// <summary>
+        /// Subtract: Set if the last operation was a subtraction
+        /// </summary>
+        N = 1 << 1,
+        /// <summary>
+        /// Parity or Overflow: 
+        /// Parity set if even number of bits set 
+        /// Overflow set if the 2-complement result does not fit in the register
+        /// </summary>
+        PV = 1 << 2,
+        /// <summary>
+        /// // Undocumented (Copy of bit 3)
+        /// </summary>
+        F3 = 1 << 3,
+        /// <summary>
+        /// Half Carry: Carry from bit 3 to bit 4
+        /// </summary>
+        H = 1 << 4,
+        /// <summary>
+        /// Undocumented (Copy of bit 5)
+        /// </summary>
+        F5 = 1 << 5,
+        /// <summary>
+        /// Set if the value is zero
+        /// </summary>
+        Z = 1 << 6,
+        /// <summary>
+        /// Set if the 2-complement value is negative (copy of MSB)
+        /// </summary>
+        S = 1 << 7     
     }
 
 
@@ -63,15 +89,48 @@ namespace SantMarti.Z80
         public byte A;
         [FieldOffset(12)]
         public short AF;
+
+        public void SetFlag(Z80Flags flag)
+        {
+            F |= flag;
+        }
+
+        public void ClearFlag(Z80Flags flag)
+        {
+            F &= ~flag;
+        }
+
+        /// <summary>
+        /// Sets a flag if value is greater than 0. Clears otherwise
+        /// <para
+        /// <param name="flag">Flag to set/clear</param>
+        /// <param name="value">Value used to set the flag (if greater than 0) or clear it (if is 0)</param>
+        public void SetFlagIf(Z80Flags flag, int value)
+        {
+            if (value != 0) { SetFlag(flag); }
+            else { ClearFlag(flag); }
+        }
+
+        /// <summary>
+        /// Sets or clears a flag based on a bool parameter
+        /// </summary>
+        /// <param name="flag">Flag to set/clear</param>
+        /// <param name="set">If true flag is set. Otherwise is cleared</param>
+        public void SetFlagIf(Z80Flags flag, bool set)
+        {
+            if (set) { SetFlag(flag); }
+            else { ClearFlag(flag); }
+        }
     }
 
-    public class Z80Registers {
+    public class Z80Registers
+    {
 
         private Z80GenericRegisters _main;
         private Z80GenericRegisters _alternate;
 
         // Generic registers (B,C,D,E,H,L,A,F)
-        public ref Z80GenericRegisters  Main {get => ref _main; }
+        public ref Z80GenericRegisters Main { get => ref _main; }
         // Generic alternate registers (B',C',D',E',H',L', A',F')
         public ref Z80GenericRegisters Alternate { get => ref _alternate; }
 
@@ -79,7 +138,6 @@ namespace SantMarti.Z80
         public ushort IX { get; set; }
         public ushort IY { get; set; }
 
-        
         // 16 bits specific registers
         public ushort PC { get; set; }          // Program Counter
         public ushort SP { get; set; }          // Stack Pointer

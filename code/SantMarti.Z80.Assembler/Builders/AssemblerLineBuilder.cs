@@ -8,13 +8,14 @@ namespace SantMarti.Z80.Assembler.Builders
 {
     class AssemblerLineBuilder
     {
-        private readonly Dictionary<string, Func<string, string, byte[]>> _builders;
+        private readonly Dictionary<string, Func<string, string, byte[]?>> _builders;
 
         public AssemblerLineBuilder()
         {
-            _builders = new Dictionary<string, Func<string, string, byte[]>>();
+            _builders = new Dictionary<string, Func<string, string, byte[]?>>();
             _builders.Add("LD", LDBuilder.BuildFromLine);
             _builders.Add("EXX", (k, l) => new[] { Z80Opcodes.EXX });
+            _builders.Add("ADD", ADDBuilder.BuildFromLine);
         }
 
         public byte[]? Build(string asm)
