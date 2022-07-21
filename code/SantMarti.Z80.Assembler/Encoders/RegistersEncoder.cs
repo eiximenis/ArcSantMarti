@@ -19,6 +19,14 @@ namespace SantMarti.Z80.Assembler.Encoders
             "L" => 0b101,
             _ => 0b110
         };
+
+        internal static bool IsByteRegister(string dest)
+        {
+            return dest == "A" || dest == "B" ||
+                   dest == "C" || dest == "D" ||
+                   dest == "E" || dest == "H" ||
+                   dest == "L";
+        }
     }
 
 }

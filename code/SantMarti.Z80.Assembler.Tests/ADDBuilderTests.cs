@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using SantMarti.Z80.Assembler.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace SantMarti.Z80.Assembler.Tests
         public void ADDA_With_Single_Byte_Should_Generate_First_The_ADD_Opcode_Then_The_Byte(byte byteToAdd)
         {
             var builder = new Z80AssemblerBuilder();
-            builder.ADDA(byteToAdd);
+            builder.ADD_AN(byteToAdd);
             var asm = builder.Build();
             asm.Should().HaveCount(2);
             asm.First().Should().Be(Z80Opcodes.ADD_AN);

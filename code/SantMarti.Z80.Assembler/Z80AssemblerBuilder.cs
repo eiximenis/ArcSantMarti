@@ -16,6 +16,12 @@ namespace SantMarti.Z80.Assembler
             _bytes = new List<byte>(1024);
             _lineBuilder = new AssemblerLineBuilder();
         }
+
+        public void Raw(IEnumerable<byte> bytes)
+        {
+            _bytes.AddRange(bytes);
+        }
+
         public IEnumerable<byte> Build() => _bytes;
 
         public void Asm(string line)
@@ -28,25 +34,25 @@ namespace SantMarti.Z80.Assembler
             _bytes.AddRange(bytes);
         }
 
-        public void LD(string dest, string source)
-        {
-            _bytes.AddRange(LDBuilder.Build(dest, source));
-        }
-
         public void EXX()
         {
             _bytes.Add(Z80Opcodes.EXX);
         }
+
 
         public void ADD(string source, string target)
         {
             _bytes.AddRange(ADDBuilder.ADD(source, target));
         }
 
-        public void ADDA(byte value)
+        public void LD(string dest, string source)
         {
-            _bytes.AddRange(ADDBuilder.ADDAN(value));
+            _bytes.AddRange(LDBuilder.LD(dest, source));
         }
+
+
+
+
 
     }
 }

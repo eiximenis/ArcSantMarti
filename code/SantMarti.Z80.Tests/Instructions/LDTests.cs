@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using SantMarti.Z80.Assembler;
+using SantMarti.Z80.Assembler.Extensions;
 using SantMarti.Z80.Tests.Extensions;
 using System;
 using System.Collections.Generic;
@@ -25,12 +26,12 @@ namespace SantMarti.Z80.Tests.Instructions
         [InlineData("D", "A")]
         [InlineData("C", "H")]
         [InlineData("H", "C")]
-        public async Task LDXY_Should_Load_Destination_Into_Source(string destination, string source)
+        public async Task LDRR_Should_Load_Destination_Into_Source(string destination, string source)
         {
             _processor.Registers.Main.SetByName(destination, 0x0A);
             _processor.Registers.Main.SetByName(source, 0x01);
             var assembler = new Z80AssemblerBuilder();
-            assembler.LD(destination, source);
+            assembler.LD_RR(destination, source);
             var bus = new TestBusBuilder().Add(assembler.Build()).BuildBus();
             _processor.ConnectToDataBus(bus);
             await _processor.RunOnce();

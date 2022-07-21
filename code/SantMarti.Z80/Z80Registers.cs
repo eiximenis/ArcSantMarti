@@ -47,7 +47,11 @@ namespace SantMarti.Z80
         /// <summary>
         /// Set if the 2-complement value is negative (copy of MSB)
         /// </summary>
-        S = 1 << 7     
+        S = 1 << 7,
+        /// <summary>
+        /// Both undocumented flags F3 and F5 mask
+        /// </summary>
+        F3F5 = F3 | F5
     }
 
 
@@ -89,6 +93,16 @@ namespace SantMarti.Z80
         public byte A;
         [FieldOffset(12)]
         public short AF;
+
+        internal void CopyF3F5FlagsFrom(byte data)
+        {
+            F |= (Z80Flags)(data & (byte)Z80Flags.F3F5);
+        }
+
+        public bool HasFlag(Z80Flags flag)
+        {
+            return (F & flag) != 0x0;
+        }
 
         public void SetFlag(Z80Flags flag)
         {

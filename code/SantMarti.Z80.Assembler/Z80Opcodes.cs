@@ -10,6 +10,7 @@ namespace SantMarti.Z80.Assembler
     {
         public const byte EXX = 0xd9;
         public const byte ADD_AN = 0xc6;                         // ADD A,n
+        public const byte ADD_AHL = 0x86;                        // ADD A,(HL)
         public const byte ADD_HLBC = 0x9;
         public const byte ADD_HLDE = 0x19;
         public const byte ADD_HLHL = 0x29;
@@ -25,7 +26,8 @@ namespace SantMarti.Z80.Assembler
 
         public static class Bases
         {
-            public const byte LD_XY = 0b01000000;                // Base for LD X,Y opcodes   
+            public const byte LD_RR = 0b01000000;                // Base for LD r,r' opcodes   
+            public const byte ADD_AR = 0b10000000;               // Base for ADD A,r
         }
         
         public static class Prefixes

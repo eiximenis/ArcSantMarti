@@ -258,7 +258,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xcb, "-- CB --", 0));           // CB Prefix
             unprefixed.Add(new Instruction(0xcc, "CALL Z,nn", 17));
             unprefixed.Add(new Instruction(0xcd, "CALL nn", 17));
-            unprefixed.Add(new Instruction(0xce, "ADC A,n", 7));
+            unprefixed.Add(new Instruction(0xce, "ADC A,n", 7, Add.AdcAN));
             unprefixed.Add(new Instruction(0xcf, "RST 08", 11));
 
             unprefixed.Add(new Instruction(0xd0, "RET NC", 11));

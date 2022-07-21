@@ -7,12 +7,19 @@ using System.Threading.Tasks;
 
 namespace SantMarti.Z80.Assembler.Builders
 {
-    public static class ADDBuilder
+    static class ADDBuilder
     {
-        public static IEnumerable<byte> ADDAN(byte value)
+        public static IEnumerable<byte> ADD_AN(byte value)
         {
+            // ADD A,n has two bytes: opcode and byte value n
             yield return Z80Opcodes.ADD_AN;
             yield return value;
+        }
+
+        private static IEnumerable<byte>? ADD_AR(string target)
+        {
+            var regValue = RegistersEncoder.RegisterNameToBinaryValue(target);
+            yield return (byte)(Z80Opcodes.Bases.ADD_AR | regValue);
         }
 
         public static byte[]? BuildFromLine(string keyword, string restLine)
@@ -24,7 +31,7 @@ namespace SantMarti.Z80.Assembler.Builders
             return ADD(source, target)?.ToArray();
 
         }
-
+            
         internal static IEnumerable<byte>? ADD(string source, string target)
         {
             // source can be either "A", "HL", "IX" or "IY" and based on source target can have different values.
@@ -49,19 +56,20 @@ namespace SantMarti.Z80.Assembler.Builders
         {
             if (HexEncoder.IsHexLiteral(target))
             {
-                return ADDAN(HexEncoder.HexLiteralToByte(target));
+                return ADD_AN(HexEncoder.HexLiteralToByte(target));
             }
 
             return target switch
             {
-                "A" or "B" or "C" or "D" or "E" or "H" or "L" => ADD_A8(target),
+                "A" or "B" or "C" or "D" or "E" or "H" or "L" => ADD_AR(target),
+                "(HL)" => ADD_AHL(),
                 _ => null
             };
         }
 
-        private static IEnumerable<byte>? ADD_A8(string target)
+        public static IEnumerable<byte> ADD_AHL()
         {
-            throw new NotImplementedException();
+            yield return Z80Opcodes.ADD_AHL;   
         }
 
         public static IEnumerable<byte>? ADDHL(string target)
