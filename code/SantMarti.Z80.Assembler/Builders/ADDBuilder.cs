@@ -54,15 +54,36 @@ namespace SantMarti.Z80.Assembler.Builders
 
         private static IEnumerable<byte>? ADD_A(string target)
         {
-            if (HexEncoder.IsHexLiteral(target))
+            if (NumericEncoder.IsNumericByteLiteral(target))
             {
-                return ADD_AN(HexEncoder.HexLiteralToByte(target));
+                return ADD_AN(NumericEncoder.NumericLiteralToByte(target));
             }
 
             return target switch
             {
                 "A" or "B" or "C" or "D" or "E" or "H" or "L" => ADD_AR(target),
                 "(HL)" => ADD_AHL(),
+                _ => ADD_Displacement(target)
+            };
+        }
+
+        // Builds:
+        // 1. ADD A,(IX + d)
+        // 2. ADD A,(IY + d)
+        private static IEnumerable<byte>? ADD_Displacement(string target)
+        {
+            if (target[0] != '(' || target[target.Length - 1] != ')') { return null; }
+
+            target = target.Substring(1, target.Length - 2);
+            var tokens = target.Split('+');
+            if (tokens.Length != 2) { return null;  }
+            var register = tokens[0].Trim();
+            var displacement = tokens[1].Trim();
+            if (!NumericEncoder.IsNumericByteLiteral(displacement)) {  return null; }
+            return register switch
+            {
+                "IX" => new byte[] { Z80Opcodes.Prefixes.DD, Z80Opcodes.ADD_AIXIY, NumericEncoder.NumericLiteralToByte(displacement) },
+                "IY" => new byte[] { Z80Opcodes.Prefixes.FD, Z80Opcodes.ADD_AIXIY, NumericEncoder.NumericLiteralToByte(displacement) },
                 _ => null
             };
         }

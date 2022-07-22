@@ -23,19 +23,19 @@ namespace SantMarti.Z80
         public void ConnectToDataBus(IDataBus databus) => _databus = databus;
 
 
-        internal byte FetchNext()
+        internal byte FetchAt(ushort address)
         {
-            var address = Registers.PC;
-            Registers.PC++;
             var opcode = _databus.Fetch(address);
             return opcode;
         }
 
         public Task RunOnce()
         {
-            var opcode = FetchNext();
+            var address = Registers.PC;
+            var opcode = FetchAt(address);
             var instruction = _instructions[opcode];
-            instruction.Action(instruction, this);
+            var nextAddres = instruction.Action(instruction, this, address);
+            Registers.PC = nextAddres;
             return Task.CompletedTask;
         }
     }
