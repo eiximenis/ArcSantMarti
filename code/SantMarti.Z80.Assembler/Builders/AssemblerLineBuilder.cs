@@ -20,10 +20,16 @@ namespace SantMarti.Z80.Assembler.Builders
 
         public byte[]? Build(string asm)
         {
-            var trimmed = asm.Trim();
+            var semicolon = asm.IndexOf(';');
+            if (semicolon != -1)
+            {
+                asm = asm.Substring(0, semicolon);
+            }
+            var trimmed = asm.ToUpperInvariant().Trim();
             var space = trimmed.IndexOf(' ');
             var keyword = space != -1 ? trimmed.Substring(0, space) : trimmed;
             var restLine = space != -1 ? trimmed.Substring(space + 1) : "";
+            
 
             if (_builders.TryGetValue(keyword, out var builder))
             {

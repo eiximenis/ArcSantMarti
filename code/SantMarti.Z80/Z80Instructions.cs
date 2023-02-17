@@ -1466,7 +1466,7 @@ namespace SantMarti.Z80
         }
         private Instruction[] AddMissingNOPs(IEnumerable<Instruction> source)
         {
-            var array = new Instruction[256];
+            var array = new Instruction?[256];
             foreach (var instruction in source)
             {
                 array[instruction.Opcode] = instruction;
@@ -1474,16 +1474,13 @@ namespace SantMarti.Z80
 
             for (var i = 0; i < array.Length; i++)
             {
-                if (array[i] is null)
-                {
-                    array[i] = Instruction.Nop((byte)i);
-                }
+                array[i] ??= Instruction.Nop((byte)i);
             }
-            return array;
+            return array!;
         }
         private Instruction[] AddMissingUnprefixed(IEnumerable<Instruction> source, Instruction[] unprefixed)
         {
-            var array = new Instruction[256];
+            var array = new Instruction?[256];
             foreach (var instruction in source)
             {
                 array[instruction.Opcode] = instruction;
@@ -1491,12 +1488,9 @@ namespace SantMarti.Z80
 
             for (var i = 0; i < array.Length; i++)
             {
-                if (array[i] is null)
-                {
-                    array[i] = unprefixed[i];
-                }
+                array[i] ??= unprefixed[i];
             }
-            return array;
+            return array!;
         }
     }
 }

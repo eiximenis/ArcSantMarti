@@ -24,7 +24,7 @@ namespace SantMarti.Z80.Assembler
 
         public IEnumerable<byte> Build() => _bytes;
 
-        public void Asm(string line)
+        public IEnumerable<byte> Asm(string line)
         {
             var bytes = _lineBuilder.Build(line);
             if (bytes is null)
@@ -32,6 +32,7 @@ namespace SantMarti.Z80.Assembler
                 throw new InvalidOperationException($"Can't parse line: {line}");
             }
             _bytes.AddRange(bytes);
+            return bytes;
         }
 
         public void EXX()
