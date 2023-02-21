@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SantMarti.Z80.Assembler.Tokens;
+using SantMarti.Z80.Assembler.Tokens.Parsers;
 
 namespace SantMarti.Z80.Assembler.Tests.EncodersTests
 {
-    public class HexEncoderTests
+    public class NumericParserTests
     {
         [Theory]
         [InlineData("$FF", 0xff)]
@@ -19,9 +21,9 @@ namespace SantMarti.Z80.Assembler.Tests.EncodersTests
         [InlineData("$0", 0x0)]
         [InlineData("$00", 0x0)]
         [InlineData("$58", 0x58)]
-        public void HexEncoder_With_Valid_Byte_Value_Should_Return_Correct_Byte(string hexByte, byte expectedByte)
+        public void NumericParser_With_Valid_Byte_Value_Should_Return_Correct_Byte(string hexByte, byte expectedByte)
         {
-            var result = HexEncoder.HexLiteralToByte(hexByte);
+            var result = NumericParser.TryGetNumber(hexByte).ParsedToken!.AsByte();
             result.Should().Be(expectedByte);
         }
 
@@ -37,9 +39,9 @@ namespace SantMarti.Z80.Assembler.Tests.EncodersTests
         [InlineData("$EBCD", 0xebcd)]
         [InlineData("$158", 0x158)]
         [InlineData("$FFFF", 0xffff)]
-        public void HexEncoder_With_Valid_Word_Value_Should_Return_Correct_Word(string hexWord, ushort expectedWord)
+        public void NumericParser_With_Valid_Word_Value_Should_Return_Correct_Word(string hexWord, ushort expectedWord)
         {
-            var result = HexEncoder.HexLiteralToWord(hexWord);
+            var result = NumericParser.TryGetNumber(hexWord).ParsedToken!.Value;
             result.Should().Be(expectedWord);
         }
 

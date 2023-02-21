@@ -1,4 +1,5 @@
 using SantMarti.Z80.AsmConsole.Context;
+using SantMarti.Z80.Assembler.Tokens;
 
 namespace SantMarti.Z80.AsmConsole.Commands;
 
@@ -39,6 +40,36 @@ class LoadCommand : IReplCommand
 
     private void DumpLine(int idx, AssembledLine line)
     {
-        Console.WriteLine($"{idx}:\t {line.Line} \t {Convert.ToHexString(line.Bytes.ToArray())}");
+        Console.Write($"{idx}:");
+        foreach (var token in line.TokenizedLine)
+        {
+            var color = token.Type switch
+            {
+                TokenType.Comment => ConsoleColor.Green,
+                TokenType.Number => ConsoleColor.Yellow,
+                TokenType.Opcode => ConsoleColor.Blue,
+                TokenType.Displacement => ConsoleColor.DarkYellow,
+                TokenType.Register => ConsoleColor.Magenta,
+                TokenType.MemoryReference => ConsoleColor.Cyan,
+                _ => ConsoleColor.Red
+            };
+            var oldcolor = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.Write($"{token.StrValue} ");
+            Console.ForegroundColor = oldcolor;
+        }
+
+        if (line.Result.HasResult)
+        {
+            Console.Write($"\t{Convert.ToHexString(line.Result.Bytes!)}");
+        }
+        else
+        {
+            Console.WriteLine();
+            Console.Write($"\t\t***ERROR: {line.Result.ErrorMessage}");
+        }
+
+        Console.WriteLine();
+
     }
 }

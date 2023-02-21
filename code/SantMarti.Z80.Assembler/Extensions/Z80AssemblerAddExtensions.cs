@@ -11,10 +11,10 @@ namespace SantMarti.Z80.Assembler.Extensions
     {
         public static void ADD_AN(this Z80AssemblerBuilder asmBuilder, byte value)
         {
-            asmBuilder.Raw(ADDBuilder.ADD_AN(value));
+            asmBuilder.Raw(ADDBuilder.ADD_AN(value).Bytes!);
         }
 
-        public static void ADD_AHL(this Z80AssemblerBuilder asmBuilder) => asmBuilder.Raw(ADDBuilder.ADD_AHL());
+        public static void ADD_AHL(this Z80AssemblerBuilder asmBuilder) => asmBuilder.Raw(ADDBuilder.ADD_AHL().Bytes!);
 
     }
 }

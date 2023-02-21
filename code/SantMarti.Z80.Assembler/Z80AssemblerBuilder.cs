@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SantMarti.Z80.Assembler.Tokens;
 
 namespace SantMarti.Z80.Assembler
 {
@@ -24,16 +25,27 @@ namespace SantMarti.Z80.Assembler
 
         public IEnumerable<byte> Build() => _bytes;
 
-        public IEnumerable<byte> Asm(string line)
+        public AssemblerLineResult Asm(string line)
         {
-            var bytes = _lineBuilder.Build(line);
-            if (bytes is null)
+            var tokenizedLine = _lineBuilder.Parse(line);
+
+            var anyUnkwon = tokenizedLine.Tokens.FirstOrDefault(t => t is UnknownToken);
+            if (anyUnkwon is not null)
             {
-                throw new InvalidOperationException($"Can't parse line: {line}");
+                return AssemblerLineResult.Error($"Unkonwn token found: {anyUnkwon.StrValue}");
             }
-            _bytes.AddRange(bytes);
-            return bytes;
+
+            var result = _lineBuilder.Build(tokenizedLine);
+
+            if (result.HasResult)
+            {
+                _bytes.AddRange(result.Bytes!);
+            }
+
+            return result;
         }
+
+        public TokenizedLine Tokenize(string line) => _lineBuilder.Parse(line);
 
         public void EXX()
         {
@@ -43,17 +55,26 @@ namespace SantMarti.Z80.Assembler
 
         public void ADD(string source, string target)
         {
-            _bytes.AddRange(ADDBuilder.ADD(source, target));
+            var result = ADDBuilder.ADD(source, target);
+            ProcessParseResult(result);
         }
 
         public void LD(string dest, string source)
         {
-            _bytes.AddRange(LDBuilder.LD(dest, source));
+            var result = LDBuilder.LD(dest, source);
+            ProcessParseResult(result);
         }
 
-
-
-
-
+        private void ProcessParseResult(AssemblerLineResult result)
+        {
+            if (result.HasResult)
+            {
+                _bytes.AddRange(result.Bytes!);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Error parsing line: {result.ErrorMessage}");
+            }
+        }
     }
 }

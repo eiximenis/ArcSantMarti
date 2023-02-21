@@ -1,7 +1,9 @@
+using System.Security.Cryptography.X509Certificates;
 using SantMarti.Z80.Assembler;
+using SantMarti.Z80.Assembler.Tokens;
 
 namespace SantMarti.Z80.AsmConsole.Context;
-record AssembledLine(string Line, IEnumerable<byte> Bytes);
+record AssembledLine(TokenizedLine TokenizedLine, AssemblerLineResult Result);
 
 class AssembledFile
 {
@@ -10,11 +12,11 @@ class AssembledFile
     
     public int LinesCount => _code.Count;
         
-    public void Add(string line, IEnumerable<byte> bytes)
+    public void Add(TokenizedLine line, AssemblerLineResult asmResult)
     {
-        _code.Add(new AssembledLine(line, bytes));
+        _code.Add(new AssembledLine(line, asmResult));
     }
-    
+
     public AssembledLine this[int idx] => _code[idx];
 }
 class AsmLoader
@@ -29,8 +31,9 @@ class AsmLoader
         var builder = new Z80AssemblerBuilder();
         foreach (var line in lines)
         {
-            var bytes = builder.Asm(line);
-            assembledFile.Add(line, bytes);
+            var tokenizedLine = builder.Tokenize(line);
+            var asmResult = builder.Asm(line);
+            assembledFile.Add(tokenizedLine, asmResult);
         }
 
         return assembledFile;

@@ -1,113 +1,123 @@
 ﻿using SantMarti.Z80.Assembler.Encoders;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SantMarti.Z80.Assembler.Tokens;
+using SantMarti.Z80.Assembler.Tokens.Parsers;
 
 namespace SantMarti.Z80.Assembler.Builders
 {
     static class ADDBuilder
     {
-        public static IEnumerable<byte> ADD_AN(byte value)
+        public static AssemblerLineResult ADD_AN(byte value)
         {
             // ADD A,n has two bytes: opcode and byte value n
-            yield return Z80Opcodes.ADD_AN;
-            yield return value;
+            return AssemblerLineResult.Success(new [] {Z80Opcodes.ADD_AN, value});
+        }
+        public static AssemblerLineResult ADD_AN(NumericValue value)
+        {
+            if (!value.IsByte) return AssemblerLineResult.Error($"Value is not a byte: {value.StrValue}", value);
+            return ADD_AN(value.AsByte());
         }
 
-        private static IEnumerable<byte>? ADD_AR(string target)
+        private static AssemblerLineResult ADD_AR(RegisterReference target)
         {
-            var regValue = RegistersEncoder.RegisterNameToBinaryValue(target);
-            yield return (byte)(Z80Opcodes.Bases.ADD_AR | regValue);
+            var regValue = RegistersEncoder.RegisterNameToBinaryValue(target.StrValue);
+            return AssemblerLineResult.Success(new [] { (byte)(Z80Opcodes.Bases.ADD_AR | regValue)});
         }
 
-        public static byte[]? BuildFromLine(string keyword, string restLine)
+        public static AssemblerLineResult BuildFromLine(TokenizedLine line)
         {
-            var operands = restLine.Split(',');
-            var target = operands[0].Trim();
-            var source = operands[1].Trim();
+            var target = line.Operands[0];
+            var source = line.Operands[1];
+            return ADD(source, target);
+        }
 
-            return ADD(source, target)?.ToArray();
-
+        internal static AssemblerLineResult ADD(BaseToken source, BaseToken target)
+        {
+            return source switch
+            {
+                RegisterReference r when r.StrValue == "A" => ADD_A(target),
+                RegisterReference r when r.StrValue == "HL" => ADDHL(target),
+                RegisterReference r when r.StrValue == "IX"  => ADDIX(target),
+                RegisterReference r when r.StrValue == "IY" => ADDIY(target),
+                _ =>  AssemblerLineResult.Error("Invalid source token", source)
+            }; 
         }
             
-        internal static IEnumerable<byte>? ADD(string source, string target)
+        internal static AssemblerLineResult ADD(string source, string target)
         {
-            // source can be either "A", "HL", "IX" or "IY" and based on source target can have different values.
-            switch (source)
-            {
-                case "A":
-                    return ADD_A(target);
-                case "HL":
-                    return ADDHL(target);
-                case "IX":
-                    return ADDIX(target);
-                case "IY":
-                    return ADDIY(target);
-                default:
-                    return null;
-            }
-
-
+            var sourceToken = AnyParser.ParseToken(source);
+            var destToken = AnyParser.ParseToken(target);
+            return ADD(source, target);
         }
-
-        private static IEnumerable<byte>? ADD_A(string target)
+        
+        
+        private static AssemblerLineResult ADD_A(BaseToken target)
         {
-            if (NumericEncoder.IsNumericByteLiteral(target))
-            {
-                return ADD_AN(NumericEncoder.NumericLiteralToByte(target));
-            }
-
             return target switch
             {
-                "A" or "B" or "C" or "D" or "E" or "H" or "L" => ADD_AR(target),
-                "(HL)" => ADD_AHL(),
-                _ => ADD_Displacement(target)
+                NumericValue { IsByte: true } nv => ADD_AN(nv.AsByte()),
+                RegisterReference r when r.IsByteRegister => ADD_AR(r),
+                RegisterReference r when r.StrValue == "(HL)" => ADD_AHL(),
+                Displacement d => ADD_Displacement(d),
+                _ => AssemblerLineResult.Error($"Invalid target token {target.StrValue}", target)
             };
         }
 
         // Builds:
         // 1. ADD A,(IX + d)
         // 2. ADD A,(IY + d)
-        private static IEnumerable<byte>? ADD_Displacement(string target)
+        private static AssemblerLineResult ADD_Displacement(Displacement displacement)
         {
-            if (target[0] != '(' || target[target.Length - 1] != ')') { return null; }
-
-            target = target.Substring(1, target.Length - 2);
-            var tokens = target.Split('+');
-            if (tokens.Length != 2) { return null;  }
-            var register = tokens[0].Trim();
-            var displacement = tokens[1].Trim();
-            if (!NumericEncoder.IsNumericByteLiteral(displacement)) {  return null; }
-            return register switch
+            var opcodes =  displacement.Register switch
             {
-                "IX" => new byte[] { Z80Opcodes.Prefixes.DD, Z80Opcodes.ADD_AIXIY, NumericEncoder.NumericLiteralToByte(displacement) },
-                "IY" => new byte[] { Z80Opcodes.Prefixes.FD, Z80Opcodes.ADD_AIXIY, NumericEncoder.NumericLiteralToByte(displacement) },
+                "IX" => new byte[] { Z80Opcodes.Prefixes.DD, Z80Opcodes.ADD_AIXIY, displacement.Number.AsByte() },
+                "IY" => new byte[] { Z80Opcodes.Prefixes.FD, Z80Opcodes.ADD_AIXIY, displacement.Number.AsByte() },
                 _ => null
             };
+                        
+            return opcodes != null 
+                ?  AssemblerLineResult.Success(opcodes) 
+                : AssemblerLineResult.Error($"Invalid displacement {displacement.StrValue}",displacement);
         }
 
-        public static IEnumerable<byte> ADD_AHL()
+        public static AssemblerLineResult ADD_AHL()
         {
-            yield return Z80Opcodes.ADD_AHL;   
+            return AssemblerLineResult.Success(new [] {Z80Opcodes.ADD_AHL}); 
         }
 
-        public static IEnumerable<byte>? ADDHL(string target)
+        public static AssemblerLineResult ADDHL(BaseToken target)
         {
             return target switch
             {
-                "BC" => new byte[] { Z80Opcodes.ADD_HLBC },
-                "DE" => new byte[] { Z80Opcodes.ADD_HLDE },
-                "HL" => new byte[] { Z80Opcodes.ADD_HLHL },
-                "SP" => new byte[] { Z80Opcodes.ADD_HLSP },
-                _ => null
+                RegisterReference r when r.StrValue == "BC" => AssemblerLineResult.Success(new byte[] { Z80Opcodes.ADD_HLBC }),
+                RegisterReference r when r.StrValue == "DE" => AssemblerLineResult.Success(new byte[] { Z80Opcodes.ADD_HLDE }),
+                RegisterReference r when r.StrValue == "HL" => AssemblerLineResult.Success( new byte[] { Z80Opcodes.ADD_HLHL }),
+                RegisterReference r when r.StrValue == "SP" =>  AssemblerLineResult.Success(new byte[] { Z80Opcodes.ADD_HLSP }),
+                _ => AssemblerLineResult.Error("Invalid target token", target)
             };
         }
 
-        public static IEnumerable<byte>? ADDIX(string target)
+
+        private static AssemblerLineResult ADDIX(BaseToken target)
         {
-            return target switch
+            return  (target is RegisterReference targetRef) 
+                ? ADDIX(targetRef)
+                : AssemblerLineResult.Error($"Invalid target token {target.StrValue}", target);
+        }
+        
+        public static AssemblerLineResult ADDIX(RegisterReference target)
+        {
+            if (!target.IsWordRegister)
+            {
+                return AssemblerLineResult.Error($"Invalid target register {target.StrValue}", target);
+            }
+            
+            var opcodes =  target.StrValue switch
             {
                 "BC" => new byte[] { Z80Opcodes.Prefixes.DD, Z80Opcodes.ADD_IXBC },
                 "DE" => new byte[] { Z80Opcodes.Prefixes.DD, Z80Opcodes.ADD_IXDE },
@@ -115,11 +125,28 @@ namespace SantMarti.Z80.Assembler.Builders
                 "SP" => new byte[] { Z80Opcodes.Prefixes.DD, Z80Opcodes.ADD_IXSP },
                 _ => null
             };
+
+            return opcodes != null 
+                ?  AssemblerLineResult.Success(opcodes) 
+                : AssemblerLineResult.Error($"Invalid target register {target}");
         }
 
-        private static IEnumerable<byte>? ADDIY(string target)
+        
+        private static AssemblerLineResult ADDIY(BaseToken target)
         {
-            return target switch
+            return  (target is RegisterReference targetRef) 
+                ? ADDIY(targetRef)
+                : AssemblerLineResult.Error($"Invalid target token {target.StrValue}", target);
+        }
+        private static AssemblerLineResult ADDIY(RegisterReference target)
+        {
+
+            if (!target.IsWordRegister)
+            {
+                return AssemblerLineResult.Error($"Invalid target register {target.StrValue}", target);
+            }
+
+            var opcodes =  target.StrValue switch
             {
                 "BC" => new byte[] { Z80Opcodes.Prefixes.FD, Z80Opcodes.ADD_IYBC },
                 "DE" => new byte[] { Z80Opcodes.Prefixes.FD, Z80Opcodes.ADD_IYDE },
@@ -127,9 +154,10 @@ namespace SantMarti.Z80.Assembler.Builders
                 "SP" => new byte[] { Z80Opcodes.Prefixes.FD, Z80Opcodes.ADD_IYSP },
                 _ => null
             };
+            
+            return opcodes != null 
+                ?  AssemblerLineResult.Success(opcodes) 
+                : AssemblerLineResult.Error($"Invalid target register {target}");
         }
-
-
-
     }
 }

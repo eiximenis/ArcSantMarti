@@ -3,40 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SantMarti.Z80.Assembler.Tokens;
 
 namespace SantMarti.Z80.Assembler.Builders
 {
     class AssemblerLineBuilder
     {
-        private readonly Dictionary<string, Func<string, string, byte[]?>> _builders;
+        private readonly Dictionary<string, Func<TokenizedLine, AssemblerLineResult>> _builders;
+        private readonly AssemblerLineParser _parser;
 
         public AssemblerLineBuilder()
         {
-            _builders = new Dictionary<string, Func<string, string, byte[]?>>();
+            _builders = new Dictionary<string, Func<TokenizedLine, AssemblerLineResult>>();
             _builders.Add("LD", LDBuilder.BuildFromLine);
-            _builders.Add("EXX", (k, l) => new[] { Z80Opcodes.EXX });
+            _builders.Add("EXX", l => AssemblerLineResult.Success(new [] { Z80Opcodes.EXX }));
             _builders.Add("ADD", ADDBuilder.BuildFromLine);
+            _parser = new AssemblerLineParser();
+        }
+        
+        public TokenizedLine Parse(string line)
+        {
+            return _parser.Parse(line);
         }
 
-        public byte[]? Build(string asm)
+        public AssemblerLineResult Build(TokenizedLine line)
         {
-            var semicolon = asm.IndexOf(';');
-            if (semicolon != -1)
+            var opcode = line.GetOpcode();
+            if (opcode is null)
             {
-                asm = asm.Substring(0, semicolon);
+                return AssemblerLineResult.Error("No opcode found!", opcode);
             }
-            var trimmed = asm.ToUpperInvariant().Trim();
-            var space = trimmed.IndexOf(' ');
-            var keyword = space != -1 ? trimmed.Substring(0, space) : trimmed;
-            var restLine = space != -1 ? trimmed.Substring(space + 1) : "";
             
-
-            if (_builders.TryGetValue(keyword, out var builder))
+            if (_builders.TryGetValue(opcode.StrValue, out var builder))
             {
-                return builder(keyword, restLine.Trim());
+                return builder(line);
             }
 
-            return null;
+            return AssemblerLineResult.Error($"Unknown opcode: {opcode.StrValue}", opcode);
         }
     }
 }

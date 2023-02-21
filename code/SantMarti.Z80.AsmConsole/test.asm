@@ -1,2 +1,2 @@
-LD A,B
+LD A,B   ;Test
 LD B,C

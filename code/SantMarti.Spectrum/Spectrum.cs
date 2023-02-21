@@ -11,26 +11,38 @@ namespace SantMarti.Spectrum
     public class Spectrum
     {
         private readonly Z80Processor _processor;
-        private readonly ROM _rom;
-        private readonly RAM _ram;
+        private readonly SpectrumMemory _memory;
 
-        private Spectrum(RAM ram, ROM rom)
+        private Spectrum(SpectrumMemory memory)
         {
             _processor = new Z80Processor();
-            _ram = ram;
-            _rom = rom;
+            _memory = memory;
         }
 
-        public static async Task<Spectrum> Create(string romFilePath, int ramSizeInKib)
+        private static async Task<Spectrum> Create(string romFilePath, int romSize, int ramSize)
         {
-            var rom = await ROM.CreateFromFile(romFilePath);
-            var ram = new RAM(ramSizeInKib);
-            var spectrum = new Spectrum(ram, rom);
+            var spectrum = new Spectrum(new SpectrumMemory(romSize, ramSize));
+            await spectrum._memory.LoadRomFromFile(romFilePath);
             return spectrum;
         }
 
-        public static Task<Spectrum> Spectrum48() => Create(Path.Combine("roms", "48e.rom"), 48);
+        public static async Task<Spectrum> Spectrum48()
+        {
+            var memory = new SpectrumMemory(16, 48)
+            {
+                ScreenMemoryOffset = 0x4000,
+                ScreenMemoryColorDataOffset = 0x5800,
+                PrinterBufferOffset = 0x5b00,
+                SystemVariables = 0x5c00,
+                ReservedOffset = 0x5cc0,
+                AvailableRamOffset = 0x5ccb,
+                Reserved2Offset = 0xff58
+            };
+            await memory.LoadRomFromFile(Path.Combine("roms", "48e.rom"));
+            return new Spectrum(memory);
+        }
 
         
     }
 }
+    
