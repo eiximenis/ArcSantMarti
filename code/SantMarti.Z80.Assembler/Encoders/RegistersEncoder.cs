@@ -9,7 +9,7 @@ namespace SantMarti.Z80.Assembler.Encoders
 {
     public static class RegistersEncoder
     {
-        public static byte RegisterNameToBinaryValue(string reg) => reg switch
+        public static byte ByteRegisterNameToBinaryValue(string reg) => reg switch
         {
             "A" => 0b111,
             "B" => 0b000,
@@ -19,6 +19,14 @@ namespace SantMarti.Z80.Assembler.Encoders
             "H" => 0b100,
             "L" => 0b101,
             _ => 0b110
+        };
+
+        public static byte WordRegisterNameToBinaryValue(string reg) => reg switch
+        {
+            "BC" => 0b00,
+            "DE" => 0b01,
+            "HL" => 0b10,
+            "SP" => 0b11
         };
     }
 

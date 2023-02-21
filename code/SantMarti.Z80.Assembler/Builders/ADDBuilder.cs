@@ -25,7 +25,7 @@ namespace SantMarti.Z80.Assembler.Builders
 
         private static AssemblerLineResult ADD_AR(RegisterReference target)
         {
-            var regValue = RegistersEncoder.RegisterNameToBinaryValue(target.StrValue);
+            var regValue = RegistersEncoder.ByteRegisterNameToBinaryValue(target.StrValue);
             return AssemblerLineResult.Success(new [] { (byte)(Z80Opcodes.Bases.ADD_AR | regValue)});
         }
 

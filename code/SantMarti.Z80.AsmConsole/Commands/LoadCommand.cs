@@ -30,7 +30,7 @@ class LoadCommand : IReplCommand
     private void DumpFirstLines(AssembledFile assembledFile)
     {
         Console.WriteLine($"CODE COUNT: {assembledFile.LinesCount}");
-        var maxCount = Math.Min(assembledFile.LinesCount, 5);
+        var maxCount = Math.Min(assembledFile.LinesCount, 30);
         for (var idx = 0; idx<maxCount; idx++)
         {
             var line = assembledFile[idx];

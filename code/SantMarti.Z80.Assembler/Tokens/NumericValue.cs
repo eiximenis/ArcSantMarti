@@ -11,4 +11,13 @@ public class NumericValue : BaseToken
     public bool IsWord => !IsByte;
     public int Value { get; }
     public byte AsByte() => (byte)Value;
+    
+    
+    public byte HiByte() => (byte)(Value >> 8);
+    public byte LoByte() => (byte)(Value | 0xFF);
+
+    public byte[] AsLoHiBytes()
+    {
+        return new[] {LoByte(), HiByte()};
+    }
 }

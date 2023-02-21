@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace SantMarti.Z80.Assembler
 {
@@ -25,11 +26,19 @@ namespace SantMarti.Z80.Assembler
         public const byte ADD_IYSP = 0x39;                      // ADD IY,SP
 
         public const byte ADD_AIXIY = 0x8e;                     // ADD A,(IX + n) or ADD A,(IY + n)
-        
+
+
+        public const byte LD_AI = 0x57;                         // LD A,I
+        public const byte LD_AR = 0x5f;                         // LD A,R
+        public const byte LD_IA = 0x47;                         // LD I,A
+        public const byte LD_RA = 0x4f;                         // LD R,A
+        public const byte LD_SPNN = 0x31;                       // LD SP,nn
 
         public static class Bases
         {
             public const byte LD_RR = 0b01000000;                // Base for LD r,r' opcodes   
+            public const byte LD_RN = 0b00000110;                // Base for LD r,n opcodes
+            public const byte LD_RNN = 0b00000001;               // Base for LD r,nn opcodes  
             public const byte ADD_AR = 0b10000000;               // Base for ADD A,r
         }
         
@@ -37,6 +46,7 @@ namespace SantMarti.Z80.Assembler
         {
             public const byte DD = 0xdd;
             public const byte FD = 0xfd;
+            public const byte ED = 0xed;
         }
     }
 }
