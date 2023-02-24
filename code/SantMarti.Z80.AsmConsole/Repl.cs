@@ -6,11 +6,12 @@ namespace SantMarti.Z80.AsmConsole;
 
 class Repl
 {
-    private readonly ReplContext _context = new();
+    public ReplContext Context { get; } = new();
     private readonly ReplParser _parser = new();
+    
     public async Task Start()
     {
-        while (!_context.Finish)
+        while (!Context.Finish)
         {
             var line = Console.ReadLine();
             var tokenized = _parser.Parse(line);
@@ -20,7 +21,7 @@ class Repl
             }
             else
             {
-                await tokenized.Command.Run(_context, tokenized.Arguments);
+                await tokenized.Command.Run(Context, tokenized.Arguments);
             }
         }
     }

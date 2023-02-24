@@ -5,8 +5,8 @@ namespace SantMarti.Z80.AsmConsole.Commands;
 
 class LoadCommand : IReplCommand
 {
-    public const string NAME = "LOAD";
-    public string Name => NAME;
+    public const string COMMAND_NAME = "LOAD";
+    public string Name => COMMAND_NAME;
     public async Task<ExecCodes> Run(ReplContext context, string[] args)
     {
         var fname = args[0];

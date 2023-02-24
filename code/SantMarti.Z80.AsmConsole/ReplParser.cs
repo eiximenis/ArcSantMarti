@@ -1,3 +1,4 @@
+using SantMarti.Tap;
 using SantMarti.Z80.AsmConsole.Commands;
 
 namespace SantMarti.Z80.AsmConsole;
@@ -9,8 +10,9 @@ class ReplParser
 
     public ReplParser()
     {
-        _commands.Add(LoadCommand.NAME, new LoadCommand());
-        _commands.Add(ExitCommand.NAME, new ExitCommand());
+        _commands.Add(LoadCommand.COMMAND_NAME, new LoadCommand());
+        _commands.Add(LoadTapeCommand.COMMAND_NAME, new LoadTapeCommand());
+        _commands.Add(ExitCommand.COMMAND_NAME, new ExitCommand());
     }
 
     public TokenizedCommand Parse(string line)

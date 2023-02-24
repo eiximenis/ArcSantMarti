@@ -1,3 +1,4 @@
+using SantMarti.Tap.Tzx;
 using SantMarti.Z80.AsmConsole.Commands;
 
 namespace SantMarti.Z80.AsmConsole.Context;
@@ -6,7 +7,7 @@ class ReplContext
 {
 
     public AssembledFile? CurrentFile { get; private set; }
-    public AsmLoader Loader { get; } = new();
+    public GenericLoader Loader { get; } = new();
     public bool Finish { get; set; }
 
     public void SetAssembledFile(AssembledFile assembledFile)
@@ -26,6 +27,19 @@ static class ReplContextExtensions
             if (File.Exists(fullPath))
             { 
                 return await context.Loader.LoadAsmFile(fullPath);
+            }
+        }   
+        return null;
+    }
+    
+    public static async Task<TzxFile?> TryLoadTzxFile(this ReplContext context, string path)
+    {
+        foreach (var  paths in context.Loader.InputPaths)
+        {
+            var fullPath = Path.Combine(paths, path);
+            if (File.Exists(fullPath))
+            { 
+                return await context.Loader.LoadTzxFile(fullPath);
             }
         }   
         return null;
