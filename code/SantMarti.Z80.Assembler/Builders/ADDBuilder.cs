@@ -75,8 +75,8 @@ namespace SantMarti.Z80.Assembler.Builders
         {
             var opcodes =  displacement.Register switch
             {
-                "IX" => new byte[] { Z80Opcodes.Prefixes.DD, Z80Opcodes.ADD_AIXIY, displacement.Number.AsByte() },
-                "IY" => new byte[] { Z80Opcodes.Prefixes.FD, Z80Opcodes.ADD_AIXIY, displacement.Number.AsByte() },
+                "IX" => new byte[] { Z80Opcodes.Prefixes.DD, Z80Opcodes.ADD_AIXIY, (byte)displacement.Value },
+                "IY" => new byte[] { Z80Opcodes.Prefixes.FD, Z80Opcodes.ADD_AIXIY, (byte)displacement.Value },
                 _ => null
             };
                         

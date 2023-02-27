@@ -32,13 +32,21 @@ namespace SantMarti.Z80.Assembler
         public const byte LD_AR = 0x5f;                         // LD A,R
         public const byte LD_IA = 0x47;                         // LD I,A
         public const byte LD_RA = 0x4f;                         // LD R,A
-        public const byte LD_SPNN = 0x31;                       // LD SP,nn
+        public const byte LD_SP_NN = 0x31;                      // LD SP,nn
+        public const byte LD_A_NNRef = 0x3a;                    // LD A,(nn)
+        public static byte LD_HLRef_Byte = 0x36;                // LD (HL),n
+        public static byte LD_Disp_Byte = 0x36;                 // LD (IX|IY + n),n
 
         public static class Bases
         {
-            public const byte LD_RR = 0b01000000;                // Base for LD r,r' opcodes   
-            public const byte LD_RN = 0b00000110;                // Base for LD r,n opcodes
-            public const byte LD_RNN = 0b00000001;               // Base for LD r,nn opcodes  
+            public const byte LD_R_R = 0b01000000;                // Base for LD r,r' opcodes   
+            public const byte LD_R_N = 0b00000110;                // Base for LD r,n opcodes
+            public const byte LD_R_NN = 0b00000001;               // Base for LD r,nn opcodes
+            public const byte LD_R_HLRef = 0b01000110;             // Base for LD r,(HL) opcodes
+            public const byte LD_HLRef_R = 0b01110000;               // Base for LD (HL),r opcodes  
+            public const byte LD_R_Displacement = 0b01000110;      // Base for LD r,(IX|IY + n) opcodes
+            public const byte LD_Displacement_R = 0b01110000;       // Base for LD (IX|IY + n),r opcodes
+
             public const byte ADD_AR = 0b10000000;               // Base for ADD A,r
         }
         

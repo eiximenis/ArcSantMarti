@@ -15,13 +15,8 @@ public class NumericParser
 {
     private const string regexString = @"^(\$?[0-9a-fA-F]{1,5})";
     
-    private static Regex _regex;
+    private static Regex _regex = new Regex(regexString, RegexOptions.Compiled);
     
-    static NumericParser()
-    {
-        _regex = new Regex(regexString, RegexOptions.Compiled);
-    }
-
     public static TokenParseResult<NumericValue> TryGetNumber(string operand)
     {
         var match = _regex.Match(operand);

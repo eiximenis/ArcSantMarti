@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using SantMarti.Z80.Assembler.Encoders;
@@ -13,36 +14,44 @@ namespace SantMarti.Z80.Assembler.Tokens.Parsers;
 
 public class MemoryReferenceParser
 {
-    private const string regexString = @"^\(\s*(\$?[0-9a-fA-F]{1,5})\s*\)";
+    // A MemoryReference is:
+    // A decimal (up to 5) digits inside parenthesis
+    // A hexadecimal (up to 4) digits inside parenthesis and prefixed with $
+    // A word register (HL, DE, BC, SP) inside parenthesis
+    private const string regexString = @"^\(\s*(\$[0-9a-fA-F]{1,4}|[0-9]{1,5}|HL|DE|BC|SP)\s*\)";
+    private static Regex _regex =  new Regex(regexString, RegexOptions.Compiled);
     
-    private static Regex _regex;
-    
-    static MemoryReferenceParser()
-    {
-        _regex = new Regex(regexString, RegexOptions.Compiled);
-    }
-
     public static TokenParseResult<MemoryReference> TryGetMemoryReference(string operand)
     {
         var match = _regex.Match(operand);
         if (match.Success)
         {
-            var number = match.Groups[1].ValueSpan;
-            var nbase = 10;
-            if (number[0] == '$')
-            {
-                nbase = 16;
-                number = number[1..];
-            }
+            var value = match.Groups[1].ValueSpan.ToString();
 
-            if (int.TryParse(number,  nbase == 16 ? NumberStyles.HexNumber : NumberStyles.None, CultureInfo.InvariantCulture, out var value))
+            return value switch
             {
-                var parsedValue = new MemoryReference(operand, value);
-                return TokenParseResult<MemoryReference>.Success(parsedValue);
-            }
+                "HL" or "DE" or "BC" or "SP" => TokenParseResult<MemoryReference>.Success(
+                    new MemoryReference(operand, RegisterParser.TryGetRegister(value).ParsedToken!)),
+                _ when value.StartsWith('$') => ParseHexadecimalAddress(value),
+                _ => ParseDecimalAddress(value)
+            };
         }
+        
+        return TokenParseResult<MemoryReference>.Error($"Invalid memory reference {operand}");
+    }
 
-        return TokenParseResult<MemoryReference>.Error($"Value '{operand}' can't be parsed as a MemoryReference");
+    private static TokenParseResult<MemoryReference> ParseHexadecimalAddress(string value)
+    {
+        return ushort.TryParse(value[1..], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var parsedValue)
+            ? TokenParseResult<MemoryReference>.Success(new MemoryReference(value, parsedValue))
+            : TokenParseResult<MemoryReference>.Error($"Invalid hexadecimal address: {value}");
+    }
+    
+    private static TokenParseResult<MemoryReference> ParseDecimalAddress(string value)
+    {
+        return ushort.TryParse(value, NumberStyles.None, CultureInfo.InvariantCulture, out var parsedValue)
+            ? TokenParseResult<MemoryReference>.Success(new MemoryReference(value, parsedValue))
+            : TokenParseResult<MemoryReference>.Error($"Invalid decimal address: {value}");
     }
 
 }

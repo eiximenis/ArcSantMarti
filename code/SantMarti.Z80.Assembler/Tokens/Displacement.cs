@@ -5,11 +5,11 @@ namespace SantMarti.Z80.Assembler.Tokens;
 /// </summary>
 public class Displacement : BaseToken
 {
-    public NumericValue Number { get; }
+    public short Value { get; }
     public string Register { get; }
-    public Displacement(string str, string register, NumericValue number) : base(str, TokenType.Displacement)
+    public Displacement(string str, string register, short value ) : base(str, TokenType.Displacement)
     {
-        Number = number;
+        Value = value;
         Register = register;
     }
 }
