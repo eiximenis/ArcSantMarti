@@ -53,13 +53,14 @@ public class TzxStandardSpedDataBlock : TzxBlock
 {
     public TapBlock TapData { get; }
     public ushort PauseMs { get; }
-    public ushort DataLength { get; }
-    public override int Length => DataLength + 2 * sizeof(ushort);
+    public ushort BlockLength { get; }
+    // Full block length is 2 bytes for pause + 2 bytes for data length + real data length
+    public override int Length => BlockLength + 2 * sizeof(ushort);       
 
-    public TzxStandardSpedDataBlock(ushort pauseMs, ushort dataLen, TapBlock tapBlock) : base(TzxBlockType.StandardSpeedDataBlock)
+    public TzxStandardSpedDataBlock(ushort pauseMs, ushort blockLen, TapBlock tapBlock) : base(TzxBlockType.StandardSpeedDataBlock)
     {
         PauseMs = pauseMs;
-        DataLength = dataLen;
+        BlockLength = blockLen;
         TapData = tapBlock;
     }
 
@@ -71,7 +72,7 @@ public class TzxStandardSpedDataBlock : TzxBlock
         var block = flagByte switch
         {
             (byte)TzxBlockTapFlagType.Header => TapBlock.HeaderOnlyBlockFromBytes(data[5..]),
-            (byte)TzxBlockTapFlagType.Data => TapBlock.RawBlockFromBytes(data[5..], len),
+            (byte)TzxBlockTapFlagType.Data => TapBlock.RawBlockFromBytes(data[5..], (ushort)(len - 2)),
             _ => throw new InvalidOperationException($"Invalid TapData flag byte: {flagByte}")
         };
         return new TzxStandardSpedDataBlock(ms, len, block);
