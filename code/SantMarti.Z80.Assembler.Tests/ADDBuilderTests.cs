@@ -21,7 +21,7 @@ namespace SantMarti.Z80.Assembler.Tests
             builder.ADD_AN(byteToAdd);
             var asm = builder.Build();
             asm.Should().HaveCount(2);
-            asm.First().Should().Be(Z80Opcodes.ADD_AN);
+            asm.First().Should().Be(Z80Opcodes.ADD_A_N);
             asm.Last().Should().Be(byteToAdd);
         }
 
@@ -36,7 +36,7 @@ namespace SantMarti.Z80.Assembler.Tests
             builder.ADD("A", hexByte);
             var asm = builder.Build();
             asm.Should().HaveCount(2);
-            asm.First().Should().Be(Z80Opcodes.ADD_AN);
+            asm.First().Should().Be(Z80Opcodes.ADD_A_N);
             asm.Last().Should().Be(decodedByte);
         }
 
@@ -52,7 +52,7 @@ namespace SantMarti.Z80.Assembler.Tests
             builder.ADD("A", literal);
             var asm = builder.Build();
             asm.Should().HaveCount(2);
-            asm.First().Should().Be(Z80Opcodes.ADD_AN);
+            asm.First().Should().Be(Z80Opcodes.ADD_A_N);
             asm.Last().Should().Be(byteValue);
         }
 

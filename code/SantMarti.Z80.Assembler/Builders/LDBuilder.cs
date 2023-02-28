@@ -28,9 +28,9 @@ namespace SantMarti.Z80.Assembler.Builders
             return destSrc switch
             {
                 // LD r,r
-                (RegisterReference {IsByteRegister: true, IsGeneric: true} targetReg, RegisterReference { IsByteRegister: true, IsGeneric: true} srcReg) => LD_RR8(targetReg, srcReg),
+                (RegisterReference {IsByteRegister: true, IsGeneric: true} targetReg, RegisterReference { IsByteRegister: true, IsGeneric: true} srcReg) => LD_R_R(targetReg, srcReg),
                 // LD r,n
-                (RegisterReference {IsByteRegister: true, IsGeneric: true} targetReg, NumericValue {IsByte: true} srcValue) => LD_Byte(targetReg, srcValue),
+                (RegisterReference {IsByteRegister: true, IsGeneric: true} targetReg, NumericValue {IsByte: true} srcValue) => LD_R_N(targetReg, srcValue),
                 // LD r,(HL)
                 (RegisterReference {IsByteRegister: true} targetReg, MemoryReference { SourceRegisterName: "HL"} srcMemRef) => LD_R_HLRef(targetReg, srcMemRef),
                 // LD r,(IX|IY+d)
@@ -45,31 +45,101 @@ namespace SantMarti.Z80.Assembler.Builders
                 (Displacement targetDis, NumericValue {IsByte: true} srcValue) => LD_Displacement_Byte(targetDis, srcValue),
                 // LD A,I|R
                 (RegisterReference {StrValue: "A"} reg, RegisterReference { StrValue: "I" or "R"} reg2) => LD_A_IR(reg, reg2),
-                // LD A, (nn) 
-                (RegisterReference {StrValue: "A"} reg, MemoryReference {IsFixedAddress: true} mr) => LD_A(reg, mr),
+                // LD A,(nn) 
+                (RegisterReference {StrValue: "A"} reg, MemoryReference {IsFixedAddress: true} mr) => LD_A_NN(reg, mr),
+                // LD (nn),A
+                (MemoryReference {IsFixedAddress: true} mr, RegisterReference {StrValue: "A"} reg) => LD_NN_A(mr, reg),
                 // LD dd,nn
-                (RegisterReference {StrValue: "BC" or "DE" or "HL" or "SP" } reg, NumericValue {IsWord: true} nv) => LD_Word(reg,nv),
+                (RegisterReference {StrValue: "BC" or "DE" or "HL" or "SP" } reg, NumericValue {IsWord: true} nv) => LD_DD_NN(reg,nv),
                 // LD I|R,A
                 (RegisterReference {StrValue: "I" or "R"} reg, RegisterReference { StrValue: "A"} reg2) => LD_IR_A(reg),
-                
-                // PENDING:
                 // LD A,(BC|DE)
+                (RegisterReference {StrValue: "A"} reg, MemoryReference {SourceRegisterName: "BC" or "DE"} mr) => LD_A_BC_DERef(reg, mr),
                 // LD (BC|DE),A
-                // LD (nn),A
+                (MemoryReference {SourceRegisterName: "BC" or "DE"} mr, RegisterReference {StrValue: "A"} reg) => LD_BC_DERef_A(mr, reg),
                 // LD IX|IY,nn
-                // LD (HL),nn
+                (RegisterReference {StrValue: "IX" or "IY"} reg, NumericValue {IsWord: true} nv) => LD_IX_IY_NN(reg, nv),
+                // LD HL,(nn)
+                (RegisterReference {StrValue: "HL"} reg, MemoryReference {IsFixedAddress: true} mr) => LD_HL_NNRef(reg, mr),
                 // LD dd,(nn)
+                (RegisterReference {StrValue: "BC" or "DE" or "SP" } reg, MemoryReference {IsFixedAddress: true} mr) => LD_DD_NNRef(reg, mr),
                 // LD IX|IY,(nn)
+                (RegisterReference {StrValue: "IX" or "IY"} reg, MemoryReference {IsFixedAddress: true} mr) => LD_IX_IY_NNRef(reg, mr),
                 // LD (nn),HL
+                (MemoryReference {IsFixedAddress: true} mr, RegisterReference {StrValue: "HL"} reg) => LD_NNRef_HL(mr, reg),
                 // LD (nn),dd
+                (MemoryReference {IsFixedAddress: true} mr, RegisterReference {StrValue: "BC" or "DE" or "SP" } reg) => LD_NNRef_DD(mr, reg),
                 // LD (nn), IX|IY
+                (MemoryReference {IsFixedAddress: true} mr, RegisterReference {StrValue: "IX" or "IY"} reg) => LD_NNRef_IX_IY(mr, reg),
                 // LD SP, HL
+                (RegisterReference {StrValue: "SP"} targetReg, RegisterReference {StrValue: "HL"} srcReg) => LD_SP_HL(targetReg, srcReg),
                 // LD SP, IX|IY
-                
-
-
+                (RegisterReference {StrValue: "SP"} targetReg, RegisterReference {StrValue: "IX" or "IY"} srcReg) => LD_SP_IX_IY(targetReg, srcReg),
                 _ => AssemblerLineResult.Error($"Unsupported combination of operands {dest}, {source}")
             };
+        }
+
+        private static AssemblerLineResult LD_SP_IX_IY(RegisterReference targetReg, RegisterReference srcReg)
+        {
+            var prefix = srcReg.StrValue == "IX" ? Z80Opcodes.Prefixes.DD : Z80Opcodes.Prefixes.FD;
+            return AssemblerLineResult.Success(prefix, Z80Opcodes.LD_SP_IX_IY);
+            
+        }
+
+        private static AssemblerLineResult LD_SP_HL(RegisterReference targetReg, RegisterReference srcReg)
+        {
+            return AssemblerLineResult.Success(Z80Opcodes.LD_SP_HL);
+        }
+
+        private static AssemblerLineResult LD_NNRef_IX_IY(MemoryReference mr, RegisterReference reg)
+        {
+            var prefix = reg.StrValue == "IX" ? Z80Opcodes.Prefixes.DD : Z80Opcodes.Prefixes.FD;
+            
+            return AssemblerLineResult.Success(prefix, Z80Opcodes.LD_NNRef_IX_IY, mr.LoByte(), mr.HiByte());
+        }
+
+        // LD (nn), BC|DE|SP
+        private static AssemblerLineResult LD_NNRef_DD(MemoryReference mr, RegisterReference reg)
+        {
+            var opcode = (byte)(Z80Opcodes.Bases.LD_NNRef_DD | RegistersEncoder.WordRegisterNameToBinaryValue(reg.StrValue) << 4);
+            return AssemblerLineResult.Success(Z80Opcodes.Prefixes.ED, opcode, mr.LoByte(), mr.HiByte());
+        }
+
+        // LD (nn), HL
+        private static AssemblerLineResult LD_NNRef_HL(MemoryReference mr, RegisterReference reg)
+        {
+            return AssemblerLineResult.Success(Z80Opcodes.LD_NNRef_HL, mr.LoByte(), mr.HiByte());
+        }
+
+        // LD IX|IY, (nn)
+        private static AssemblerLineResult LD_IX_IY_NNRef(RegisterReference reg, MemoryReference mr)
+        {
+            var prefix = reg.StrValue == "IX" ? Z80Opcodes.Prefixes.DD : Z80Opcodes.Prefixes.FD;
+            
+            return AssemblerLineResult.Success(prefix, Z80Opcodes.LD_IX_IY_NNRef, mr.LoByte(), mr.HiByte());
+        }
+
+        // LD BC|DE|SP, (nn)
+        private static AssemblerLineResult LD_DD_NNRef(RegisterReference reg, MemoryReference mr)
+        {
+            var opcode = (byte)(Z80Opcodes.Bases.LD_DD_NNRef |  RegistersEncoder.WordRegisterNameToBinaryValue(reg.StrValue) << 4);
+
+            return AssemblerLineResult.Success(Z80Opcodes.Prefixes.ED, opcode, mr.LoByte(), mr.HiByte());
+        }
+
+        // LD HL,(nn)
+        private static AssemblerLineResult LD_HL_NNRef(RegisterReference reg, MemoryReference mr)
+        {
+            return AssemblerLineResult.Success(Z80Opcodes.LD_HL_NNRef, mr.LoByte(), mr.HiByte());
+        }
+
+        // LD IX|IY,nn
+        private static AssemblerLineResult LD_IX_IY_NN(RegisterReference target, NumericValue source)
+        {
+
+            var prefix = target.StrValue == "IX" ? Z80Opcodes.Prefixes.DD : Z80Opcodes.Prefixes.FD;
+            
+            return AssemblerLineResult.Success(prefix, Z80Opcodes.LD_IX_IY_NN, source.LoByte(), source.HiByte());
         }
 
         // Generates LD (HL),n
@@ -135,13 +205,33 @@ namespace SantMarti.Z80.Assembler.Builders
         }
         
         // LD A,(nn)
-        private static AssemblerLineResult LD_A(RegisterReference target, MemoryReference source)
+        private static AssemblerLineResult LD_A_NN(RegisterReference target, MemoryReference source)
         {
             return AssemblerLineResult.Success(new[] { Z80Opcodes.LD_A_NNRef, source.LoByte(), source.HiByte() });
         }
+        
+        // LD (nn), A
+        private static AssemblerLineResult LD_NN_A(MemoryReference target, RegisterReference source)
+        {
+            return AssemblerLineResult.Success(new[] { Z80Opcodes.LD_NNRef_A, target.LoByte(), target.HiByte() });
+        }
+        
+        // LD A,(BC|DE)
+        private static AssemblerLineResult LD_A_BC_DERef(RegisterReference target, MemoryReference source)
+        {
+            var opcode = source.SourceRegisterName == "BC" ? Z80Opcodes.LD_A_BCRef : Z80Opcodes.LD_A_DERef;
+            return AssemblerLineResult.Success(opcode);
+        }
+        
+        // LD (BC|DE),A
+        private static AssemblerLineResult LD_BC_DERef_A(MemoryReference target, RegisterReference source)
+        {
+            var opcode = target.SourceRegisterName == "BC" ? Z80Opcodes.LD_BCRef_A : Z80Opcodes.LD_DERef_A;
+            return AssemblerLineResult.Success(opcode);
+        }
 
         // LD reg,nn (where reg is BC, DE, HL or SP
-        private static AssemblerLineResult LD_Word(RegisterReference target, NumericValue source)
+        private static AssemblerLineResult LD_DD_NN(RegisterReference target, NumericValue source)
         {
             // LD r,nn opcode is 00DD0001 (DD = Destination)
             var bytes = RegistersEncoder.WordRegisterNameToBinaryValue(target.StrValue);
@@ -149,7 +239,7 @@ namespace SantMarti.Z80.Assembler.Builders
             return AssemblerLineResult.Success(new [] {opcode, source.LoByte(), source.HiByte()});
         }
 
-        private static AssemblerLineResult LD_Byte(RegisterReference target, NumericValue source)
+        private static AssemblerLineResult LD_R_N(RegisterReference target, NumericValue source)
         {
             // LD r,n opcode is 00DDD110 (DDD = Destination, SSS = Source)
             var destBits = RegistersEncoder.ByteRegisterNameToBinaryValue(target.StrValue);
@@ -169,10 +259,10 @@ namespace SantMarti.Z80.Assembler.Builders
             if (destRegister.HasError) return AssemblerLineResult.Error($"Invalid destination: {dest}");
             if (sourceRegister.HasError) return AssemblerLineResult.Error($"Invalid source: {source}");
 
-            return LD_RR8(destRegister.ParsedToken!, sourceRegister.ParsedToken!);
+            return LD_R_R(destRegister.ParsedToken!, sourceRegister.ParsedToken!);
         }
       
-        private static AssemblerLineResult LD_RR8(RegisterReference dest, RegisterReference source)
+        private static AssemblerLineResult LD_R_R(RegisterReference dest, RegisterReference source)
         {
             // LD r,r' opcode is 01DDDSSS (DDD = Destination, SSS = Source)
             var destBits = RegistersEncoder.ByteRegisterNameToBinaryValue(dest.StrValue);

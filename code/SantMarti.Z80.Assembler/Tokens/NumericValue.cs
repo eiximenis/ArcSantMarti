@@ -14,7 +14,7 @@ public class NumericValue : BaseToken
     
     
     public byte HiByte() => (byte)(Value >> 8);
-    public byte LoByte() => (byte)(Value | 0xFF);
+    public byte LoByte() => (byte)(Value & 0xFF);
 
     public byte[] AsLoHiBytes()
     {

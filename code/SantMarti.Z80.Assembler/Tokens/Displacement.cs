@@ -1,7 +1,7 @@
 namespace SantMarti.Z80.Assembler.Tokens;
 
 /// <summary>
-/// Encodes tokens like (I
+/// Encodes tokens like (IY + d) or (IY + d)
 /// </summary>
 public class Displacement : BaseToken
 {

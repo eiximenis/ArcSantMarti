@@ -21,5 +21,5 @@ public class MemoryReference : BaseToken
     public string SourceRegisterName => SourceRegister?.StrValue ?? string.Empty;
     
     public byte HiByte() => (byte)(Address >> 8);
-    public byte LoByte() => (byte)(Address | 0xFF); 
+    public byte LoByte() => (byte)(Address & 0xFF); 
 }
