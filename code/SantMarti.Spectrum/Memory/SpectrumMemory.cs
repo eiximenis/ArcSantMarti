@@ -1,7 +1,11 @@
+using SantMarti.Z80;
+
 namespace SantMarti.Spectrum.Memory;
 
 public class SpectrumMemory
 {
+
+    
     private readonly byte[] _data;
     public int Size { get; }
     public int RomOffset { get; }
@@ -23,6 +27,8 @@ public class SpectrumMemory
         _data = new byte[RomLength + RamLength];
     }
 
+
+
     public async Task LoadRomFromFile(string filePath)
     {
         var romFileInfo = new FileInfo(filePath);
@@ -37,4 +43,6 @@ public class SpectrumMemory
         await fs.CopyToAsync(destination);
         fs.Close();
     }
+
+
 }

@@ -9,7 +9,7 @@ namespace SantMarti.Z80.Assembler.Tokens.Parsers;
 // - A byte literal in hexadecimal form ($00-$FF)
 // - A word literal in hexadecimal form ($0000-$FFFF)
 // - A word literal in decimal form (0-65535)
-
+// - A character in single quotes (e.g. 'A')
 
 public class NumericParser
 {

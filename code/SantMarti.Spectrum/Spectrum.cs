@@ -10,14 +10,40 @@ namespace SantMarti.Spectrum
 {
     public class Spectrum
     {
+        
+        private const OtherPins MEMORY_READ = OtherPins.MREQ | OtherPins.RD;
+        private bool _readPending = false;
+        
         private readonly Z80Processor _processor;
         private readonly SpectrumMemory _memory;
-
+        
         private Spectrum(SpectrumMemory memory)
         {
             _processor = new Z80Processor();
             _memory = memory;
+            _memory.PlugTo(_processor);
         }
+        
+        public void PlugTo(Z80Processor processor)
+        {
+            processor.SetTickHandler(OnTick);
+        }
+        
+        private void OnTick(ref Z80Pins pins)
+        {
+            if (!pins.OthersAreSet(MEMORY_READ)) return;
+            if (_readPending)
+            {
+                _readPending = false;
+                pins.Data = _data[pins.Address];
+            }
+            else
+            {
+                _readPending = true;
+            }
+        }
+        
+        
 
         private static async Task<Spectrum> Create(string romFilePath, int romSize, int ramSize)
         {

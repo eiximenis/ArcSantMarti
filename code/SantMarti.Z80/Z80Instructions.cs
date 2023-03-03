@@ -57,7 +57,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xf, "RRCA", 4));
 
 
-            unprefixed.Add(new Instruction(0x10, "DJNZ d", 13));
+            unprefixed.Add(new Instruction(0x10, "DJNZ d", 13, 8));
             unprefixed.Add(new Instruction(0x11, "LD DE,nn", 10));
             unprefixed.Add(new Instruction(0x12, "LD (DE),A", 7));
             unprefixed.Add(new Instruction(0x13, "INC DE", 6));
@@ -244,32 +244,32 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xbe, "CP (HL)", 7));
             unprefixed.Add(new Instruction(0xbf, "CP A", 4));
 
-            unprefixed.Add(new Instruction(0xc0, "RET NZ", 11));
+            unprefixed.Add(new Instruction(0xc0, "RET NZ", 11, 5));   
             unprefixed.Add(new Instruction(0xc1, "POP BC", 10));
-            unprefixed.Add(new Instruction(0xc2, "JP NZ,nn", 10));
+            unprefixed.Add(new Instruction(0xc2, "JP NZ,nn", 10, 10));
             unprefixed.Add(new Instruction(0xc3, "JP nn", 10));
             unprefixed.Add(new Instruction(0xc4, "CALL NZ,nn", 17));
             unprefixed.Add(new Instruction(0xc5, "PUSH BC", 11));
             unprefixed.Add(new Instruction(0xc6, "ADD A,n", 7, Add.AddAN));
             unprefixed.Add(new Instruction(0xc7, "RST 00", 11));
-            unprefixed.Add(new Instruction(0xc8, "RET Z", 11));
+            unprefixed.Add(new Instruction(0xc8, "RET Z", 11, 5));
             unprefixed.Add(new Instruction(0xc9, "RET", 10));
-            unprefixed.Add(new Instruction(0xca, "JP Z,nn", 10));
+            unprefixed.Add(new Instruction(0xca, "JP Z,nn", 10, 10));
             unprefixed.Add(new Instruction(0xcb, "-- CB --", 0));           // CB Prefix
             unprefixed.Add(new Instruction(0xcc, "CALL Z,nn", 17));
             unprefixed.Add(new Instruction(0xcd, "CALL nn", 17));
             unprefixed.Add(new Instruction(0xce, "ADC A,n", 7, Add.AdcAN));
             unprefixed.Add(new Instruction(0xcf, "RST 08", 11));
 
-            unprefixed.Add(new Instruction(0xd0, "RET NC", 11));
+            unprefixed.Add(new Instruction(0xd0, "RET NC", 11,5 ));
             unprefixed.Add(new Instruction(0xd1, "POP DE", 10));
-            unprefixed.Add(new Instruction(0xd2, "JP NC,nn", 10));
+            unprefixed.Add(new Instruction(0xd2, "JP NC,nn", 10, 10));
             unprefixed.Add(new Instruction(0xd3, "OUT (n),A", 11));
             unprefixed.Add(new Instruction(0xd4, "CALL NC,nn", 17));
             unprefixed.Add(new Instruction(0xd5, "PUSH DE", 11));
             unprefixed.Add(new Instruction(0xd6, "SUB n", 7));
             unprefixed.Add(new Instruction(0xd7, "RST 10", 11));
-            unprefixed.Add(new Instruction(0xd8, "RET C", 11));
+            unprefixed.Add(new Instruction(0xd8, "RET C", 11, 5));
             unprefixed.Add(new Instruction(0xd9, "EXX", 4, Exchange.EXX));
             unprefixed.Add(new Instruction(0xda, "JP C,nn", 10));
             unprefixed.Add(new Instruction(0xdb, "IN A,(n)", 11));
@@ -278,7 +278,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xde, "SBC A,n", 7));
             unprefixed.Add(new Instruction(0xdf, "RST 18", 11));
 
-            unprefixed.Add(new Instruction(0xe0, "RET PO", 11));
+            unprefixed.Add(new Instruction(0xe0, "RET PO", 11, 5));
             unprefixed.Add(new Instruction(0xe1, "POP HL", 10));
             unprefixed.Add(new Instruction(0xe2, "JP PO,nn", 10));
             unprefixed.Add(new Instruction(0xe3, "EX (SP),HL", 19));
@@ -286,7 +286,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xe5, "PUSH HL", 11));
             unprefixed.Add(new Instruction(0xe6, "AND n", 7));
             unprefixed.Add(new Instruction(0xe7, "RST 20", 11));
-            unprefixed.Add(new Instruction(0xe8, "RET PE", 11));
+            unprefixed.Add(new Instruction(0xe8, "RET PE", 11, 5));
             unprefixed.Add(new Instruction(0xe9, "JP (HL)", 4));
             unprefixed.Add(new Instruction(0xea, "JP PE,nn", 10));
             unprefixed.Add(new Instruction(0xeb, "EX DE,HL", 4, Exchange.EXDEHL));
@@ -295,19 +295,19 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xee, "XOR n", 7));
             unprefixed.Add(new Instruction(0xef, "RST 28", 11));
 
-            unprefixed.Add(new Instruction(0xf0, "RET P", 11));
+            unprefixed.Add(new Instruction(0xf0, "RET P", 11, 5));
             unprefixed.Add(new Instruction(0xf1, "POP AF", 10));
-            unprefixed.Add(new Instruction(0xf2, "JP P,nn", 10));
+            unprefixed.Add(new Instruction(0xf2, "JP P,nn", 10, 10));
             unprefixed.Add(new Instruction(0xf3, "DI", 4));
-            unprefixed.Add(new Instruction(0xf4, "CALL P,nn", 17));
+            unprefixed.Add(new Instruction(0xf4, "CALL P,nn", 17, 10));
             unprefixed.Add(new Instruction(0xf5, "PUSH AF", 11));
             unprefixed.Add(new Instruction(0xf6, "OR n", 7));
             unprefixed.Add(new Instruction(0xf7, "RST 30", 11));
-            unprefixed.Add(new Instruction(0xf8, "RET M", 11));
+            unprefixed.Add(new Instruction(0xf8, "RET M", 11, 5));
             unprefixed.Add(new Instruction(0xf9, "LD SP,HL", 6));
-            unprefixed.Add(new Instruction(0xfa, "JP M,nn", 10));
+            unprefixed.Add(new Instruction(0xfa, "JP M,nn", 10, 10));
             unprefixed.Add(new Instruction(0xfb, "EI", 4));
-            unprefixed.Add(new Instruction(0xfc, "CALL M,nn", 17));
+            unprefixed.Add(new Instruction(0xfc, "CALL M,nn", 17, 10));
             unprefixed.Add(new Instruction(0xfd, "-- FD --", 0));       // FD Prefix
             unprefixed.Add(new Instruction(0xfe, "CP n", 7));
             unprefixed.Add(new Instruction(0xff, "RST 38", 11));
