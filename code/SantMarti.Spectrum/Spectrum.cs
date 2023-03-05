@@ -21,12 +21,7 @@ namespace SantMarti.Spectrum
         {
             _processor = new Z80Processor();
             _memory = memory;
-            _memory.PlugTo(_processor);
-        }
-        
-        public void PlugTo(Z80Processor processor)
-        {
-            processor.SetTickHandler(OnTick);
+            _processor.SetTickHandler(OnTick);
         }
         
         private void OnTick(ref Z80Pins pins)
@@ -35,7 +30,7 @@ namespace SantMarti.Spectrum
             if (_readPending)
             {
                 _readPending = false;
-                pins.Data = _data[pins.Address];
+                pins.Data = _memory.Data[pins.Address];
             }
             else
             {

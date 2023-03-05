@@ -19,6 +19,8 @@ public class SpectrumMemory
     public int ReservedOffset { get; init; }
     public int AvailableRamOffset { get; init; }
     public int Reserved2Offset { get; init; }
+    
+    public Span<byte> Data => _data;
 
     public SpectrumMemory(int romKKib, int ramKib)
     {
