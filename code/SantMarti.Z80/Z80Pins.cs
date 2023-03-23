@@ -12,6 +12,11 @@ public enum OtherPins
     WAIT = 0x20,
     INT = 0x40,
     RESET= 0x80,
+    // Standard Combinations
+    MEMORY_READ = MREQ | RD,
+    MEMORY_WRITE = MREQ | WR,
+    IO_READ = IORQ | RD,
+    IO_WRITE = IORQ | WR
 }
 
 /// <summary>

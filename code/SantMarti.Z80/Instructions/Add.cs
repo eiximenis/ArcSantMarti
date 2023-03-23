@@ -12,27 +12,23 @@ namespace SantMarti.Z80.Instructions
         /// <summary>
         /// ADD A,n: Adds n to A
         /// </summary>
-        public static ushort AddAN(Instruction instruction, Z80Processor processor, ushort pc)
+        public static void AddAN(Instruction instruction, Z80Processor processor)
         {
-            var data = processor.FetchAt((ushort)(pc + 1));
+            var data = processor.MemoryRead((ushort)(processor.Registers.PC + 1));
             ref var registers = ref processor.Registers.Main;
             DoByteAdd(ref registers, data);
-            return (ushort)(pc + 2);
         }
         
         /// <summary>
         ///  ADC A,n: Adds n + carry flag to A
         /// </summary>
-        public static ushort AdcAN(Instruction instruction, Z80Processor processor, ushort pc)
+        public static void AdcAN(Instruction instruction, Z80Processor processor)
         {
-            var data = processor.FetchAt((ushort)(pc + 1));
+            var data = processor.MemoryRead((ushort)(processor.Registers.PC + 1));
             ref var registers = ref processor.Registers.Main;
             var carry = registers.HasFlag(Z80Flags.C) ? (byte)1 : (byte)0;
             DoByteAdd(ref registers, data, carry);
-            return (ushort)(pc + 2);
         }
-
-
 
         /// <summary>
         /// ADD A,r: Adds value of register r to A
