@@ -10,7 +10,7 @@ namespace SantMarti.Z80.Assembler.Extensions
 {
     public static class Z80AssemblerAddExtensions
     {
-        public static void ADD_AN(this Z80AssemblerBuilder asmBuilder, byte value)
+        public static void RADD_AN(this Z80AssemblerBuilder asmBuilder, byte value)
         {
             var numericValue = new NumericValue(value.ToString(), value, isByte:true);
             asmBuilder.Raw(ADDBuilder.ADD_A_N(numericValue).Bytes!);

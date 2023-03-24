@@ -12,9 +12,11 @@ namespace SantMarti.Z80.Tests.Instructions
     public class ADDTests
     {
         private readonly Z80Processor _processor;
+        private readonly TestTickHandler _testTickHandler;
         public ADDTests()
         {
             _processor = new Z80Processor();
+            _testTickHandler = new TestTickHandler(_processor);
         }
 
         [Theory]
@@ -25,12 +27,12 @@ namespace SantMarti.Z80.Tests.Instructions
         [InlineData(0x39, 0x48, 0x81)]          // Half Carry
         public async Task ADDAN_Should_Add_Specified_Byte_Value_To_Accumulator(byte initialValue, byte valueToAdd, byte expectedResult)
         {
+            const int EXPTECTED_TICKS = 4;
             _processor.Registers.Main.A = initialValue;                 // Initial accumulator value
             var assembler = new Z80AssemblerBuilder();
-            assembler.ADD_AN(valueToAdd);
-            var bus = new TestBusBuilder().Add(assembler.Build()).BuildBus();
-            _processor.ConnectToDataBus(bus);
+            assembler.ADD("A", valueToAdd.ToString());
             await _processor.RunOnce();
+            _testTickHandler.TotalTicks.Should().Be(EXPTECTED_TICKS);
             _processor.Registers.Main.A.Should().Be(expectedResult);
         }
 
@@ -42,12 +44,12 @@ namespace SantMarti.Z80.Tests.Instructions
 
         public async Task ADDAN_Should_Set_Carry_Flag_When_Value_Exceeds_Maximum_Byte_Value(byte initialValue, byte valueToAdd, bool carryExpected)
         {
+            const int EXPTECTED_TICKS = 4;
             _processor.Registers.Main.A = initialValue;                 // Initial accumulator value
             var assembler = new Z80AssemblerBuilder();
-            assembler.ADD_AN(valueToAdd);
-            var bus = new TestBusBuilder().Add(assembler.Build()).BuildBus();
-            _processor.ConnectToDataBus(bus);
+            assembler.ADD("A", valueToAdd.ToString());
             await _processor.RunOnce();
+            _testTickHandler.TotalTicks.Should().Be(EXPTECTED_TICKS);
             _processor.Registers.Main.F.HasFlag(Z80Flags.C).Should().Be(carryExpected);
         }
 
@@ -61,12 +63,12 @@ namespace SantMarti.Z80.Tests.Instructions
         [InlineData(0b01010101, 0b10101010, false)]
         public async Task ADDAN_Should_Set_HalfCarryFlag_When_Intermediate_Carry_Is_Observed(byte initialValue, byte valueToAdd, bool halfCarryExpected)
         {
+            const int EXPTECTED_TICKS = 4;
             _processor.Registers.Main.A = initialValue;                 // Initial accumulator value
             var assembler = new Z80AssemblerBuilder();
-            assembler.ADD_AN(valueToAdd);
-            var bus = new TestBusBuilder().Add(assembler.Build()).BuildBus();
-            _processor.ConnectToDataBus(bus);
+            assembler.ADD("A", valueToAdd.ToString());
             await _processor.RunOnce();
+            _testTickHandler.TotalTicks.Should().Be(EXPTECTED_TICKS);
             _processor.Registers.Main.F.HasFlag(Z80Flags.H).Should().Be(halfCarryExpected);
         }
         [Theory]
@@ -76,13 +78,13 @@ namespace SantMarti.Z80.Tests.Instructions
         [InlineData(0x39, 0x48)]
         public async Task ADDAN_Should_Clear_SubstractionFlag_Always(byte initialValue, byte valueToAdd)
         {
+            const int EXPTECTED_TICKS = 4;
             _processor.Registers.Main.SetFlag(Z80Flags.N);
             _processor.Registers.Main.A = initialValue;                 // Initial accumulator value
             var assembler = new Z80AssemblerBuilder();
-            assembler.ADD_AN(valueToAdd);
-            var bus = new TestBusBuilder().Add(assembler.Build()).BuildBus();
-            _processor.ConnectToDataBus(bus);
+            assembler.ADD("A", valueToAdd.ToString());
             await _processor.RunOnce();
+            _testTickHandler.TotalTicks.Should().Be(EXPTECTED_TICKS);
             _processor.Registers.Main.F.HasFlag(Z80Flags.N).Should().Be(false);
         }
 
