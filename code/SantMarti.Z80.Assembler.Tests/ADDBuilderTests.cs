@@ -18,7 +18,7 @@ namespace SantMarti.Z80.Assembler.Tests
         public void ADDA_With_Single_Byte_Should_Generate_First_The_ADD_Opcode_Then_The_Byte(byte byteToAdd)
         {
             var builder = new Z80AssemblerBuilder();
-            builder.ADD_AN(byteToAdd);
+            builder.ADD("A", byteToAdd.ToString());
             var asm = builder.Build();
             asm.Should().HaveCount(2);
             asm.First().Should().Be(Z80Opcodes.ADD_A_N);
@@ -59,12 +59,9 @@ namespace SantMarti.Z80.Assembler.Tests
         [Theory]
         [InlineData("IX", "0", 0xdd, 0)]
         [InlineData("IY", "$0", 0xfd, 0)]
-        [InlineData("IX", "$AD", 0xdd, 0xad)]
-        [InlineData("IY", "129", 0xfd, 129)]
-
-
+        [InlineData("IX", "$1A", 0xdd, 0x1a)]
+        [InlineData("IY", "126", 0xfd, 126)]
         public void ADD_With_Displacement_Should_Generate_The_Correct_Prefix_The_Opcode_And_The_Byte_Value(string index, string encodedByte, byte expectedPrefix, byte byteValue)
-        
         {
             var builder = new Z80AssemblerBuilder();
             builder.ADD("A", $"({index} + {encodedByte})");
@@ -73,8 +70,5 @@ namespace SantMarti.Z80.Assembler.Tests
             asm.First().Should().Be(expectedPrefix);
             asm.Should().BeEquivalentTo(new[] { expectedPrefix, Z80Opcodes.ADD_AIXIY, byteValue });
         }
-
-
-
     }
 }

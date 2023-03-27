@@ -4,6 +4,13 @@ using SantMarti.Z80.Assembler.Encoders;
 
 namespace SantMarti.Z80.Assembler.Tokens.Parsers;
 
+
+public enum NumericValueKind
+{
+    StandardValue,
+    DisplacementOffset
+}
+
 // A number is:
 // - A byte literal in decimal form (0-255)
 // - A byte literal in hexadecimal form ($00-$FF)
@@ -13,23 +20,30 @@ namespace SantMarti.Z80.Assembler.Tokens.Parsers;
 
 public class NumericParser
 {
-    private const string regexString = @"^(\$?[0-9a-fA-F]{1,5})";
+    private const string regexStringStandardValue = @"^(\$?)([0-9a-fA-F]{1,5})";
+    private const string regexStringOffset = @"^(\$?)([0-9a-fA-F]{1,3})";
     
-    private static Regex _regex = new Regex(regexString, RegexOptions.Compiled);
+    private static Regex _regexStandardValue = new Regex(regexStringStandardValue, RegexOptions.Compiled);
+    private static Regex _regexOffsetValue = new Regex(regexStringOffset, RegexOptions.Compiled);
     
-    public static TokenParseResult<NumericValue> TryGetNumber(string operand)
+    public static TokenParseResult<NumericValue> TryGetNumber(string operand, NumericValueKind kind = NumericValueKind.StandardValue)
     {
-        var match = _regex.Match(operand);
+        var regex = kind switch
+        {
+            NumericValueKind.StandardValue => _regexStandardValue,
+            NumericValueKind.DisplacementOffset => _regexOffsetValue,
+            _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null)
+        };
+        var match = _regexStandardValue.Match(operand);
         if (match.Success)
         {
-            var number = match.Groups[1].ValueSpan;
-            var nbase = 10;
-            if (number[0] == '$')
+            var prefix = match.Groups[1].Value;
+            var nbase = prefix switch
             {
-                nbase = 16;
-                number = number[1..];
-            }
-
+                "$" => 16,
+                _ => 10,
+            };
+            var number = match.Groups[2].Value;
             if (int.TryParse(number,  nbase == 16 ? NumberStyles.HexNumber : NumberStyles.None, CultureInfo.InvariantCulture, out var value))
             {
                 var parsedValue =  new NumericValue(operand, value, value <= 255);

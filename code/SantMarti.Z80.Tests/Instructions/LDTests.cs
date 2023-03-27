@@ -14,11 +14,19 @@ namespace SantMarti.Z80.Tests.Instructions
     public class LDTests
     {
         private readonly Z80Processor _processor;
+        private readonly TestTickHandler _testTickHandler;
         public LDTests()
         {
             _processor = new Z80Processor();
+            _testTickHandler = new TestTickHandler(_processor);
         }
 
+        private void SetupProcessorWithProgram(Z80AssemblerBuilder asm)
+        {
+            var program = asm.Build();
+            _testTickHandler.OnMemoryRead(10, program);
+            _processor.Registers.PC = 10;
+        }
         [Theory()]
         [InlineData("B", "L")]
         [InlineData("L", "B")]
@@ -32,8 +40,7 @@ namespace SantMarti.Z80.Tests.Instructions
             _processor.Registers.Main.SetByName(source, 0x01);
             var assembler = new Z80AssemblerBuilder();
             assembler.LD_RR(destination, source);
-            var bus = new TestBusBuilder().Add(assembler.Build()).BuildBus();
-            _processor.ConnectToDataBus(bus);
+            SetupProcessorWithProgram(assembler);
             await _processor.RunOnce();
             _processor.Registers.Main.GetByName(destination).Should().Be(0x01);
         }

@@ -42,7 +42,7 @@ namespace SantMarti.Z80.Assembler.Builders
                         NumericValue { IsByte: true } num => ADD_A_N(num),
                         MemoryReference { SourceRegisterName: "HL" } => ADD_A_HLRef(),
                         Displacement d => ADD_A_IX_IYDisp(d),
-                        _ => AssemblerLineResult.Error($"Invalid second operand ${second.StrValue}", second)
+                        _ => AssemblerLineResult.Error($"Invalid second operand {second.StrValue}", second)
                     };
                 case RegisterReference { StrValue: "HL" }:
                     return second switch
@@ -51,7 +51,7 @@ namespace SantMarti.Z80.Assembler.Builders
                         RegisterReference { StrValue: "DE" } => AssemblerLineResult.Success( Z80Opcodes.ADD_HL_DE ),
                         RegisterReference { StrValue: "HL" } => AssemblerLineResult.Success( Z80Opcodes.ADD_HL_HL ),
                         RegisterReference { StrValue: "SP" } =>  AssemblerLineResult.Success (Z80Opcodes.ADD_HL_SP ),
-                        _ => AssemblerLineResult.Error($"Invalid second operand ${second.StrValue}", second)
+                        _ => AssemblerLineResult.Error($"Invalid second operand {second.StrValue}", second)
                     };
                 default: 
                     return AssemblerLineResult.Error("Invalid first operand", first);
@@ -66,7 +66,7 @@ namespace SantMarti.Z80.Assembler.Builders
         private static AssemblerLineResult ADD_A_R(RegisterReference target)
         {
             var regValue = RegistersEncoder.ByteRegisterNameToBinaryValue(target.StrValue);
-            return AssemblerLineResult.Success(new [] { (byte)(Z80Opcodes.Bases.ADD_A_R | regValue)});
+            return AssemblerLineResult.Success((byte)(Z80Opcodes.Bases.ADD_A_R | regValue));
         }
         
         // Builds:

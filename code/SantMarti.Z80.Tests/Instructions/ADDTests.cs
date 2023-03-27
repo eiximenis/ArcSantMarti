@@ -19,6 +19,13 @@ namespace SantMarti.Z80.Tests.Instructions
             _testTickHandler = new TestTickHandler(_processor);
         }
 
+        private void SetupProcessorWithProgram(Z80AssemblerBuilder asm)
+        {
+            var program = asm.Build();
+            _testTickHandler.OnMemoryRead(10, program);
+            _processor.Registers.PC = 10;
+        }
+
         [Theory]
         [InlineData(0x78, 0x69, 0xE1)]
         [InlineData(0xFF, 1, 0)]                // Carry and Overflow
@@ -27,10 +34,11 @@ namespace SantMarti.Z80.Tests.Instructions
         [InlineData(0x39, 0x48, 0x81)]          // Half Carry
         public async Task ADDAN_Should_Add_Specified_Byte_Value_To_Accumulator(byte initialValue, byte valueToAdd, byte expectedResult)
         {
-            const int EXPTECTED_TICKS = 4;
+            const int EXPTECTED_TICKS = 7;
             _processor.Registers.Main.A = initialValue;                 // Initial accumulator value
             var assembler = new Z80AssemblerBuilder();
             assembler.ADD("A", valueToAdd.ToString());
+            SetupProcessorWithProgram(assembler);
             await _processor.RunOnce();
             _testTickHandler.TotalTicks.Should().Be(EXPTECTED_TICKS);
             _processor.Registers.Main.A.Should().Be(expectedResult);
@@ -44,10 +52,11 @@ namespace SantMarti.Z80.Tests.Instructions
 
         public async Task ADDAN_Should_Set_Carry_Flag_When_Value_Exceeds_Maximum_Byte_Value(byte initialValue, byte valueToAdd, bool carryExpected)
         {
-            const int EXPTECTED_TICKS = 4;
+            const int EXPTECTED_TICKS = 7;
             _processor.Registers.Main.A = initialValue;                 // Initial accumulator value
             var assembler = new Z80AssemblerBuilder();
             assembler.ADD("A", valueToAdd.ToString());
+            SetupProcessorWithProgram(assembler);
             await _processor.RunOnce();
             _testTickHandler.TotalTicks.Should().Be(EXPTECTED_TICKS);
             _processor.Registers.Main.F.HasFlag(Z80Flags.C).Should().Be(carryExpected);
@@ -63,10 +72,11 @@ namespace SantMarti.Z80.Tests.Instructions
         [InlineData(0b01010101, 0b10101010, false)]
         public async Task ADDAN_Should_Set_HalfCarryFlag_When_Intermediate_Carry_Is_Observed(byte initialValue, byte valueToAdd, bool halfCarryExpected)
         {
-            const int EXPTECTED_TICKS = 4;
+            const int EXPTECTED_TICKS = 7;
             _processor.Registers.Main.A = initialValue;                 // Initial accumulator value
             var assembler = new Z80AssemblerBuilder();
             assembler.ADD("A", valueToAdd.ToString());
+            SetupProcessorWithProgram(assembler);
             await _processor.RunOnce();
             _testTickHandler.TotalTicks.Should().Be(EXPTECTED_TICKS);
             _processor.Registers.Main.F.HasFlag(Z80Flags.H).Should().Be(halfCarryExpected);
@@ -78,11 +88,12 @@ namespace SantMarti.Z80.Tests.Instructions
         [InlineData(0x39, 0x48)]
         public async Task ADDAN_Should_Clear_SubstractionFlag_Always(byte initialValue, byte valueToAdd)
         {
-            const int EXPTECTED_TICKS = 4;
+            const int EXPTECTED_TICKS = 7;
             _processor.Registers.Main.SetFlag(Z80Flags.N);
             _processor.Registers.Main.A = initialValue;                 // Initial accumulator value
             var assembler = new Z80AssemblerBuilder();
             assembler.ADD("A", valueToAdd.ToString());
+            SetupProcessorWithProgram(assembler);
             await _processor.RunOnce();
             _testTickHandler.TotalTicks.Should().Be(EXPTECTED_TICKS);
             _processor.Registers.Main.F.HasFlag(Z80Flags.N).Should().Be(false);
@@ -95,21 +106,17 @@ namespace SantMarti.Z80.Tests.Instructions
         [InlineData(0xFF, 0xFF, false)]
         public async Task ADDAN_Should_Set_Zero_Flag_If_Accumulator_Is_Zero(byte initialValue, byte valueToAdd, bool zeroExpected)
         {
+            const int EXPTECTED_TICKS = 7;
             _processor.Registers.Main.ClearFlag(Z80Flags.Z);
             _processor.Registers.Main.A = initialValue;                 // Initial accumulator value
             var assembler = new Z80AssemblerBuilder();
-            assembler.ADD_AN(valueToAdd);
-            var bus = new TestBusBuilder().Add(assembler.Build()).BuildBus();
-            _processor.ConnectToDataBus(bus);
+            assembler.ADD("A", valueToAdd.ToString());
+            SetupProcessorWithProgram(assembler);
             await _processor.RunOnce();
+            _testTickHandler.TotalTicks.Should().Be(EXPTECTED_TICKS);
             _processor.Registers.Main.F.HasFlag(Z80Flags.Z).Should().Be(zeroExpected);
         }
-
-        public async Task ADDHL_Should_Get_()
-        {
-            var assembler = new Z80AssemblerBuilder();
-            
-        }
+        
 
     }
 }

@@ -14,17 +14,36 @@ public class TestTickHandler
     private readonly Z80Processor _processor;
     private readonly List<(ushort, byte)> _memoryWrites = new();
     private readonly List<ushort> _memoryReads = new();
+    private readonly Dictionary<ushort, Func<byte>> _memoryReaders = new();
     
     private int _readTick = 0;
     private int _writeTick = 0;
     
-    private Func<ushort, byte> _memoryReader = address => 0x0;
+    private Func<ushort, byte> _defaultMemoryReader = address => 0x0;
     
-    public TestTickHandler OnMemoryRead(Func<ushort, byte> reader)
+    public TestTickHandler OnDefaultMemoryRead(Func<ushort, byte> defaultReader)
     {
-        _memoryReader = reader;
+        _defaultMemoryReader = defaultReader;
         return this;
-    } 
+    }
+    
+    public TestTickHandler OnMemoryRead(ushort address, Func<byte> reader)
+    {
+        _memoryReaders.Add(address, reader);
+        return this;
+    }
+
+    public TestTickHandler OnMemoryRead(ushort startAddress, IEnumerable<byte> data)
+    {
+        var address = startAddress;
+        foreach (var databyte in data)
+        {
+            OnMemoryRead(address, () => databyte);
+            address++;
+        }
+        
+        return this;
+    }
     
     private readonly List<TickData> _tickData = new();
 
@@ -65,7 +84,14 @@ public class TestTickHandler
         {
             _readTick = 0;
             _memoryReads.Add(pins.Address);
-            pins.Data = _memoryReader(pins.Address);
+            if (_memoryReaders.ContainsKey(pins.Address))
+            {
+                pins.Data = _memoryReaders[pins.Address]();
+            }
+            else
+            {
+                pins.Data = _defaultMemoryReader(pins.Address);
+            }
         }
     }
     
