@@ -24,10 +24,10 @@ namespace SantMarti.Z80.Instructions
         
         public static void LD_A_NN(Instruction instruction, Z80Processor processor)
         {
-            var lobyte = processor.ReadMemoryAddress((ushort)(processor.Registers.PC + 1));
-            var hibite = processor.ReadMemoryAddress((ushort)(processor.Registers.PC + 2));
+            var lobyte = processor.MemoryRead();
+            var hibite = processor.MemoryRead();
             var address = (ushort)((hibite << 8) | lobyte);
-            processor.Registers.Main.A = processor.ReadMemoryAddress(address);
+            processor.Registers.Main.A = processor.MemoryRead(address);
         }
     }
 }

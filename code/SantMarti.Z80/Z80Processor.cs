@@ -35,47 +35,65 @@ namespace SantMarti.Z80
         /// **usually** takes 4 ticks:
         ///  Ticks 1 and 2 are for memory read
         ///  Ticks 3 and 4 are for decoding the instruction
-        internal byte FetchOpcode()
+        internal void FetchOpcode()
         {
             _pins.SetOthers(OtherPins.M1 | OtherPins.MEMORY_READ);
             _pins.Address = Registers.PC;
             OnTick();
+            Registers.PC = (ushort)(Registers.PC + 1);
             OnTick();
             // TODO: Check WAIT states
             _pins.ClearOthers(OtherPins.M1 | OtherPins.RD);
-            var opcode = _pins.Data;
+            Registers.InstructionRegister = _pins.Data;
             OnTick();
             _pins.ClearOthers(OtherPins.MREQ);
             OnTick();
-            return opcode;
         }
-        
+
         /// <summary>
-        /// Fetch a byte from the memory. This operation
-        /// usually takes 3 ticks:
+        /// Reads specific position of rhe memory.
+        /// This takes three ticks:
         /// Ticks 1 and 2 are for memory read
         /// Tick 3 is for getting the result
         /// </summary>
+        /// <param name="address">address to read</param>
         /// <returns></returns>
-        internal byte ReadMemoryAddress(ushort address)
+        public byte MemoryRead(ushort address)
         {
-            _pins.SetOthers(OtherPins.M1 | OtherPins.MEMORY_READ);
             _pins.Address = address;
+            _pins.SetOthers(OtherPins.MEMORY_READ);
             OnTick();
             OnTick();
             // TODO: Check WAIT states
-            _pins.ClearOthers(OtherPins.M1 | OtherPins.RD);
-            var value = _pins.Data;
-            _pins.ClearOthers(OtherPins.MREQ);
+            _pins.ClearOthers(OtherPins.MEMORY_READ);
             OnTick();
-            return value;
+            return _pins.Data;
         }
+        
+        /// <summary>
+        /// Reads the PC position of the memory and increments the PC
+        /// This takes three ticks:
+        /// Ticks 1 and 2 are for memory read
+        /// Tick 3 is for getting the result
+        /// </summary>
+        public byte MemoryRead()
+        {
+            _pins.Address = Registers.PC;
+            _pins.SetOthers(OtherPins.MEMORY_READ);
+            OnTick();
+            Registers.PC = (ushort)(Registers.PC + 1);
+            OnTick();
+            _pins.ClearOthers(OtherPins.MEMORY_READ);
+            OnTick();
+            return _pins.Data;
+        }
+
 
         public Task RunOnce()
         {
-            var opcode = FetchOpcode();
-            var instruction = _instructions[opcode];
-            instruction.Action(instruction, this);
+            FetchOpcode();
+            var instruction = _instructions[Registers.InstructionRegister];
+            instruction.Action!(instruction, this);
             return Task.CompletedTask;
         }
 
@@ -84,16 +102,8 @@ namespace SantMarti.Z80
             _onTick = responder;
         }
 
-        public byte MemoryRead(ushort address)
-        {
-            _pins.Address = address;
-            _pins.SetOthers(OtherPins.MEMORY_READ);
-            OnTick();
-            OnTick();
-            _pins.ClearOthers(OtherPins.MEMORY_READ);
-            OnTick();
-            return _pins.Data;
-        }
+
+
 
         public byte IoRead(ushort address)
         {

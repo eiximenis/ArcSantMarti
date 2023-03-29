@@ -54,6 +54,14 @@ namespace SantMarti.Z80
         F3F5 = F3 | F5
     }
 
+    [StructLayout(LayoutKind.Explicit)]
+    public struct Z80IRRegister
+    {
+        [FieldOffset(0)] public byte I;
+        [FieldOffset(1)] public byte R;
+        [FieldOffset(0)] public ushort IR;
+    }
+
 
     /// <summary>
     /// Implements the Z80 Registers.
@@ -142,11 +150,15 @@ namespace SantMarti.Z80
 
         private Z80GenericRegisters _main;
         private Z80GenericRegisters _alternate;
+        
 
         // Generic registers (B,C,D,E,H,L,A,F)
         public ref Z80GenericRegisters Main { get => ref _main; }
         // Generic alternate registers (B',C',D',E',H',L', A',F')
         public ref Z80GenericRegisters Alternate { get => ref _alternate; }
+        
+        // 8 bit instruction register (note that this register is never available to developer)
+        public byte InstructionRegister { get; set; }
 
         // 16 bit general purpose registers
         public ushort IX { get; set; }
@@ -155,6 +167,9 @@ namespace SantMarti.Z80
         // 16 bits specific registers
         public ushort PC { get; set; }          // Program Counter
         public ushort SP { get; set; }          // Stack Pointer
+        
+        // IR register
+        public Z80IRRegister IR { get; } = new(); // Instruction Register
 
     }
 }
