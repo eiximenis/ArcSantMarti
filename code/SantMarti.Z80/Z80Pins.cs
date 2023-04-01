@@ -4,6 +4,7 @@ namespace SantMarti.Z80;
 [Flags]
 public enum OtherPins
 {
+    NONE = 0x0,
     MREQ = 0x1,
     IORQ = 0x2,
     RD = 0x4,
@@ -12,6 +13,7 @@ public enum OtherPins
     WAIT = 0x20,
     INT = 0x40,
     RESET= 0x80,
+    RFSH = 0x100,
     // Standard Combinations
     MEMORY_READ = MREQ | RD,
     MEMORY_WRITE = MREQ | WR,
@@ -43,7 +45,8 @@ public struct Z80Pins
     
     public ushort Others;
     
-    public void SetOthers(OtherPins pins) => Others |= (ushort)pins;
-    public void ClearOthers(OtherPins pins) => Others &= (ushort)~pins;
+    public void ReplaceOtherPinsWith(OtherPins pins) => Others = (ushort)pins;
+    public void ActivateOtherPins(OtherPins pins) => Others |= (ushort)pins;
+    public void DeactivateOtherPins(OtherPins pins) => Others &= (ushort)~pins;
     public bool OthersAreSet(OtherPins pins) => (Others & (ushort)pins) == (ushort)pins;
 }

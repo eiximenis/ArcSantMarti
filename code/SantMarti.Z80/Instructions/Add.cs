@@ -14,7 +14,7 @@ namespace SantMarti.Z80.Instructions
         /// </summary>
         public static void AddAN(Instruction instruction, Z80Processor processor)
         {
-            var data = processor.MemoryRead((ushort)(processor.Registers.PC + 1));
+            var data = processor.MemoryRead();
             ref var registers = ref processor.Registers.Main;
             DoByteAdd(ref registers, data);
         }
@@ -24,7 +24,7 @@ namespace SantMarti.Z80.Instructions
         /// </summary>
         public static void AdcAN(Instruction instruction, Z80Processor processor)
         {
-            var data = processor.MemoryRead((ushort)(processor.Registers.PC + 1));
+            var data = processor.MemoryRead();
             ref var registers = ref processor.Registers.Main;
             var carry = registers.HasFlag(Z80Flags.C) ? (byte)1 : (byte)0;
             DoByteAdd(ref registers, data, carry);

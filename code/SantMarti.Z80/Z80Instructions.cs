@@ -1,9 +1,4 @@
 ﻿using SantMarti.Z80.Instructions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SantMarti.Z80
 
@@ -283,7 +278,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xe2, "JP PO,nn", 10));
             unprefixed.Add(new Instruction(0xe3, "EX (SP),HL", 19));
             unprefixed.Add(new Instruction(0xe4, "CALL PO,nn", 17));
-            unprefixed.Add(new Instruction(0xe5, "PUSH HL", 11));
+            unprefixed.Add(new Instruction(0xe5, "PUSH HL", 11, Stack.PUSHL));
             unprefixed.Add(new Instruction(0xe6, "AND n", 7));
             unprefixed.Add(new Instruction(0xe7, "RST 20", 11));
             unprefixed.Add(new Instruction(0xe8, "RET PE", 11, 5));

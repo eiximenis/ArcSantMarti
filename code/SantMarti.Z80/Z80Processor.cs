@@ -24,7 +24,7 @@ namespace SantMarti.Z80
             _instructions = new Z80Instructions();
         }
 
-        private void OnTick()
+        internal void OnTick()
         {
             _onTick(ref _pins);
         }
@@ -34,20 +34,30 @@ namespace SantMarti.Z80
         /// Fetch an opcode from the memory. This operation
         /// **usually** takes 4 ticks:
         ///  Ticks 1 and 2 are for memory read
-        ///  Ticks 3 and 4 are for decoding the instruction
+        ///  Ticks 3 and 4 are decoding and executing the instruction
         internal void FetchOpcode()
-        {
-            _pins.SetOthers(OtherPins.M1 | OtherPins.MEMORY_READ);
+        {   
+            // T1: Address bus is filled with PC
+            //     Pins M1, MD and MREQ are set
+            //     PC is increased
             _pins.Address = Registers.PC;
-            OnTick();
+            _pins.ReplaceOtherPinsWith(OtherPins.M1 | OtherPins.MEMORY_READ);
             Registers.PC = (ushort)(Registers.PC + 1);
             OnTick();
-            // TODO: Check WAIT states
-            _pins.ClearOthers(OtherPins.M1 | OtherPins.RD);
+            // T2: At this point Memory read has been performed and the data is available in Address Bus
+            //     Instruction register is filled with the data read from memory
+            //     TODO: This is the ONLY point where M1 can be stretched using WAIT states 
             Registers.InstructionRegister = _pins.Data;
             OnTick();
-            _pins.ClearOthers(OtherPins.MREQ);
+            // T3: Memory Refresh (1/2): MREQ and RFSH are set 
+            // TODO: Check WAIT states
+            _pins.ReplaceOtherPinsWith(OtherPins.MREQ | OtherPins.RFSH);
             OnTick();
+            // T4: Memory Refresh (2/2): RFSH is cleared
+            _pins.DeactivateOtherPins(OtherPins.MREQ);
+            OnTick();
+            // M1 (Opcode fetch) with 4 T-Cycles is completed
+            _pins.ReplaceOtherPinsWith(OtherPins.NONE);
         }
 
         /// <summary>
@@ -61,11 +71,11 @@ namespace SantMarti.Z80
         public byte MemoryRead(ushort address)
         {
             _pins.Address = address;
-            _pins.SetOthers(OtherPins.MEMORY_READ);
+            _pins.ActivateOtherPins(OtherPins.MEMORY_READ);
             OnTick();
             OnTick();
             // TODO: Check WAIT states
-            _pins.ClearOthers(OtherPins.MEMORY_READ);
+            _pins.DeactivateOtherPins(OtherPins.MEMORY_READ);
             OnTick();
             return _pins.Data;
         }
@@ -79,11 +89,11 @@ namespace SantMarti.Z80
         public byte MemoryRead()
         {
             _pins.Address = Registers.PC;
-            _pins.SetOthers(OtherPins.MEMORY_READ);
+            _pins.ActivateOtherPins(OtherPins.MEMORY_READ);
             OnTick();
             Registers.PC = (ushort)(Registers.PC + 1);
             OnTick();
-            _pins.ClearOthers(OtherPins.MEMORY_READ);
+            _pins.DeactivateOtherPins(OtherPins.MEMORY_READ);
             OnTick();
             return _pins.Data;
         }
@@ -108,10 +118,10 @@ namespace SantMarti.Z80
         public byte IoRead(ushort address)
         {
             _pins.Address = address;
-            _pins.SetOthers(OtherPins.IO_READ);
+            _pins.ActivateOtherPins(OtherPins.IO_READ);
             OnTick();
             OnTick();
-            _pins.ClearOthers(OtherPins.IO_READ);
+            _pins.DeactivateOtherPins(OtherPins.IO_READ);
             OnTick();
             OnTick();
             return _pins.Data;
@@ -121,11 +131,11 @@ namespace SantMarti.Z80
         {
             _pins.Address = address;
             _pins.Data = data;
-            _pins.SetOthers(OtherPins.MEMORY_WRITE);
+            _pins.ActivateOtherPins(OtherPins.MEMORY_WRITE);
             OnTick();
-            _pins.SetOthers(OtherPins.WR);
+            _pins.ActivateOtherPins(OtherPins.WR);
             OnTick();
-            _pins.ClearOthers(OtherPins.MEMORY_WRITE | OtherPins.WR);
+            _pins.DeactivateOtherPins(OtherPins.MEMORY_WRITE | OtherPins.WR);
             OnTick();
             
         }
@@ -134,11 +144,11 @@ namespace SantMarti.Z80
         {
             _pins.Address = address;
             _pins.Data = data;
-            _pins.SetOthers(OtherPins.IO_WRITE);
+            _pins.ActivateOtherPins(OtherPins.IO_WRITE);
             OnTick();
-            _pins.SetOthers(OtherPins.WR);
+            _pins.ActivateOtherPins(OtherPins.WR);
             OnTick();
-            _pins.ClearOthers(OtherPins.IO_WRITE | OtherPins.WR);
+            _pins.DeactivateOtherPins(OtherPins.IO_WRITE | OtherPins.WR);
             OnTick();
             OnTick();
         }

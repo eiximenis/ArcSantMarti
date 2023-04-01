@@ -16,8 +16,6 @@ public class TestTickHandler
     private readonly List<ushort> _memoryReads = new();
     private readonly Dictionary<ushort, Func<byte>> _memoryReaders = new();
     
-    private int _readTick = 0;
-    private int _writeTick = 0;
     
     private Func<ushort, byte> _defaultMemoryReader = address => 0x0;
     
@@ -63,35 +61,20 @@ public class TestTickHandler
         }
         else if (pins.OthersAreSet(OtherPins.MEMORY_WRITE))
         {
-            DoWriteMemory(ref pins);
-        }
-    }
-    
-    private void DoWriteMemory(ref Z80Pins pins)
-    {
-        _writeTick++;
-        if (_writeTick == 3)
-        {
-            _writeTick = 0;
             _memoryWrites.Add((pins.Address, pins.Data));
         }
     }
-
+    
     private void DoReadMemory(ref Z80Pins pins)
     {
-        _readTick++;
-        if (_readTick == 2)
+        _memoryReads.Add(pins.Address);
+        if (_memoryReaders.ContainsKey(pins.Address))
         {
-            _readTick = 0;
-            _memoryReads.Add(pins.Address);
-            if (_memoryReaders.ContainsKey(pins.Address))
-            {
-                pins.Data = _memoryReaders[pins.Address]();
-            }
-            else
-            {
-                pins.Data = _defaultMemoryReader(pins.Address);
-            }
+            pins.Data = _memoryReaders[pins.Address]();
+        }
+        else
+        {
+            pins.Data = _defaultMemoryReader(pins.Address);
         }
     }
     
