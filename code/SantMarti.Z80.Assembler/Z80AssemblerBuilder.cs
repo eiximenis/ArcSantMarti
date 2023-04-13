@@ -1,6 +1,7 @@
 ﻿using SantMarti.Z80.Assembler.Builders;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,6 +63,12 @@ namespace SantMarti.Z80.Assembler
         public void LD(string dest, string source)
         {
             var result = LDBuilder.LD(dest, source);
+            ProcessParseResult(result);
+        }
+
+        public void PUSH(string dest)
+        {
+            var result = PUSHBuilder.PUSH(dest);
             ProcessParseResult(result);
         }
 

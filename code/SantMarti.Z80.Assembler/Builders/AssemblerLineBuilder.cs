@@ -18,6 +18,7 @@ namespace SantMarti.Z80.Assembler.Builders
             _builders.Add("LD", LDBuilder.BuildFromLine);
             _builders.Add("EXX", l => AssemblerLineResult.Success(new [] { Z80Opcodes.EXX }));
             _builders.Add("ADD", ADDBuilder.BuildFromLine);
+            _builders.Add("PUSH", PUSHBuilder.BuildFromLine);
             _parser = new AssemblerLineParser();
         }
         

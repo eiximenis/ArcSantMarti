@@ -100,7 +100,7 @@ namespace SantMarti.Z80
         [FieldOffset(13)]
         public byte A;
         [FieldOffset(12)]
-        public short AF;
+        public ushort AF;
 
         internal void CopyF3F5FlagsFrom(byte data)
         {

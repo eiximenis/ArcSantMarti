@@ -48,6 +48,10 @@ namespace SantMarti.Z80.Assembler
         public static byte LD_NNRef_IX_IY = 0x22;               // LD (nn),IX or LD (nn),IY
         public static byte LD_SP_HL = 0xf9;                     // LD SP,HL
         public static byte LD_SP_IX_IY = 0xf9;                  // LD SP,IX or LD SP,IY
+        public static byte PUSH_BC = 0xc5;                      // PUSH BC
+        public static byte PUSH_DE = 0xd5;                      // PUSH DE
+        public static byte PUSH_HL = 0xe5;                      // PUSH HL
+        public static byte PUSH_AF = 0xf5;                      // PUSH AF
 
 
         public static class Bases

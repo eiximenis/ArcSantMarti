@@ -12,7 +12,7 @@ public record TickData(Z80Pins pins);
 public class TestTickHandler
 {
     private readonly Z80Processor _processor;
-    private readonly List<(ushort, byte)> _memoryWrites = new();
+    private readonly List<(ushort Address, byte Data)> _memoryWrites = new();
     private readonly List<ushort> _memoryReads = new();
     private readonly Dictionary<ushort, Func<byte>> _memoryReaders = new();
     
@@ -79,7 +79,7 @@ public class TestTickHandler
     }
     
     public int TotalTicks => _tickData.Count;
-    public IEnumerable<(ushort, byte)> MemoryWrites => _memoryWrites;
+    public IEnumerable<(ushort Address, byte Data)> MemoryWrites => _memoryWrites;
     public bool HasAddressBeenRead(ushort address) => _memoryReads.Contains(address);
     public IEnumerable<ushort> MemoryReads => _memoryReads;
 

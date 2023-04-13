@@ -8,7 +8,7 @@ namespace SantMarti.Z80.Tests.Extensions
 {
     static class Z80GenericRegistersExtensions
     {
-        public static byte GetByName(in this Z80GenericRegisters regs, string name) => name switch
+        public static byte GetByteRegisterByName(in this Z80GenericRegisters regs, string name) => name switch
         {
             "B" => regs.B,
             "C" => regs.C,
@@ -20,8 +20,17 @@ namespace SantMarti.Z80.Tests.Extensions
             "F" => (byte)regs.F,
             _ => 0x0
         };
+        
+        public static ushort GetWordRegisterByName(in this Z80GenericRegisters regs, string name) => name switch
+        {
+            "BC" => regs.BC,
+            "DE" => regs.DE,
+            "HL" => regs.HL,
+            "AF" => regs.AF,
+            _ => 0x0
+        };
 
-        public static void SetByName(ref this Z80GenericRegisters regs, string name, byte value)
+        public static void SetByteRegisterByName(ref this Z80GenericRegisters regs, string name, byte value)
         {
             switch (name)
             {
@@ -33,7 +42,17 @@ namespace SantMarti.Z80.Tests.Extensions
                 case "L": regs.L = value; break;
                 case "A": regs.A = value; break;
                 case "F": regs.F = (Z80Flags)value; break;
-                default: break;
+            }
+        }
+        
+        public static void SetWordRegisterByName(ref this Z80GenericRegisters regs, string name, ushort value)
+        {
+            switch (name)
+            {
+                case "BC": regs.BC = value; break;
+                case "DE": regs.DE = value; break;
+                case "HL": regs.HL = value; break;
+                case "AF": regs.AF = value; break;
             }
         }
     }

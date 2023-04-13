@@ -131,11 +131,11 @@ namespace SantMarti.Z80
         {
             _pins.Address = address;
             _pins.Data = data;
-            _pins.ActivateOtherPins(OtherPins.MEMORY_WRITE);
+            _pins.ActivateOtherPins(OtherPins.MREQ);
             OnTick();
             _pins.ActivateOtherPins(OtherPins.WR);
             OnTick();
-            _pins.DeactivateOtherPins(OtherPins.MEMORY_WRITE | OtherPins.WR);
+            _pins.DeactivateOtherPins(OtherPins.MEMORY_WRITE);
             OnTick();
             
         }
