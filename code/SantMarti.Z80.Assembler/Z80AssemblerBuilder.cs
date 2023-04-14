@@ -72,6 +72,12 @@ namespace SantMarti.Z80.Assembler
             ProcessParseResult(result);
         }
 
+        public void INC(string dest)
+        {
+            var result = INCBuilder.INC(dest);
+            ProcessParseResult(result);
+        }
+
         private void ProcessParseResult(AssemblerLineResult result)
         {
             if (result.HasResult)

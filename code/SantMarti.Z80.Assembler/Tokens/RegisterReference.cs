@@ -28,7 +28,7 @@ public class RegisterReference : BaseToken
     {
         return (IsByteRegister, StrValue) switch
         {
-            (true, "A" or "B" or "C" or "D" or "E" or "F" or "H" or "L") => true,
+            (true, "A" or "B" or "C" or "D" or "E" or "H" or "L") => true,
             (false, "HL" or "BC" or "DE" or "SP") => true,
             _ => false
         };

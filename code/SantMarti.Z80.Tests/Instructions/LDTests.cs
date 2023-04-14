@@ -36,13 +36,13 @@ namespace SantMarti.Z80.Tests.Instructions
         [InlineData("H", "C")]
         public async Task LDRR_Should_Load_Destination_Into_Source(string destination, string source)
         {
-            _processor.Registers.Main.SetByteRegisterByName(destination, 0x0A);
-            _processor.Registers.Main.SetByteRegisterByName(source, 0x01);
+            _processor.Registers.SetByteRegisterByName(destination, 0x0A);
+            _processor.Registers.SetByteRegisterByName(source, 0x01);
             var assembler = new Z80AssemblerBuilder();
             assembler.LD_RR(destination, source);
             SetupProcessorWithProgram(assembler);
             await _processor.RunOnce();
-            _processor.Registers.Main.GetByteRegisterByName(destination).Should().Be(0x01);
+            _processor.Registers.GetByteRegisterByName(destination).Should().Be(0x01);
         }
     }
 }

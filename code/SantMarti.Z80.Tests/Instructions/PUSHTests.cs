@@ -74,10 +74,10 @@ public class PUSHTests
         await _processor.RunOnce();
         _testTickHandler.MemoryWrites.Should().HaveCount(2);
         _testTickHandler.MemoryWrites.First().Data.Should()
-            .Be(_processor.Registers.Main.GetByteRegisterByName(firstHalf));
+            .Be(_processor.Registers.GetByteRegisterByName(firstHalf));
         _testTickHandler.MemoryWrites.First().Address.Should().Be(19);
         _testTickHandler.MemoryWrites.Last().Data.Should()
-            .Be(_processor.Registers.Main.GetByteRegisterByName(secondHalf));
+            .Be(_processor.Registers.GetByteRegisterByName(secondHalf));
         _testTickHandler.MemoryWrites.Last().Address.Should().Be(18);
     }
     

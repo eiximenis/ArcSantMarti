@@ -17,17 +17,17 @@ namespace SantMarti.Z80
         /// <summary>
         /// Carry: Set if the result did not fit in the register
         /// </summary>
-        C = 1 << 0,
+        Carry = 1 << 0,
         /// <summary>
         /// Subtract: Set if the last operation was a subtraction
         /// </summary>
-        N = 1 << 1,
+        Substract = 1 << 1,
         /// <summary>
         /// Parity or Overflow: 
         /// Parity set if even number of bits set 
         /// Overflow set if the 2-complement result does not fit in the register
         /// </summary>
-        PV = 1 << 2,
+        ParityOrOverflow = 1 << 2,
         /// <summary>
         /// // Undocumented (Copy of bit 3)
         /// </summary>
@@ -35,7 +35,7 @@ namespace SantMarti.Z80
         /// <summary>
         /// Half Carry: Carry from bit 3 to bit 4
         /// </summary>
-        H = 1 << 4,
+        HalfCarry = 1 << 4,
         /// <summary>
         /// Undocumented (Copy of bit 5)
         /// </summary>
@@ -43,11 +43,11 @@ namespace SantMarti.Z80
         /// <summary>
         /// Set if the value is zero
         /// </summary>
-        Z = 1 << 6,
+        Zero = 1 << 6,
         /// <summary>
         /// Set if the 2-complement value is negative (copy of MSB)
         /// </summary>
-        S = 1 << 7,
+        Sign = 1 << 7,
         /// <summary>
         /// Both undocumented flags F3 and F5 mask
         /// </summary>

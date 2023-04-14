@@ -35,24 +35,30 @@ namespace SantMarti.Z80.Assembler
         public const byte LD_SP_NN = 0x31;                      // LD SP,nn
         public const byte LD_A_NNRef = 0x3a;                    // LD A,(nn)
         public const byte LD_NNRef_A = 0x32;                    // LD (nn),A
-        public static byte LD_HLRef_Byte = 0x36;                // LD (HL),n
-        public static byte LD_Disp_Byte = 0x36;                 // LD (IX|IY + n),n
-        public static byte LD_A_BCRef = 0xa;                    // LD A,(BC)
-        public static byte LD_A_DERef = 0x1a;                   // LD A,(DE)
-        public static byte LD_BCRef_A = 0x2;                    // LD (BC),A
-        public static byte LD_DERef_A = 0x12;                   // LD (DE),A
-        public static byte LD_IX_IY_NN = 0x21;                  // LD IX,nn or LD IY,nn
-        public static byte LD_HL_NNRef = 0x2a;                  // LD HL,(nn)
-        public static byte LD_IX_IY_NNRef = 0x2a;               // LD IX,(nn) or LD IY,(nn)
-        public static byte LD_NNRef_HL = 0x22;                  // LD (nn),HL
-        public static byte LD_NNRef_IX_IY = 0x22;               // LD (nn),IX or LD (nn),IY
-        public static byte LD_SP_HL = 0xf9;                     // LD SP,HL
-        public static byte LD_SP_IX_IY = 0xf9;                  // LD SP,IX or LD SP,IY
-        public static byte PUSH_BC = 0xc5;                      // PUSH BC
-        public static byte PUSH_DE = 0xd5;                      // PUSH DE
-        public static byte PUSH_HL = 0xe5;                      // PUSH HL
-        public static byte PUSH_AF = 0xf5;                      // PUSH AF
-
+        public const byte LD_HLRef_Byte = 0x36;                // LD (HL),n
+        public const byte LD_Disp_Byte = 0x36;                 // LD (IX|IY + n),n
+        public const byte LD_A_BCRef = 0xa;                    // LD A,(BC)
+        public const byte LD_A_DERef = 0x1a;                   // LD A,(DE)
+        public const byte LD_BCRef_A = 0x2;                    // LD (BC),A
+        public const byte LD_DERef_A = 0x12;                   // LD (DE),A
+        public const byte LD_IX_IY_NN = 0x21;                  // LD IX,nn or LD IY,nn
+        public const byte LD_HL_NNRef = 0x2a;                  // LD HL,(nn)
+        public const byte LD_IX_IY_NNRef = 0x2a;               // LD IX,(nn) or LD IY,(nn)
+        public const byte LD_NNRef_HL = 0x22;                  // LD (nn),HL
+        public const byte LD_NNRef_IX_IY = 0x22;               // LD (nn),IX or LD (nn),IY
+        public const byte LD_SP_HL = 0xf9;                     // LD SP,HL
+        public const byte LD_SP_IX_IY = 0xf9;                  // LD SP,IX or LD SP,IY
+        public const byte PUSH_BC = 0xc5;                      // PUSH BC
+        public const byte PUSH_DE = 0xd5;                      // PUSH DE
+        public const byte PUSH_HL = 0xe5;                      // PUSH HL
+        public const byte PUSH_AF = 0xf5;                      // PUSH AF
+        public const byte INC_A = 0x3c;                        // INC A
+        public const byte INC_B = 0x4;                         // INC B
+        public const byte INC_C = 0xc;                         // INC C
+        public const byte INC_D = 0x14;                        // INC D
+        public const byte INC_E = 0x1c;                        // INC E
+        public const byte INC_H = 0x24;                        // INC H
+        public const byte INC_L = 0x2c;                        // INC L
 
         public static class Bases
         {
