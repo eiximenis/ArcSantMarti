@@ -28,7 +28,7 @@ namespace SantMarti.Z80.Tests.Instructions
 
         [Theory]
         [InlineData(0x78, 0x69, 0xE1)]
-        [InlineData(0xFF, 1, 0)]                // Carry and Overflow
+        [InlineData(0xFF, 1, 0)]                // Carry
         [InlineData(0x72, 0xFA, 0x6C)]          // Carry
         [InlineData(0x3e, 0x22, 0x60)]          // Half Carry
         [InlineData(0x39, 0x48, 0x81)]          // Half Carry
@@ -46,7 +46,7 @@ namespace SantMarti.Z80.Tests.Instructions
 
         [Theory]
         [InlineData(0x78, 0x69, false)]
-        [InlineData(0xFF, 1, true)]                // Carry and Overflow
+        [InlineData(0xFF, 1, true)]                // Carry
         [InlineData(0x72, 0xFA, true)]          // Carry
         [InlineData(0x39, 0x48, false)]          // Half Carry
 
@@ -63,7 +63,8 @@ namespace SantMarti.Z80.Tests.Instructions
         }
 
         [Theory]
-        [InlineData(0x3e, 0x22, true)]           // 0x3e = 0011 1110
+        [InlineData(0x3e, 0x22, true)]           
+                                                 // 0x3e = 0011 1110
                                                  // 0x22 = 0010 0010
                                                  // (+)  = 0110 0000     = 0x60
                                                  // c    =   ** ***

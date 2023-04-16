@@ -10,7 +10,7 @@ public static class Z80Alu
     /// <param name="second"Second operand></param>
     /// <param name="cflag">Carry flag></param>
     /// <returns>Result (bye)</returns>
-    public static byte ByteAdd(ref Z80GenericRegisters registers, byte first, byte second, byte cflag = 0)
+    public static byte Add8(ref Z80GenericRegisters registers, byte first, byte second, byte cflag = 0)
     {
         int result =first + second + cflag ;
         int no_carry_sum = first ^ (second + cflag);
@@ -38,19 +38,22 @@ public static class Z80Alu
     /// <param name="first">First operand</param>
     /// <param name="second"Second operand></param>
     /// <returns>Result (bye)</returns>
-    public static byte ByteAddNoSetCarry(ref Z80GenericRegisters registers, byte first, byte second)
+    public static byte Inc8(ref Z80GenericRegisters registers, byte first)
     {        
-        int result =first + second;
-        int no_carry_sum = first ^ second;
+        int result = first + 1;
+        int no_carry_sum = first ^ 1;
         int carry_into = result ^ no_carry_sum;
         int half_carry = carry_into & 0x10;
         var byteResult = (byte)result;
+
+        // For addition, operands with different signs never cause overflow.
+        // When adding operands with similar signs and the result contains a different sign, the Overflow Flag is set.
         var overflow = ((no_carry_sum & 0x80) == 0) && (((byteResult & 0x80) ^ (first & 0x80)) != 0);
         registers.ClearFlag(Z80Flags.Substract);
         registers.SetFlagIf(Z80Flags.Zero, byteResult == 0);
+        registers.SetFlagIf(Z80Flags.Sign, byteResult & 0x80);
         registers.SetFlagIf(Z80Flags.HalfCarry, half_carry);
         registers.SetFlagIf(Z80Flags.ParityOrOverflow, overflow);
-        registers.SetFlagIf(Z80Flags.Sign, byteResult & 0x80);
         registers.CopyF3F5FlagsFrom(byteResult);
         return byteResult;
     }

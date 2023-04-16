@@ -16,7 +16,7 @@ namespace SantMarti.Z80.Instructions
         {
             var data = processor.MemoryRead();
             ref var registers = ref processor.Registers.Main;
-            processor.Registers.Main.A = Z80Alu.ByteAdd(ref registers, processor.Registers.Main.A, data);
+            processor.Registers.Main.A = Z80Alu.Add8(ref registers, processor.Registers.Main.A, data);
         }
         
         /// <summary>
@@ -27,7 +27,7 @@ namespace SantMarti.Z80.Instructions
             var data = processor.MemoryRead();
             ref var registers = ref processor.Registers.Main;
             var carry = registers.HasFlag(Z80Flags.Carry) ? (byte)1 : (byte)0;
-            processor.Registers.Main.A = Z80Alu.ByteAdd(ref registers, data, carry);
+            processor.Registers.Main.A = Z80Alu.Add8(ref registers, data, carry);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace SantMarti.Z80.Instructions
             ref var registers = ref processor.Registers.Main;
             // Add A,r opcode is 10000RRR where RRR is the register to add
             var value = processor.GetByteRegister(instruction.Opcode & 0b00000111);
-            processor.Registers.Main.A = Z80Alu.ByteAdd(ref registers, processor.Registers.Main.A, value);
+            processor.Registers.Main.A = Z80Alu.Add8(ref registers, processor.Registers.Main.A, value);
         }
     }
 }
