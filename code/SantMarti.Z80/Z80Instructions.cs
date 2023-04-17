@@ -154,12 +154,12 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0x6e, "LD L,(HL)", 7));
             unprefixed.Add(new Instruction(0x6f, "LD L,A", 4, Load.LD_R_R));
 
-            unprefixed.Add(new Instruction(0x70, "LD (HL),B", 7));
-            unprefixed.Add(new Instruction(0x71, "LD (HL),C", 7));
-            unprefixed.Add(new Instruction(0x72, "LD (HL),D", 7));
-            unprefixed.Add(new Instruction(0x73, "LD (HL),E", 7));
-            unprefixed.Add(new Instruction(0x74, "LD (HL),H", 7));
-            unprefixed.Add(new Instruction(0x75, "LD (HL),L", 7));
+            unprefixed.Add(new Instruction(0x70, "LD (HL),B", 7, Load.LD_HLRef_R));
+            unprefixed.Add(new Instruction(0x71, "LD (HL),C", 7, Load.LD_HLRef_R));
+            unprefixed.Add(new Instruction(0x72, "LD (HL),D", 7, Load.LD_HLRef_R));
+            unprefixed.Add(new Instruction(0x73, "LD (HL),E", 7, Load.LD_HLRef_R));
+            unprefixed.Add(new Instruction(0x74, "LD (HL),H",7 , Load.LD_HLRef_R));
+            unprefixed.Add(new Instruction(0x75, "LD (HL),L", 7, Load.LD_HLRef_R));
             unprefixed.Add(new Instruction(0x76, "HALT", 4));
             unprefixed.Add(new Instruction(0x77, "LD (HL),A", 7));
             unprefixed.Add(new Instruction(0x78, "LD A,B", 4, Load.LD_R_R));

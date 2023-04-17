@@ -16,6 +16,8 @@ public class TestTickHandler
     private readonly List<ushort> _memoryReads = new();
     private readonly Dictionary<ushort, Func<byte>> _memoryReaders = new();
     
+    private int _writeTicks = 0;
+    
     
     private Func<ushort, byte> _defaultMemoryReader = address => 0x0;
     
@@ -73,6 +75,9 @@ public class TestTickHandler
     
     private void DoReadMemory(ref Z80Pins pins)
     {
+        _writeTicks++;
+        if (_writeTicks < 2) return;            // We are slow writer, and we need TWO ticks
+        _writeTicks = 0;
         _memoryReads.Add(pins.Address);
         if (_memoryReaders.ContainsKey(pins.Address))
         {
@@ -87,6 +92,7 @@ public class TestTickHandler
     public int TotalTicks => _tickData.Count;
     public IEnumerable<(ushort Address, byte Data)> MemoryWrites => _memoryWrites;
     public bool HasAddressBeenRead(ushort address) => _memoryReads.Contains(address);
+    public bool HasAddressBeenWritten(ushort address) => _memoryWrites.Any(w => w.Address == address);
     public IEnumerable<ushort> MemoryReads => _memoryReads;
     public int TotalMemoryReads => _memoryReads.Count;
 

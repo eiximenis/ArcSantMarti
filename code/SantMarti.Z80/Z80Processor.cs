@@ -44,11 +44,11 @@ namespace SantMarti.Z80
             _pins.ReplaceOtherPinsWith(OtherPins.M1 | OtherPins.MEMORY_READ);
             Registers.PC = (ushort)(Registers.PC + 1);
             OnTick();
+            OnTick();
             // T2: At this point Memory read has been performed and the data is available in Address Bus
             //     Instruction register is filled with the data read from memory
             //     TODO: This is the ONLY point where M1 can be stretched using WAIT states 
-            Registers.InstructionRegister = _pins.Data;
-            OnTick();
+            Registers.InstructionRegister = _pins.Data;            
             // T3: Memory Refresh (1/2): MREQ and RFSH are set 
             // TODO: Check WAIT states
             _pins.ReplaceOtherPinsWith(OtherPins.MREQ | OtherPins.RFSH);

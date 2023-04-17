@@ -11,8 +11,7 @@ namespace SantMarti.Z80.Instructions
     {
 
         /// <summary>
-        /// LD X,Y: Loads Y into D
-        /// http://www.z80.info/z80syntx.htm#LD
+        /// LD R,R2: Loads R2 into R
         /// </summary>
         public static void LD_R_R (Instruction instruction, Z80Processor processor)
         {
@@ -22,12 +21,26 @@ namespace SantMarti.Z80.Instructions
             processor.SetByteRegister(dest, processor.GetByteRegister(source));
         }
         
+        /// <summary>
+        /// LD A, (nn): Loads memory address nn into A 
+        /// </summary>
         public static void LD_A_NN(Instruction instruction, Z80Processor processor)
         {
             var lobyte = processor.MemoryRead();
             var hibite = processor.MemoryRead();
             var address = (ushort)((hibite << 8) | lobyte);
             processor.Registers.Main.A = processor.MemoryRead(address);
+        }
+        
+        /// <summary>
+        /// LD (HL), R: Loads R into memory address pointed by HL
+        /// </summary>
+        public static void LD_HLRef_R(Instruction instruction, Z80Processor processor)
+        {
+            var opcode = instruction.Opcode;
+            var source = opcode & 0b00_000_111;
+            var value = processor.GetByteRegister(source);
+            processor.MemoryWrite(processor.Registers.Main.HL, value);
         }
     }
 }
