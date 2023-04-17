@@ -12,7 +12,7 @@ namespace SantMarti.Z80.Instructions
         /// <summary>
         /// ADD A,n: Adds n to A
         /// </summary>
-        public static void AddAN(Instruction instruction, Z80Processor processor)
+        public static void Add_N(Instruction instruction, Z80Processor processor)
         {
             var data = processor.MemoryRead();
             ref var registers = ref processor.Registers.Main;
@@ -22,22 +22,29 @@ namespace SantMarti.Z80.Instructions
         /// <summary>
         ///  ADC A,n: Adds n + carry flag to A
         /// </summary>
-        public static void AdcAN(Instruction instruction, Z80Processor processor)
+        public static void Adc_N(Instruction instruction, Z80Processor processor)
         {
             var data = processor.MemoryRead();
             ref var registers = ref processor.Registers.Main;
             var carry = registers.HasFlag(Z80Flags.Carry) ? (byte)1 : (byte)0;
-            processor.Registers.Main.A = Z80Alu.Add8(ref registers, data, carry);
+            processor.Registers.Main.A = Z80Alu.Add8(ref registers, processor.Registers.Main.A, data, carry);
         }
 
         /// <summary>
         /// ADD A,r: Adds value of register r to A
         /// </summary>
-        public static void AddAR(Instruction instruction, Z80Processor processor)
+        public static void Add_R(Instruction instruction, Z80Processor processor)
         {
             ref var registers = ref processor.Registers.Main;
             // Add A,r opcode is 10000RRR where RRR is the register to add
             var value = processor.GetByteRegister(instruction.Opcode & 0b00000111);
+            processor.Registers.Main.A = Z80Alu.Add8(ref registers, processor.Registers.Main.A, value);
+        }
+
+        public static void Add_HL(Instruction instruction, Z80Processor processor)
+        {
+            ref var registers = ref processor.Registers.Main;
+            var value = processor.MemoryRead(processor.Registers.Main.HL);
             processor.Registers.Main.A = Z80Alu.Add8(ref registers, processor.Registers.Main.A, value);
         }
     }

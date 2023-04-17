@@ -31,6 +31,12 @@ public class TestTickHandler
         return this;
     }
 
+    public TestTickHandler OnMemoryRead(ushort address, byte fixedValue)
+    {
+        _memoryReaders.Add(address, () => fixedValue);
+        return this;
+    }
+
     public TestTickHandler OnMemoryRead(ushort startAddress, IEnumerable<byte> data)
     {
         var address = startAddress;
@@ -82,6 +88,7 @@ public class TestTickHandler
     public IEnumerable<(ushort Address, byte Data)> MemoryWrites => _memoryWrites;
     public bool HasAddressBeenRead(ushort address) => _memoryReads.Contains(address);
     public IEnumerable<ushort> MemoryReads => _memoryReads;
+    public int TotalMemoryReads => _memoryReads.Count;
 
     /// <summary>
     /// Returns the byte written to memory at the given address if any

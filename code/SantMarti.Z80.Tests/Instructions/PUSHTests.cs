@@ -10,17 +10,11 @@ public class PUSHTests
 {
     private readonly Z80Processor _processor;
     private readonly TestTickHandler _testTickHandler;
+    private const  ushort TEST_START_ADDRESS = 10;
     public PUSHTests()
     {
         _processor = new Z80Processor();
         _testTickHandler = new TestTickHandler(_processor);
-    }
-
-    private void SetupProcessorWithProgram(Z80AssemblerBuilder asm)
-    {
-        var program = asm.Build();
-        _testTickHandler.OnMemoryRead(10, program);
-        _processor.Registers.PC = 10;
     }
     
     [Theory()]
@@ -35,7 +29,7 @@ public class PUSHTests
         _processor.Registers.SP = START_SP;
         var assembler = new Z80AssemblerBuilder();
         assembler.PUSH(register);
-        SetupProcessorWithProgram(assembler);
+        _processor.SetupWithProgram(_testTickHandler, assembler, TEST_START_ADDRESS);
         await _processor.RunOnce();
         _processor.Registers.SP.Should().Be(expectedSP);
     }
@@ -51,7 +45,7 @@ public class PUSHTests
         _processor.Registers.SP = 20;
         var assembler = new Z80AssemblerBuilder();
         assembler.PUSH(register);
-        SetupProcessorWithProgram(assembler);
+        _processor.SetupWithProgram(_testTickHandler, assembler, TEST_START_ADDRESS);
         await _processor.RunOnce();
         _testTickHandler.TotalTicks.Should().Be(EXPECTED_TICKS);
     }
@@ -70,7 +64,7 @@ public class PUSHTests
         _processor.Registers.Main.DE = 0xabcd;
         var assembler = new Z80AssemblerBuilder();
         assembler.PUSH(register);
-        SetupProcessorWithProgram(assembler);
+        _processor.SetupWithProgram(_testTickHandler, assembler, TEST_START_ADDRESS);
         await _processor.RunOnce();
         _testTickHandler.MemoryWrites.Should().HaveCount(2);
         _testTickHandler.MemoryWrites.First().Data.Should()

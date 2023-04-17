@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SantMarti.Z80.Tests.Extensions;
 
 namespace SantMarti.Z80.Tests.Instructions
 {
@@ -13,6 +14,7 @@ namespace SantMarti.Z80.Tests.Instructions
     {
         private readonly Z80Processor _processor;
         private readonly TestTickHandler _testTickHandler;
+        private const ushort TEST_START_ADDRESS = 20;
         public ADDTests()
         {
             _processor = new Z80Processor();
@@ -117,7 +119,42 @@ namespace SantMarti.Z80.Tests.Instructions
             _testTickHandler.TotalTicks.Should().Be(EXPTECTED_TICKS);
             _processor.Registers.Main.F.HasFlag(Z80Flags.Zero).Should().Be(zeroExpected);
         }
+
+        [Theory]
+        [InlineData(0x1)]
+        [InlineData(0x7d)]
+        [InlineData(0xff)]
+        public async Task ADD_HL_Should_Read_Value_At_HL(byte value)
+        {
+            const ushort HL_ADDRESS = 0x1234;
+            _processor.Registers.Main.HL = HL_ADDRESS;
+            _testTickHandler.OnMemoryRead(HL_ADDRESS, value);
+            var assembler = new Z80AssemblerBuilder();
+            assembler.ADD("A", "(HL)");
+            _processor.SetupWithProgram(_testTickHandler, assembler, TEST_START_ADDRESS);
+            await _processor.RunOnce();
+            _testTickHandler.TotalMemoryReads.Should().Be(2);               // 1 opcode fetch + 1 (HL)
+            _testTickHandler.MemoryReads.Last().Should().Be(HL_ADDRESS);
+        }
         
+        
+        [Theory]
+        [InlineData(0x1)]
+        [InlineData(0x7d)]
+        [InlineData(0xff)]
+        public async Task ADD_HL_Should_Last_For_7_TStates(byte value)
+        {
+            const int EXPTECTED_TICKS = 7;
+            const ushort HL_ADDRESS = 0x1234;
+            _processor.Registers.Main.HL = HL_ADDRESS;
+            _testTickHandler.OnMemoryRead(HL_ADDRESS, value);
+            var assembler = new Z80AssemblerBuilder();
+            assembler.ADD("A", "(HL)");
+            _processor.SetupWithProgram(_testTickHandler, assembler, TEST_START_ADDRESS);
+            await _processor.RunOnce();
+            _testTickHandler.TotalTicks.Should().Be(EXPTECTED_TICKS);
+        }
+
 
     }
 }
