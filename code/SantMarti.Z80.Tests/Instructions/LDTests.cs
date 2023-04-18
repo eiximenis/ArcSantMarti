@@ -55,6 +55,7 @@ namespace SantMarti.Z80.Tests.Instructions
         [InlineData("C")]
         [InlineData("D")]
         [InlineData("E")]
+        [InlineData("A")]
 
         public async Task LD_HRef_R_Should_Write_Memory_Pointed_By_HL(string source)
         {
@@ -92,6 +93,7 @@ namespace SantMarti.Z80.Tests.Instructions
         [InlineData("C")]
         [InlineData("D")]
         [InlineData("E")]
+        [InlineData("A")]
         public async Task LD_HRef_R_Should_Last_For_7_TStates(string source)
         {
             const int EXPECTED_TICKS = 7;
