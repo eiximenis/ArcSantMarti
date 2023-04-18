@@ -53,6 +53,8 @@ namespace SantMarti.Z80.Assembler
             _bytes.Add(Z80Opcodes.EXX);
         }
 
+        public void NOP() => _bytes.Add(Z80Opcodes.NOP);
+
 
         public void ADD(string source, string target)
         {

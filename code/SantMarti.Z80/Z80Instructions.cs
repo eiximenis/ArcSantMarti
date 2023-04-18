@@ -34,7 +34,7 @@ namespace SantMarti.Z80
         {
             var unprefixed = new List<Instruction>();
             // For x = 0 and z=0 (Relative jumps and assorted ops)
-            unprefixed.Add(new Instruction(0x0, "NOP", 4));
+            unprefixed.Add(new Instruction(0x0, "NOP", 4, Nop.NOP));
             unprefixed.Add(new Instruction(0x1, "LD BC,nn", 10));
             unprefixed.Add(new Instruction(0x2, "LD (BC),A", 7));
             unprefixed.Add(new Instruction(0x3, "INC BC", 6));

@@ -9,6 +9,7 @@ namespace SantMarti.Z80.Assembler
 {
     public static class Z80Opcodes
     {
+        public const byte NOP = 0x0;                            // NOP
         public const byte EXX = 0xd9;
         public const byte ADD_A_N = 0xc6;                        // ADD A,n
         public const byte ADD_A_HLRef = 0x86;                       // ADD A,(HL)
