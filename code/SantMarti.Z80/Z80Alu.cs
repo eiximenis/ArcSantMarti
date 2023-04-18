@@ -1,3 +1,5 @@
+using SantMarti.Z80.Extensions;
+
 namespace SantMarti.Z80;
 
 public static class Z80Alu
@@ -56,6 +58,28 @@ public static class Z80Alu
         registers.SetFlagIf(Z80Flags.ParityOrOverflow, overflow);
         registers.CopyF3F5FlagsFrom(byteResult);
         return byteResult;
+    }
+
+    public static ushort Add16(ref Z80GenericRegisters registers, ushort first, ushort second, byte cflag = 0)
+    {
+        
+        var loFirst = first.LoByte();
+        var hiFirst = first.HiByte();
+        var loSecond = second.LoByte();
+        var hiSecond = second.HiByte();
+        var result = first + second + cflag;
+        
+        if ((loFirst + loSecond + cflag) > 0xFF) hiSecond++;
+        
+        registers.SetFlagIf(Z80Flags.HalfCarry, ((hiFirst & 0x0F) + (hiSecond & 0x0F) > 0xF));
+        // For Add16 carry is set if there is a carry from bit 16 to (inexistent) bit 17 
+        registers.SetFlagIf(Z80Flags.Carry, result > 0xFFFF);
+        
+        // Undocumented Flags - from high byte
+        registers.CopyF3F5FlagsFrom(((ushort)result).HiByte());
+        // Preserves Sign, Zero, and ParityOrOverflow
+        return (ushort)result;
+
     }
     
 }
