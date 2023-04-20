@@ -37,15 +37,25 @@ namespace SantMarti.Z80.Instructions
         {
             ref var registers = ref processor.Registers.Main;
             // Add A,r opcode is 10000RRR where RRR is the register to add
-            var value = processor.GetByteRegister(instruction.Opcode & 0b00000111);
+            var value = processor.GetByteRegisterMask(instruction.Opcode & 0b00000111);
             processor.Registers.Main.A = Z80Alu.Add8(ref registers, processor.Registers.Main.A, value);
         }
 
-        public static void Add_HL(Instruction instruction, Z80Processor processor)
+        // ADD A,(HL): Adds value of memory address pointed by HL to A
+        public static void Add_HLRef(Instruction instruction, Z80Processor processor)
         {
             ref var registers = ref processor.Registers.Main;
             var value = processor.MemoryRead(processor.Registers.Main.HL);
             processor.Registers.Main.A = Z80Alu.Add8(ref registers, processor.Registers.Main.A, value);
+        }
+
+        // ADD HL, RR: Adds value of register pair RR to HL
+        public static void Add_HL_RR(Instruction instruction, Z80Processor processor)
+        {
+            // Register Pair is encoded in the opcode as 00RRR1001
+            var value = processor.GetWordRegisterMask(instruction.Opcode & 0b00110000);
+            processor.Registers.Main.HL = Z80Alu.Add16(ref processor.Registers.Main, processor.Registers.Main.HL, value);
+            
         }
     }
 }

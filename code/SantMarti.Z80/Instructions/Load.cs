@@ -18,7 +18,7 @@ namespace SantMarti.Z80.Instructions
             var opcode = instruction.Opcode;
             var source = opcode & 0b00_000_111;
             var dest = (opcode & 0b00_111_000) >> 3;
-            processor.SetByteRegister(dest, processor.GetByteRegister(source));
+            processor.SetByteRegisterByMask(dest, processor.GetByteRegisterMask(source));
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace SantMarti.Z80.Instructions
         {
             var opcode = instruction.Opcode;
             var source = opcode & 0b00_000_111;
-            var value = processor.GetByteRegister(source);
+            var value = processor.GetByteRegisterMask(source);
             processor.MemoryWrite(processor.Registers.Main.HL, value);
         }
     }

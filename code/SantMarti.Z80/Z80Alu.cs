@@ -62,7 +62,6 @@ public static class Z80Alu
 
     public static ushort Add16(ref Z80GenericRegisters registers, ushort first, ushort second, byte cflag = 0)
     {
-        
         var loFirst = first.LoByte();
         var hiFirst = first.HiByte();
         var loSecond = second.LoByte();

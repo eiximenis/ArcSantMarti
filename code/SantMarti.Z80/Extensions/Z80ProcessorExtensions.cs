@@ -8,7 +8,7 @@ namespace SantMarti.Z80.Extensions
 {
     public static class Z80ProcessorExtensions
     {
-        public static byte GetByteRegister(this Z80Processor processor, int regId)
+        public static byte GetByteRegisterMask(this Z80Processor processor, int regId)
         {
             ref var registers = ref processor.Registers.Main;
             return regId switch
@@ -24,7 +24,7 @@ namespace SantMarti.Z80.Extensions
             };
         }
 
-        public static void SetByteRegister(this Z80Processor processor, int regId, byte value)
+        public static void SetByteRegisterByMask(this Z80Processor processor, int regId, byte value)
         {
             ref var registers = ref processor.Registers.Main;
 
@@ -39,6 +39,19 @@ namespace SantMarti.Z80.Extensions
                 case 0b111: registers.A = value; break;
                 default: break;
             }
+        }
+
+        public static ushort GetWordRegisterMask(this Z80Processor processor, int regid)
+        {
+            ref var registers = ref processor.Registers.Main;
+            return regid switch
+            {
+                0b00 => registers.BC,
+                0b01 => registers.DE,
+                0b10 => registers.HL,
+                0b11 => processor.Registers.SP,
+                _ => 0x0000
+            };
         }
     }
 }

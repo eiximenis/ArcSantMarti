@@ -74,6 +74,7 @@ namespace SantMarti.Z80.Assembler
             public static byte LD_NNRef_DD = 0b01000011;              // Base for LD (nn),BC|DE|SP opcodes
 
             public const byte ADD_A_R = 0b10000000;               // Base for ADD A,r
+            public const byte ADD_HL_RR = 0b00001001;             // Base for ADD HL,BC|DE|HL|SP
         }
         
         public static class Prefixes
