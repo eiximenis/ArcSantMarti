@@ -1,11 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SantMarti.Z80
 {
+
+    enum OpcodePrefix
+    {
+        None = 0,
+        CB = 1,
+        ED = 2,
+        DD = 3,
+        FD = 4,
+        DDCB = 5,
+        FDCB = 6
+    }
     
     public delegate void OnTickResponder (ref Z80Pins pins);
     
@@ -15,6 +28,8 @@ namespace SantMarti.Z80
         public Z80Registers Registers { get; }
         private Z80Pins _pins = new();
         private OnTickResponder _onTick = (ref Z80Pins _) => { };
+        
+        private OpcodePrefix _currentPrefix = OpcodePrefix.None;
 
         public ref Z80Pins Pins => ref _pins;
 
@@ -103,7 +118,16 @@ namespace SantMarti.Z80
         {
             FetchOpcode();
             var instruction = _instructions[Registers.InstructionRegister];
-            instruction.Action!(instruction, this);
+            if (instruction.IsPrefix)
+            {
+                MoveCurrentPrefixTo(instruction.Opcode);
+                FetchOpcode();
+            }
+            else
+            {
+                instruction.Action!(instruction, this);
+            }
+            
             return Task.CompletedTask;
         }
 
@@ -112,6 +136,38 @@ namespace SantMarti.Z80
             _onTick = responder;
         }
 
+        private void MoveCurrentPrefixTo(byte prefixRead)
+        {
+            switch (_currentPrefix) {
+                case OpcodePrefix.None:
+                    _currentPrefix = prefixRead switch {
+                        0xCB => OpcodePrefix.CB,
+                        0xED => OpcodePrefix.ED,
+                        0xDD => OpcodePrefix.DD,
+                        0xFD => OpcodePrefix.FD,
+                        _ => throw new InvalidOperationException($"Error. Invalid prefix found???? ({prefixRead:x2})")
+                    };
+                    break;
+                case OpcodePrefix.DD:
+                    _currentPrefix = prefixRead switch {
+                        0xCB => OpcodePrefix.DDCB,
+                        0xED => OpcodePrefix.ED,
+                        0xFD => OpcodePrefix.FD,
+                        _ => throw new InvalidOperationException($"Error. Invalid prefix found???? ({prefixRead:x2})")
+                    };
+                    break;
+                case OpcodePrefix.FD:
+                    _currentPrefix = prefixRead switch {
+                        0xCB => OpcodePrefix.FDCB,
+                        0xED => OpcodePrefix.ED,
+                        0xDD => OpcodePrefix.DD,
+                        _ => throw new InvalidOperationException($"Error. Invalid prefix found???? ({prefixRead:x2})")
+                    };
+                    break;
+                default:
+                    throw new InvalidOperationException($"Error. Found prefix {prefixRead:x2} when processor is on prefix {_currentPrefix}");
+            }   
+        }
 
 
 

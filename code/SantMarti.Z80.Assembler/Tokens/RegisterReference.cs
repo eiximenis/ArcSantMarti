@@ -1,6 +1,19 @@
 using System.Reflection;
+using System.Security.Cryptography;
 
 namespace SantMarti.Z80.Assembler.Tokens;
+
+
+public enum RegisterType  {
+    GenericByte,    // A B C D E H L
+    Word,           // AF BC DE HL
+    IndexWord,      // IX IY
+    IndexByte,      // IXH IXL IYH IYL
+    
+    
+    
+}
+
 
 public class RegisterReference : BaseToken
 {

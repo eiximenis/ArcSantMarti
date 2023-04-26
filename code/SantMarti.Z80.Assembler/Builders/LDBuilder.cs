@@ -32,13 +32,13 @@ namespace SantMarti.Z80.Assembler.Builders
                 // LD r,n
                 (RegisterReference {IsByteRegister: true, IsGeneric: true} targetReg, NumericValue {IsByte: true} srcValue) => LD_R_N(targetReg, srcValue),
                 // LD r,(HL)
-                (RegisterReference {IsByteRegister: true} targetReg, MemoryReference { SourceRegisterName: "HL"} srcMemRef) => LD_R_HLRef(targetReg, srcMemRef),
+                (RegisterReference {IsByteRegister: true, IsGeneric: true} targetReg, MemoryReference { SourceRegisterName: "HL"} srcMemRef) => LD_R_HLRef(targetReg, srcMemRef),
                 // LD r,(IX|IY+d)
-                (RegisterReference {IsByteRegister: true} targetReg, Displacement srcDis) => LD_R_Displacement(targetReg, srcDis),
+                (RegisterReference {IsByteRegister: true, IsGeneric: true} targetReg, Displacement srcDis) => LD_R_Displacement(targetReg, srcDis),
                 // LD (HL),r
-                (MemoryReference { SourceRegisterName: "HL"} targetMemRef, RegisterReference {IsByteRegister: true} srcReg) => LD_HLRef_R(targetMemRef, srcReg),
+                (MemoryReference { SourceRegisterName: "HL"} targetMemRef, RegisterReference {IsByteRegister: true, IsGeneric: true} srcReg) => LD_HLRef_R(targetMemRef, srcReg),
                 // LD (IX|IY+d),r 
-                (Displacement targetDis, RegisterReference {IsByteRegister: true} srcReg) => LD_Displacement_R(targetDis, srcReg),
+                (Displacement targetDis, RegisterReference {IsByteRegister: true, IsGeneric: true} srcReg) => LD_Displacement_R(targetDis, srcReg),
                 // LD (HL),n
                 (MemoryReference {SourceRegisterName: "HL"} targetMemRef, NumericValue {IsByte: true} srcValue) => LD_HLRef_Byte(targetMemRef, srcValue),
                 // LD (IX|IY+d),n

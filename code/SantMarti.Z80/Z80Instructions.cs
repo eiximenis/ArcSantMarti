@@ -205,14 +205,14 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0x9e, "SBC A,(HL)", 7));
             unprefixed.Add(new Instruction(0x9f, "SBC A,A", 4));
 
-            unprefixed.Add(new Instruction(0xa0, "AND B", 4));
-            unprefixed.Add(new Instruction(0xa1, "AND C", 4));
-            unprefixed.Add(new Instruction(0xa2, "AND D", 4));
-            unprefixed.Add(new Instruction(0xa3, "AND E", 4));
-            unprefixed.Add(new Instruction(0xa4, "AND H", 4));
-            unprefixed.Add(new Instruction(0xa5, "AND L", 4));
-            unprefixed.Add(new Instruction(0xa6, "AND (HL)", 7));
-            unprefixed.Add(new Instruction(0xa7, "AND A", 4));
+            unprefixed.Add(new Instruction(0xa0, "AND B", 4, Logical.AND_R));
+            unprefixed.Add(new Instruction(0xa1, "AND C", 4, Logical.AND_R));
+            unprefixed.Add(new Instruction(0xa2, "AND D", 4, Logical.AND_R));
+            unprefixed.Add(new Instruction(0xa3, "AND E", 4, Logical.AND_R));
+            unprefixed.Add(new Instruction(0xa4, "AND H", 4, Logical.AND_R));
+            unprefixed.Add(new Instruction(0xa5, "AND L", 4, Logical.AND_R));
+            unprefixed.Add(new Instruction(0xa6, "AND (HL)", 7, Logical.AND_HLRef));
+            unprefixed.Add(new Instruction(0xa7, "AND A", 4, Logical.AND_R));
             unprefixed.Add(new Instruction(0xa8, "XOR B", 4));
             unprefixed.Add(new Instruction(0xa9, "XOR C", 4));
             unprefixed.Add(new Instruction(0xaa, "XOR D", 4));
@@ -279,7 +279,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xe3, "EX (SP),HL", 19));
             unprefixed.Add(new Instruction(0xe4, "CALL PO,nn", 17));
             unprefixed.Add(new Instruction(0xe5, "PUSH HL", 11, Stack.PUSHL));
-            unprefixed.Add(new Instruction(0xe6, "AND n", 7));
+            unprefixed.Add(new Instruction(0xe6, "AND n", 7, Logical.AND_N));
             unprefixed.Add(new Instruction(0xe7, "RST 20", 11));
             unprefixed.Add(new Instruction(0xe8, "RET PE", 11, 5));
             unprefixed.Add(new Instruction(0xe9, "JP (HL)", 4));
@@ -763,7 +763,7 @@ namespace SantMarti.Z80
             ddPrefixed.Add(new Instruction(0x9d, "SBC A,IXL", 8));
             ddPrefixed.Add(new Instruction(0x9e, "SBC A,(IX+d)", 19));
 
-            ddPrefixed.Add(new Instruction(0xa4, "AND IXH", 8));
+            ddPrefixed.Add(new Instruction(0xa4, "AND IXH", 8, Logical.AND_IXH));
             ddPrefixed.Add(new Instruction(0xa5, "AND IXL", 8));
             ddPrefixed.Add(new Instruction(0xa6, "AND (IX+d)", 19));
             ddPrefixed.Add(new Instruction(0xac, "XOR IXH", 8));
@@ -783,6 +783,8 @@ namespace SantMarti.Z80
             ddPrefixed.Add(new Instruction(0xe3, "EX (SP),IX", 23));
             ddPrefixed.Add(new Instruction(0xe5, "PUSH IX", 15));
             ddPrefixed.Add(new Instruction(0xe9, "JP (IX)", 8));
+            ddPrefixed.Add(new Instruction(0xed, "-- ED --", 0));
+            ddPrefixed.Add(new Instruction(0xfd, "-- FD --", 0));
 
             ddPrefixed.Add(new Instruction(0xf9, "LD SP,IX", 10));
             return ddPrefixed;
@@ -884,11 +886,13 @@ namespace SantMarti.Z80
             fdPrefixed.Add(new Instruction(0xbe, "CP (IY+d)", 19));
 
             fdPrefixed.Add(new Instruction(0xcb, "-- CB --", 0));           // CB Prefix
+            fdPrefixed.Add(new Instruction(0xdd, "-- DD --", 0));           // DD Prefix
 
             fdPrefixed.Add(new Instruction(0xe1, "POP IY", 14));
             fdPrefixed.Add(new Instruction(0xe3, "EX (SP),IY", 23));
             fdPrefixed.Add(new Instruction(0xe5, "PUSH IY", 15));
             fdPrefixed.Add(new Instruction(0xe9, "JP (IY)", 8));
+            fdPrefixed.Add(new Instruction(0xed, "-- ED --", 0));
 
             fdPrefixed.Add(new Instruction(0xf9, "LD SP,IY", 10));
             return fdPrefixed;

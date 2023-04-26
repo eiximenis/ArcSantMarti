@@ -111,5 +111,6 @@ public class TestTickHandler
         }
         return -1;
     }
-    
+
+    public void ResetTicks() => _tickData.Clear();
 }

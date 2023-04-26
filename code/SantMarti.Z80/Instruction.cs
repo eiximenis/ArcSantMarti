@@ -13,6 +13,8 @@ namespace SantMarti.Z80
     {
         public Instruction(byte opcode, string name, int tstates,  Action<Instruction, Z80Processor>? Action = null) : this(opcode, name, tstates, tstates, Action) { }
         public static Instruction Nop(byte opc) => new Instruction(opc, "NOP", 4);
+
+        public bool IsPrefix => TStates == 0;
     }
 
 }

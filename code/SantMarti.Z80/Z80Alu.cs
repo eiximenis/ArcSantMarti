@@ -80,5 +80,15 @@ public static class Z80Alu
         return (ushort)result;
 
     }
-    
+
+    public static byte And8(ref Z80GenericRegisters registers, byte first, byte second)
+    {
+        var result =  (byte)(first & second);
+        registers.ClearFlag(Z80Flags.Substract | Z80Flags.Carry);
+        registers.SetFlag(Z80Flags.Carry);
+        registers.CopyF3F5FlagsFrom(result);
+        // Count the number of bits set to 1
+        registers.SetParityFor(result);
+        return result;
+    }
 }

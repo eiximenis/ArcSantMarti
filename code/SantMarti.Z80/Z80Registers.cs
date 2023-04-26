@@ -149,6 +149,20 @@ namespace SantMarti.Z80
             if (set) { SetFlag(flag); }
             else { ClearFlag(flag); }
         }
+
+        public void SetParityFor(byte result)
+        {            
+            var parity = true;
+            while (result > 0)
+            {
+                if ((result & 0x01) == 1)
+                {
+                    parity = !parity;
+                }
+                result = (byte)(result >> 1);
+            }
+            SetFlagIf(Z80Flags.ParityOrOverflow,parity);
+        }
     }
 
     public class Z80Registers

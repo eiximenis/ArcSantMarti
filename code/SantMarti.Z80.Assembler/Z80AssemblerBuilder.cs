@@ -79,6 +79,8 @@ namespace SantMarti.Z80.Assembler
             var result = INCBuilder.INC(dest);
             ProcessParseResult(result);
         }
+        
+        public void DAA() => _bytes.Add(Z80Opcodes.DAA);
 
         private void ProcessParseResult(AssemblerLineResult result)
         {
