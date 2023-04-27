@@ -5,24 +5,14 @@ using SantMarti.Z80.Tests.Extensions;
 
 namespace SantMarti.Z80.Tests.Instructions;
 
-public class DAATests
+public class DAATests : InstructionTestsBase
 {
-    private readonly Z80Processor _processor;
-    private readonly TestTickHandler _testTickHandler;
     private const ushort TEST_START_ADDRESS = 20;
     
-    public DAATests()
+    public DAATests() : base(TEST_START_ADDRESS)
     {
-        _processor = new Z80Processor();
-        _testTickHandler = new TestTickHandler(_processor);
     }
-
-    private void SetupProcessorWithProgram(Z80AssemblerBuilder asm)
-    {
-        var program = asm.Build();
-        _testTickHandler.OnMemoryRead(10, program);
-        _processor.Registers.PC = 10;
-    }
+    
 
     // We rely on ADD for easy testing of DAA
     // Also: What is the supposed behavior of DAA when Acc value is not BCD-valid?
@@ -38,17 +28,17 @@ public class DAATests
     public async Task DAA_After_ADD_Should_Leave_BCD_Value_In_Acc(byte a, byte b,  byte result, bool carryExpected)
     {
         const int EXPECTED_TICKS = 4;
-        _processor.Registers.Main.A = a;
+        Processor.Registers.Main.A = a;
         var assembler = new Z80AssemblerBuilder();
         assembler.ADD("A", b.ToString());
         assembler.DAA();
-        _processor.SetupWithProgram(_testTickHandler, assembler, TEST_START_ADDRESS);
-        await _processor.RunOnce();
-        _testTickHandler.ResetTicks();
-        await _processor.RunOnce();
-        _processor.Registers.Main.A.Should().Be(result);
-        _processor.Registers.Main.HasFlag(Z80Flags.Carry).Should().Be(carryExpected);
-        _testTickHandler.TotalTicks.Should().Be(EXPECTED_TICKS);
+        SetupProcessorWithProgram(assembler);
+        await Processor.RunOnce();
+        TickHandler.ResetTicks();
+        await Processor.RunOnce();
+        Processor.Registers.Main.A.Should().Be(result);
+        Processor.Registers.Main.HasFlag(Z80Flags.Carry).Should().Be(carryExpected);
+        TickHandler.TotalTicks.Should().Be(EXPECTED_TICKS);
     }
     
 }

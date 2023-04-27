@@ -62,9 +62,11 @@ namespace SantMarti.Z80.Assembler
         public const byte INC_L = 0x2c;                        // INC L
         public const byte DAA = 0x27;                          // DAA
         public const byte AND_HLRef = 0xa6;                     // AND (HL)
-        public static byte AND_N = 0xe6;                        // AND n
+        public const byte AND_N = 0xe6;                        // AND n
         
-
+        // DD prefixed opcodes
+        public const byte DD_AND_IXH = 0xa4;                   // ADD IXH
+        public const byte DD_AND_IXL = 0xa5;                   // ADD IXL
         public static class Bases
         {
             public const byte LD_R_R = 0b01000000;                // Base for LD r,r' opcodes   
@@ -75,7 +77,7 @@ namespace SantMarti.Z80.Assembler
             public const byte LD_R_Displacement = 0b01000110;      // Base for LD r,(IX|IY + n) opcodes
             public const byte LD_Displacement_R = 0b01110000;       // Base for LD (IX|IY + n),r opcodes
             public const byte LD_DD_NNRef = 0b01001011;            // Base for LD BC|DE|SP,(nn) opcodes
-            public static byte LD_NNRef_DD = 0b01000011;              // Base for LD (nn),BC|DE|SP opcodes
+            public const byte LD_NNRef_DD = 0b01000011;              // Base for LD (nn),BC|DE|SP opcodes
             
             public static byte AND_R = 0b10100000;               // Base for AND r
 

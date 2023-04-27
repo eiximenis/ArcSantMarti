@@ -4,23 +4,9 @@ using SantMarti.Z80.Tests.Extensions;
 
 namespace SantMarti.Z80.Tests.Instructions;
 
-public class INCTests
+public class INCTests : InstructionTestsBase
 {
-    private readonly Z80Processor _processor;
-    private readonly TestTickHandler _testTickHandler;
-    public INCTests()
-    {
-        _processor = new Z80Processor();
-        _testTickHandler = new TestTickHandler(_processor);
-    }
-
-    private void SetupProcessorWithProgram(Z80AssemblerBuilder asm)
-    {
-        var program = asm.Build();
-        _testTickHandler.OnMemoryRead(10, program);
-        _processor.Registers.PC = 10;
-    }
-
+    
     [Theory]
     [InlineData("A")]
     [InlineData("B")]
@@ -33,12 +19,12 @@ public class INCTests
     {
         const byte initial = 0x10;
         const byte expected = 0x11;
-        _processor.Registers.SetByteRegisterByName(register, initial);
+        Processor.Registers.SetByteRegisterByName(register, initial);
         var assembler = new Z80AssemblerBuilder();
         assembler.INC(register);
         SetupProcessorWithProgram(assembler);
-        await _processor.RunOnce();
-        _processor.Registers.GetByteRegisterByName(register).Should().Be(expected);
+        await Processor.RunOnce();
+        Processor.Registers.GetByteRegisterByName(register).Should().Be(expected);
     }
 
     // Overflow flag is set when operands have both same sign and result has different sign.
@@ -54,14 +40,12 @@ public class INCTests
     [InlineData("A", 0xff, false)]
     public async Task INC_R_Should_Set_Overflow_Flag_If_Expected(string register, byte initial, bool overflowExpected)
     {
-        _processor.Registers.SetByteRegisterByName(register, initial);
+        Processor.Registers.SetByteRegisterByName(register, initial);
         var assembler = new Z80AssemblerBuilder();
         assembler.INC(register);
         SetupProcessorWithProgram(assembler);
-        await _processor.RunOnce();
-        _processor.Registers.Main.F.HasFlag(Z80Flags.ParityOrOverflow).Should().Be(overflowExpected);
+        await Processor.RunOnce();
+        Processor.Registers.Main.F.HasFlag(Z80Flags.ParityOrOverflow).Should().Be(overflowExpected);
     }
     
-    
-
 }

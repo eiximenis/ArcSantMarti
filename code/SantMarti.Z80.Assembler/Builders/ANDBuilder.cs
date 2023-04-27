@@ -23,10 +23,22 @@ public class ANDBuilder
         return regToken switch
         {
             RegisterReference { RegisterType: RegisterType.GenericByte } r => AND_R(r),
+            RegisterReference {RegisterType: RegisterType.IndexByte} r => AND_I8(r),
             MemoryReference { SourceRegisterName: "HL" } => AssemblerLineResult.Success(Z80Opcodes.AND_HLRef),
             NumericValue {IsByte: true} n => AND_N(n),
             Displacement d => AND_IX_IYDisp(d),
             _ => AssemblerLineResult.Error($"Invalid operand {regToken.StrValue}", regToken)
+        };
+    }
+    
+    // AND IXH|IXL|IYH|IYL
+    private static AssemblerLineResult AND_I8(RegisterReference register)
+    {
+        return register.StrValue switch
+        {
+            "IXH" => AssemblerLineResult.Success(Z80Opcodes.Prefixes.DD, Z80Opcodes.DD_AND_IXH),
+            "IXL" => AssemblerLineResult.Success(Z80Opcodes.Prefixes.DD, Z80Opcodes.DD_AND_IXL),
+            _ => AssemblerLineResult.Error($"Invalid operand (expected IXH|IXL|IYH|IYL){register.StrValue}", register)
         };
     }
 

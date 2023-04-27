@@ -1,3 +1,5 @@
 LD A,B   ;Test
 LD B,C
 INC D
+AND IXH
+AND IXL
