@@ -8,7 +8,7 @@ public static class RegisterParser
     {
         return operand switch
         {
-            "A" or "B" or "C" or "D" or "E" or "F" or "H" or "L" => 
+            "A" or "B" or "C" or "D" or "E" or "H" or "L" => 
                 TokenParseResult<RegisterReference>.Success(new RegisterReference(operand, RegisterType.GenericByte)),
             "I" or "R" =>
                 TokenParseResult<RegisterReference>.Success(new RegisterReference(operand, RegisterType.OtherByte)),
