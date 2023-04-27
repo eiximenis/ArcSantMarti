@@ -22,7 +22,7 @@ public class ANDBuilder
     {
         return regToken switch
         {
-            RegisterReference { IsByteRegister: true, IsGeneric: true } r => AND_R(r),
+            RegisterReference { RegisterType: RegisterType.GenericByte } r => AND_R(r),
             MemoryReference { SourceRegisterName: "HL" } => AssemblerLineResult.Success(Z80Opcodes.AND_HLRef),
             NumericValue {IsByte: true} n => AND_N(n),
             Displacement d => AND_IX_IYDisp(d),

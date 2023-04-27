@@ -22,7 +22,7 @@ public class INCBuilder
     {
         return  regToken switch
         {
-            RegisterReference { IsByteRegister: true, IsGeneric: true } r => INC_R(r),
+            RegisterReference { RegisterType: RegisterType.GenericByte } r => INC_R(r),
             MemoryReference { SourceRegisterName: "HL" } => INC_HLRef(),
             Displacement d => INC_IX_IYDisp(d),
             _ => AssemblerLineResult.Error($"Invalid operand {regToken.StrValue}", regToken)

@@ -38,7 +38,7 @@ namespace SantMarti.Z80.Assembler.Builders
                 case RegisterReference {StrValue: "A" }:
                     return second switch
                     {
-                        RegisterReference { IsByteRegister: true, IsGeneric: true } r => ADD_A_R(r),
+                        RegisterReference { RegisterType: RegisterType.GenericByte } r => ADD_A_R(r),
                         NumericValue { IsByte: true } num => ADD_A_N(num),
                         MemoryReference { SourceRegisterName: "HL" } => ADD_A_HLRef(),
                         Displacement d => ADD_A_IX_IYDisp(d),

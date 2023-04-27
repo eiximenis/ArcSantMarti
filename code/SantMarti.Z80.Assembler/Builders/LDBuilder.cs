@@ -28,53 +28,53 @@ namespace SantMarti.Z80.Assembler.Builders
             return destSrc switch
             {
                 // LD r,r
-                (RegisterReference {IsByteRegister: true, IsGeneric: true} targetReg, RegisterReference { IsByteRegister: true, IsGeneric: true} srcReg) => LD_R_R(targetReg, srcReg),
+                (RegisterReference {RegisterType: RegisterType.GenericByte} targetReg, RegisterReference { RegisterType: RegisterType.GenericByte} srcReg) => LD_R_R(targetReg, srcReg),
                 // LD r,n
-                (RegisterReference {IsByteRegister: true, IsGeneric: true} targetReg, NumericValue {IsByte: true} srcValue) => LD_R_N(targetReg, srcValue),
+                (RegisterReference {RegisterType: RegisterType.GenericByte} targetReg, NumericValue {IsByte: true} srcValue) => LD_R_N(targetReg, srcValue),
                 // LD r,(HL)
-                (RegisterReference {IsByteRegister: true, IsGeneric: true} targetReg, MemoryReference { SourceRegisterName: "HL"} srcMemRef) => LD_R_HLRef(targetReg, srcMemRef),
+                (RegisterReference {RegisterType: RegisterType.GenericByte} targetReg, MemoryReference { SourceRegisterName: "HL"} srcMemRef) => LD_R_HLRef(targetReg, srcMemRef),
                 // LD r,(IX|IY+d)
-                (RegisterReference {IsByteRegister: true, IsGeneric: true} targetReg, Displacement srcDis) => LD_R_Displacement(targetReg, srcDis),
+                (RegisterReference {RegisterType: RegisterType.GenericByte} targetReg, Displacement srcDis) => LD_R_Displacement(targetReg, srcDis),
                 // LD (HL),r
-                (MemoryReference { SourceRegisterName: "HL"} targetMemRef, RegisterReference {IsByteRegister: true, IsGeneric: true} srcReg) => LD_HLRef_R(targetMemRef, srcReg),
+                (MemoryReference { SourceRegisterName: "HL"} targetMemRef, RegisterReference {RegisterType: RegisterType.GenericByte} srcReg) => LD_HLRef_R(targetMemRef, srcReg),
                 // LD (IX|IY+d),r 
-                (Displacement targetDis, RegisterReference {IsByteRegister: true, IsGeneric: true} srcReg) => LD_Displacement_R(targetDis, srcReg),
+                (Displacement targetDis, RegisterReference {RegisterType: RegisterType.GenericByte} srcReg) => LD_Displacement_R(targetDis, srcReg),
                 // LD (HL),n
                 (MemoryReference {SourceRegisterName: "HL"} targetMemRef, NumericValue {IsByte: true} srcValue) => LD_HLRef_Byte(targetMemRef, srcValue),
                 // LD (IX|IY+d),n
                 (Displacement targetDis, NumericValue {IsByte: true} srcValue) => LD_Displacement_Byte(targetDis, srcValue),
                 // LD A,I|R
-                (RegisterReference {StrValue: "A"} reg, RegisterReference { StrValue: "I" or "R"} reg2) => LD_A_IR(reg, reg2),
+                (RegisterReference {IsAccumulator: true} reg, RegisterReference { RegisterType: RegisterType.OtherByte} reg2) => LD_A_IR(reg, reg2),
                 // LD A,(nn) 
-                (RegisterReference {StrValue: "A"} reg, MemoryReference {IsFixedAddress: true} mr) => LD_A_NN(reg, mr),
+                (RegisterReference {IsAccumulator: true} reg, MemoryReference {IsFixedAddress: true} mr) => LD_A_NN(reg, mr),
                 // LD (nn),A
-                (MemoryReference {IsFixedAddress: true} mr, RegisterReference {StrValue: "A"} reg) => LD_NN_A(mr, reg),
+                (MemoryReference {IsFixedAddress: true} mr, RegisterReference {IsAccumulator: true} reg) => LD_NN_A(mr, reg),
                 // LD dd,nn
                 (RegisterReference {StrValue: "BC" or "DE" or "HL" or "SP" } reg, NumericValue {IsWord: true} nv) => LD_DD_NN(reg,nv),
                 // LD I|R,A
-                (RegisterReference {StrValue: "I" or "R"} reg, RegisterReference { StrValue: "A"} reg2) => LD_IR_A(reg),
+                (RegisterReference {RegisterType: RegisterType.OtherByte} reg, RegisterReference { IsAccumulator: true} reg2) => LD_IR_A(reg),
                 // LD A,(BC|DE)
-                (RegisterReference {StrValue: "A"} reg, MemoryReference {SourceRegisterName: "BC" or "DE"} mr) => LD_A_BC_DERef(reg, mr),
+                (RegisterReference {IsAccumulator: true} reg, MemoryReference {SourceRegisterName: "BC" or "DE"} mr) => LD_A_BC_DERef(reg, mr),
                 // LD (BC|DE),A
-                (MemoryReference {SourceRegisterName: "BC" or "DE"} mr, RegisterReference {StrValue: "A"} reg) => LD_BC_DERef_A(mr, reg),
+                (MemoryReference {SourceRegisterName: "BC" or "DE"} mr, RegisterReference {IsAccumulator: true} reg) => LD_BC_DERef_A(mr, reg),
                 // LD IX|IY,nn
-                (RegisterReference {StrValue: "IX" or "IY"} reg, NumericValue {IsWord: true} nv) => LD_IX_IY_NN(reg, nv),
+                (RegisterReference {RegisterType: RegisterType.IndexWord} reg, NumericValue {IsWord: true} nv) => LD_IX_IY_NN(reg, nv),
                 // LD HL,(nn)
                 (RegisterReference {StrValue: "HL"} reg, MemoryReference {IsFixedAddress: true} mr) => LD_HL_NNRef(reg, mr),
                 // LD dd,(nn)
                 (RegisterReference {StrValue: "BC" or "DE" or "SP" } reg, MemoryReference {IsFixedAddress: true} mr) => LD_DD_NNRef(reg, mr),
                 // LD IX|IY,(nn)
-                (RegisterReference {StrValue: "IX" or "IY"} reg, MemoryReference {IsFixedAddress: true} mr) => LD_IX_IY_NNRef(reg, mr),
+                (RegisterReference {RegisterType: RegisterType.IndexWord} reg, MemoryReference {IsFixedAddress: true} mr) => LD_IX_IY_NNRef(reg, mr),
                 // LD (nn),HL
                 (MemoryReference {IsFixedAddress: true} mr, RegisterReference {StrValue: "HL"} reg) => LD_NNRef_HL(mr, reg),
                 // LD (nn),dd
                 (MemoryReference {IsFixedAddress: true} mr, RegisterReference {StrValue: "BC" or "DE" or "SP" } reg) => LD_NNRef_DD(mr, reg),
                 // LD (nn), IX|IY
-                (MemoryReference {IsFixedAddress: true} mr, RegisterReference {StrValue: "IX" or "IY"} reg) => LD_NNRef_IX_IY(mr, reg),
+                (MemoryReference {IsFixedAddress: true} mr, RegisterReference {RegisterType: RegisterType.IndexWord} reg) => LD_NNRef_IX_IY(mr, reg),
                 // LD SP, HL
                 (RegisterReference {StrValue: "SP"} targetReg, RegisterReference {StrValue: "HL"} srcReg) => LD_SP_HL(targetReg, srcReg),
                 // LD SP, IX|IY
-                (RegisterReference {StrValue: "SP"} targetReg, RegisterReference {StrValue: "IX" or "IY"} srcReg) => LD_SP_IX_IY(targetReg, srcReg),
+                (RegisterReference {StrValue: "SP"} targetReg, RegisterReference {RegisterType: RegisterType.IndexWord} srcReg) => LD_SP_IX_IY(targetReg, srcReg),
                 _ => AssemblerLineResult.Error($"Unsupported combination of operands {dest}, {source}")
             };
         }
