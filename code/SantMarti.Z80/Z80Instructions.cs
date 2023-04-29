@@ -16,6 +16,7 @@ namespace SantMarti.Z80
         private readonly Instruction[] _fdPrefixed;
         private readonly Instruction[] _ddcbPrefixed;
         private readonly Instruction[] _fdcbPrefixed;
+        
 
         public Z80Instructions()
         {
@@ -28,7 +29,17 @@ namespace SantMarti.Z80
             _fdcbPrefixed = CreateFDCBPrefixedInstructions().ToArray();
         }
 
-        public Instruction this[byte opcode] => _unprefixed[opcode];
+        public Instruction this[byte opcode, OpcodePrefix prefix] => prefix switch
+        {
+            OpcodePrefix.CB => _cbPrefixed[opcode],
+            OpcodePrefix.DD => _ddPrefixed[opcode],
+            OpcodePrefix.ED => _edPrefixed[opcode],
+            OpcodePrefix.FD => _fdPrefixed[opcode],
+            OpcodePrefix.DDCB => _ddcbPrefixed[opcode],
+            OpcodePrefix.FDCB => _fdcbPrefixed[opcode],
+            _ => _unprefixed[opcode]
+        };
+        
 
         private IEnumerable<Instruction> CreateUnprefixedInstructions()
         {
@@ -764,7 +775,7 @@ namespace SantMarti.Z80
             ddPrefixed.Add(new Instruction(0x9e, "SBC A,(IX+d)", 19));
 
             ddPrefixed.Add(new Instruction(0xa4, "AND IXH", 8, Logical.AND_IXH));
-            ddPrefixed.Add(new Instruction(0xa5, "AND IXL", 8));
+            ddPrefixed.Add(new Instruction(0xa5, "AND IXL", 8, Logical.AND_IXL));
             ddPrefixed.Add(new Instruction(0xa6, "AND (IX+d)", 19));
             ddPrefixed.Add(new Instruction(0xac, "XOR IXH", 8));
             ddPrefixed.Add(new Instruction(0xad, "XOR IXL", 8));
@@ -871,8 +882,8 @@ namespace SantMarti.Z80
             fdPrefixed.Add(new Instruction(0x9d, "SBC A,IYL", 8));
             fdPrefixed.Add(new Instruction(0x9e, "SBC A,(IY+d)", 19));
 
-            fdPrefixed.Add(new Instruction(0xa4, "AND IYH", 8));
-            fdPrefixed.Add(new Instruction(0xa5, "AND IYL", 8));
+            fdPrefixed.Add(new Instruction(0xa4, "AND IYH", 8, Logical.AND_IYH));
+            fdPrefixed.Add(new Instruction(0xa5, "AND IYL", 8, Logical.AND_IYL));
             fdPrefixed.Add(new Instruction(0xa6, "AND (IY+d)", 19));
             fdPrefixed.Add(new Instruction(0xac, "XOR IYH", 8));
             fdPrefixed.Add(new Instruction(0xad, "XOR IYL", 8));

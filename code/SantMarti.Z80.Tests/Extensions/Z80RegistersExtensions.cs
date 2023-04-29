@@ -10,7 +10,7 @@ namespace SantMarti.Z80.Tests.Extensions
     {
         public static byte GetByteRegisterByName(this Z80Registers regs, string name) => name switch
         {
-            "B" => regs.Main.B,
+            "B" => regs.Main.B, 
             "C" => regs.Main.C,
             "D" => regs.Main.D,
             "E" => regs.Main.E,
@@ -18,6 +18,10 @@ namespace SantMarti.Z80.Tests.Extensions
             "L" => regs.Main.L,
             "A" => regs.Main.A,
             "F" => (byte)regs.Main.F,
+            "IXH" => regs.IXH,
+            "IXL" => regs.IXL,
+            "IYH" =>  regs.IYH,
+            "IYL" => regs.IXL,
             _ => 0x0
         };
         
@@ -27,6 +31,8 @@ namespace SantMarti.Z80.Tests.Extensions
             "DE" => regs.Main.DE,
             "HL" => regs.Main.HL,
             "AF" => regs.Main.AF,
+            "IX" => regs.IX,
+            "IY" => regs.IY,
             _ => 0x0
         };
 
@@ -34,6 +40,7 @@ namespace SantMarti.Z80.Tests.Extensions
         {
             switch (name)
             {
+                // Generic 8 bit registers
                 case "B": regs.Main.B = value; break;
                 case "C": regs.Main.C = value; break;
                 case "D": regs.Main.D = value; break;
@@ -42,6 +49,11 @@ namespace SantMarti.Z80.Tests.Extensions
                 case "L": regs.Main.L = value; break;
                 case "A": regs.Main.A = value; break;
                 case "F": regs.Main.F = (Z80Flags)value; break;
+                case "IXH": regs.IXH = value; break;
+                case "IXL": regs.IXL = value; break;
+                case "IYH": regs.IYH = value; break;
+                case "IYL": regs.IYL = value; break;
+                
             }
         }
         
@@ -53,6 +65,8 @@ namespace SantMarti.Z80.Tests.Extensions
                 case "DE": regs.Main.DE = value; break;
                 case "HL": regs.Main.HL = value; break;
                 case "AF": regs.Main.AF = value; break;
+                case "IX": regs.IX = value; break;
+                case "IY": regs.IY = value; break;
             }
         }
     }

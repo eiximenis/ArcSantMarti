@@ -65,8 +65,10 @@ namespace SantMarti.Z80.Assembler
         public const byte AND_N = 0xe6;                        // AND n
         
         // DD prefixed opcodes
-        public const byte DD_AND_IXH = 0xa4;                   // ADD IXH
-        public const byte DD_AND_IXL = 0xa5;                   // ADD IXL
+        public const byte DD_AND_IXH = 0xa4;                   // AND IXH
+        public const byte DD_AND_IXL = 0xa5;                   // AND IXL
+        public const byte FD_AND_IYH = 0xa4;                   // AND IYH
+        public const byte FD_AND_IYL = 0xa5;                   // AND IYL
         public static class Bases
         {
             public const byte LD_R_R = 0b01000000;                // Base for LD r,r' opcodes   

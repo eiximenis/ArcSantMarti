@@ -184,6 +184,30 @@ namespace SantMarti.Z80
         public ushort IX { get; set; }
         public ushort IY { get; set; }
 
+        public byte IXH
+        {
+            get => (byte)(IX >> 8);
+            set => IX = (ushort)((IX & 0x00FF) | (value << 8));
+        }
+
+        public byte IXL
+        {
+            get => (byte)(IX  & 0xFF);
+            set => IX = (ushort)((IX & 0xFF00) | value);
+        }
+        
+        public byte IYH
+        {
+            get => (byte)(IY >> 8);
+            set => IY = (ushort)((IX & 0x00FF) | (value << 8));
+        }
+
+        public byte IYL
+        {
+            get => (byte)(IY & 0xFF);
+            set => IY = (ushort)((IY & 0xFF00) | value);
+        }
+
         // 16 bits specific registers
         public ushort PC { get; set; }          // Program Counter
         public ushort SP { get; set; }          // Stack Pointer

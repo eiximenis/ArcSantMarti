@@ -117,17 +117,15 @@ namespace SantMarti.Z80
         public Task RunOnce()
         {
             FetchOpcode();
-            var instruction = _instructions[Registers.InstructionRegister];
-            if (instruction.IsPrefix)
+            var instruction = _instructions[Registers.InstructionRegister, _currentPrefix];
+            while (instruction.IsPrefix)
             {
                 MoveCurrentPrefixTo(instruction.Opcode);
                 FetchOpcode();
+                instruction = _instructions[Registers.InstructionRegister, _currentPrefix];
             }
-            else
-            {
-                instruction.Action!(instruction, this);
-            }
-            
+            instruction.Action!(instruction, this);
+            _currentPrefix = OpcodePrefix.None;
             return Task.CompletedTask;
         }
 

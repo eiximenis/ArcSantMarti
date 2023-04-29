@@ -42,7 +42,27 @@ public class Logical
     public static void AND_IXH(Instruction instruction, Z80Processor processor)
     {
         ref var registers = ref processor.Registers.Main;
-        var data =processor.Registers.IX.HiByte();
+        var data = processor.Registers.IXH;
         registers.A = Z80Alu.And8(ref registers, registers.A, data);
     }
+    public static void AND_IXL(Instruction instruction, Z80Processor processor)
+    {
+        ref var registers = ref processor.Registers.Main;
+        var data = processor.Registers.IXL;
+        registers.A = Z80Alu.And8(ref registers, registers.A, data);
+    }
+
+    public static void AND_IYH(Instruction instruction, Z80Processor processor)
+    {
+        ref var registers = ref processor.Registers.Main;
+        var data = processor.Registers.IYH;
+        registers.A = Z80Alu.And8(ref registers, registers.A, data);
+    }
+    public static void AND_IYL(Instruction instruction, Z80Processor processor)
+    {
+        ref var registers = ref processor.Registers.Main;
+        var data = processor.Registers.IYL;
+        registers.A = Z80Alu.And8(ref registers, registers.A, data);
+    }
+    
 }

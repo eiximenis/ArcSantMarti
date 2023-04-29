@@ -38,7 +38,9 @@ public class ANDBuilder
         {
             "IXH" => AssemblerLineResult.Success(Z80Opcodes.Prefixes.DD, Z80Opcodes.DD_AND_IXH),
             "IXL" => AssemblerLineResult.Success(Z80Opcodes.Prefixes.DD, Z80Opcodes.DD_AND_IXL),
-            _ => AssemblerLineResult.Error($"Invalid operand (expected IXH|IXL|IYH|IYL){register.StrValue}", register)
+            "IYH" => AssemblerLineResult.Success(Z80Opcodes.Prefixes.FD, Z80Opcodes.FD_AND_IYH),
+            "IYL" => AssemblerLineResult.Success(Z80Opcodes.Prefixes.FD, Z80Opcodes.FD_AND_IYL),
+            _ => AssemblerLineResult.Error($"Invalid operand (expected IXH|IXL|IYH|IYL) found: {register.StrValue}", register)
         };
     }
 
