@@ -96,5 +96,25 @@ namespace SantMarti.Z80.Tests.Instructions
             await Processor.RunOnce();
             TickHandler.TotalTicks.Should().Be(EXPECTED_TICKS);
         }
+        
+        [Theory()]
+        [InlineData("B")]
+        [InlineData("C")]
+        [InlineData("D")]
+        [InlineData("E")]
+        [InlineData("A")]
+        public async Task LD_R_HRef_Should_Load_Register_With_Memory_Contents_Pointed_By_HL(string reg)
+        {
+            var assembler = new Z80AssemblerBuilder();
+            assembler.LD(reg, "(HL)");
+            var address = (ushort)100;
+            var random = new Random();
+            var memContent = random.GetRandomByte();
+            TickHandler.OnMemoryRead(address, memContent);
+            Processor.Registers.Main.HL = address;
+            SetupProcessorWithProgram(assembler);
+            await Processor.RunOnce();
+            Processor.Registers.GetByteRegisterByName(reg).Should().Be(memContent);
+        }
     }
 }

@@ -120,7 +120,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0x43, "LD B,E", 4, Load.LD_R_R));    
             unprefixed.Add(new Instruction(0x44, "LD B,H", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x45, "LD B,L", 4, Load.LD_R_R));
-            unprefixed.Add(new Instruction(0x46, "LD B,(HL)", 7));
+            unprefixed.Add(new Instruction(0x46, "LD B,(HL)", 7, Load.LD_R_HLRef));
             unprefixed.Add(new Instruction(0x47, "LD B,A", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x48, "LD C,B", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x49, "LD C,C", 4, Load.LD_R_R));
@@ -128,7 +128,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0x4b, "LD C,E", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x4c, "LD C,H", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x4d, "LD C,L", 4, Load.LD_R_R));
-            unprefixed.Add(new Instruction(0x4e, "LD C,(HL)", 7));
+            unprefixed.Add(new Instruction(0x4e, "LD C,(HL)", 7,Load.LD_R_HLRef));
             unprefixed.Add(new Instruction(0x4f, "LD C,A", 4, Load.LD_R_R));
 
             unprefixed.Add(new Instruction(0x50, "LD D,B", 4, Load.LD_R_R));
@@ -137,7 +137,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0x53, "LD D,E", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x54, "LD D,H", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x55, "LD D,L", 4, Load.LD_R_R));
-            unprefixed.Add(new Instruction(0x56, "LD D,(HL)", 7));
+            unprefixed.Add(new Instruction(0x56, "LD D,(HL)", 7, Load.LD_R_HLRef));
             unprefixed.Add(new Instruction(0x57, "LD D,A", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x58, "LD E,B", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x59, "LD E,C", 4, Load.LD_R_R));
@@ -145,7 +145,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0x5b, "LD E,E", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x5c, "LD E,H", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x5d, "LD E,L", 4, Load.LD_R_R));
-            unprefixed.Add(new Instruction(0x5e, "LD E,(HL)", 7));
+            unprefixed.Add(new Instruction(0x5e, "LD E,(HL)", 7, Load.LD_R_HLRef));
             unprefixed.Add(new Instruction(0x5f, "LD E,A", 4, Load.LD_R_R));
 
             unprefixed.Add(new Instruction(0x60, "LD H,B", 4, Load.LD_R_R));
@@ -154,7 +154,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0x63, "LD H,E", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x64, "LD H,H", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x65, "LD H,L", 4, Load.LD_R_R));
-            unprefixed.Add(new Instruction(0x66, "LD H,(HL)", 7));
+            unprefixed.Add(new Instruction(0x66, "LD H,(HL)", 7, Load.LD_R_HLRef));
             unprefixed.Add(new Instruction(0x67, "LD H,A", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x68, "LD L,B", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x69, "LD L,C", 4, Load.LD_R_R));
@@ -162,7 +162,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0x6b, "LD L,E", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x6c, "LD L,H", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x6d, "LD L,L", 4, Load.LD_R_R));
-            unprefixed.Add(new Instruction(0x6e, "LD L,(HL)", 7));
+            unprefixed.Add(new Instruction(0x6e, "LD L,(HL)", 7, Load.LD_R_HLRef));
             unprefixed.Add(new Instruction(0x6f, "LD L,A", 4, Load.LD_R_R));
 
             unprefixed.Add(new Instruction(0x70, "LD (HL),B", 7, Load.LD_HLRef_R));
@@ -179,7 +179,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0x7b, "LD A,E", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x7c, "LD A,H", 4, Load.LD_R_R));
             unprefixed.Add(new Instruction(0x7d, "LD A,L", 4, Load.LD_R_R));
-            unprefixed.Add(new Instruction(0x7e, "LD A,(HL)", 7));
+            unprefixed.Add(new Instruction(0x7e, "LD A,(HL)", 7, Load.LD_A_HLRef));
             unprefixed.Add(new Instruction(0x7f, "LD A,A", 4, Load.LD_R_R));
 
             unprefixed.Add(new Instruction(0x80, "ADD A,B", 4, Add.Add_R));

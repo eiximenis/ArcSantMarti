@@ -42,5 +42,22 @@ namespace SantMarti.Z80.Instructions
             var value = processor.GetByteRegisterMask(source);
             processor.MemoryWrite(processor.Registers.Main.HL, value);
         }
+        
+        // LD R, (HL): Loads memory address pointed by HL into R
+        public static void LD_R_HLRef(Instruction instruction, Z80Processor processor)
+        {
+            var opcode = instruction.Opcode;
+            var target = (opcode & 000_111_000) >> 3;
+            var data = processor.MemoryRead(processor.Registers.Main.HL);
+            processor.SetByteRegisterByMask(target, data);
+        }
+
+        // LD A, (HL): Loads memory address pointed by HL into A
+        // Cant use LD_R_HLRef because opcode does not follow the mask (000_111_000) for R
+        public static void LD_A_HLRef(Instruction instruction, Z80Processor processor)
+        {
+            var data = processor.MemoryRead(processor.Registers.Main.HL);
+            processor.Registers.Main.A = data;
+        }
     }
 }
