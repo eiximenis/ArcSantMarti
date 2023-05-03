@@ -53,7 +53,7 @@ namespace SantMarti.Z80.Instructions
         }
 
         // LD A, (HL): Loads memory address pointed by HL into A
-        // Cant use LD_R_HLRef because opcode does not follow the mask (000_111_000) for R
+        // Cant use LD_R_HLRef because opcode does not follow the mask (000_111_000) for A
         public static void LD_A_HLRef(Instruction instruction, Z80Processor processor)
         {
             var data = processor.MemoryRead(processor.Registers.Main.HL);

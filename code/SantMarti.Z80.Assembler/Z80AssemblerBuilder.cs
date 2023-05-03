@@ -87,6 +87,18 @@ namespace SantMarti.Z80.Assembler
             var result = ANDBuilder.AND(operand);
             ProcessParseResult(result);
         }
+        
+        public void OR(string operand)
+        {
+            var result = ORBuilder.OR(operand);
+            ProcessParseResult(result);
+        }
+        
+        public void XOR(string operand)
+        {
+            var result = XORBuilder.XOR(operand);
+            ProcessParseResult(result);
+        }
 
         private void ProcessParseResult(AssemblerLineResult result)
         {

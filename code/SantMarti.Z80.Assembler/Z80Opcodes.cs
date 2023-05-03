@@ -82,6 +82,8 @@ namespace SantMarti.Z80.Assembler
             public const byte LD_NNRef_DD = 0b01000011;              // Base for LD (nn),BC|DE|SP opcodes
             
             public static byte AND_R = 0b10100000;               // Base for AND r
+            public static byte OR_R = 0b10110000;                // Base for OR r
+            public static byte XOR_R = 0b10101000;                // Base for XOR r
 
             public const byte ADD_A_R = 0b10000000;               // Base for ADD A,r
             public const byte ADD_HL_RR = 0b00001001;             // Base for ADD HL,BC|DE|HL|SP

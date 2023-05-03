@@ -23,7 +23,8 @@ namespace SantMarti.Z80.Assembler.Builders
             _builders.Add("NOP", l => AssemblerLineResult.Success(Z80Opcodes.NOP));
             _builders.Add("DAA", l => AssemblerLineResult.Success(Z80Opcodes.DAA));
             _builders.Add("AND", ANDBuilder.BuildFromLine);
-            
+            _builders.Add("OR", ORBuilder.BuildFromLine);
+            _builders.Add("XOR", XORBuilder.BuildFromLine);
 
             _parser = new AssemblerLineParser();
         }

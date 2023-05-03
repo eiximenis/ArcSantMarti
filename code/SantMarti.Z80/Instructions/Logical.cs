@@ -16,6 +16,24 @@ public class Logical
         ref var registers = ref processor.Registers.Main;
         registers.A = Z80Alu.And8(ref registers, registers.A, value);
     }
+
+    public static void OR_R(Instruction instruction, Z80Processor processor)
+    {        
+        var opcode = instruction.Opcode;
+        var source = opcode & 0b00_000_111;
+        var value = processor.GetByteRegisterMask(source);
+        ref var registers = ref processor.Registers.Main;
+        registers.A = Z80Alu.Or8(ref registers, registers.A, value);
+    }
+    public static void XOR_R(Instruction instruction, Z80Processor processor)
+    {        
+        var opcode = instruction.Opcode;
+        var source = opcode & 0b00_000_111;
+        var value = processor.GetByteRegisterMask(source);
+        ref var registers = ref processor.Registers.Main;
+        registers.A = Z80Alu.Xor8(ref registers, registers.A, value);
+    }
+
     
 
     /// <summary>

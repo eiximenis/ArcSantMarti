@@ -27,7 +27,7 @@ public static class Z80Alu
         registers.SetFlagIf(Z80Flags.HalfCarry, half_carry);
         registers.SetFlagIf(Z80Flags.Carry, carry);
         registers.SetFlagIf(Z80Flags.ParityOrOverflow, overflow);
-        registers.SetFlagIf(Z80Flags.Sign, byteResult & 0x80);
+        registers.SetSignFor(byteResult);
         registers.CopyF3F5FlagsFrom(byteResult);
 
         return byteResult;
@@ -45,15 +45,15 @@ public static class Z80Alu
         int result = first + 1;
         int no_carry_sum = first ^ 1;
         int carry_into = result ^ no_carry_sum;
-        int half_carry = carry_into & 0x10;
+        int half_carry = carry_into & BitConstants.BIT5;
         var byteResult = (byte)result;
 
         // For addition, operands with different signs never cause overflow.
         // When adding operands with similar signs and the result contains a different sign, the Overflow Flag is set.
-        var overflow = ((no_carry_sum & 0x80) == 0) && (((byteResult & 0x80) ^ (first & 0x80)) != 0);
+        var overflow = ((no_carry_sum & BitConstants.MSB) == 0) && (((byteResult & BitConstants.MSB) ^ (first & BitConstants.MSB)) != 0);
         registers.ClearFlag(Z80Flags.Substract);
         registers.SetFlagIf(Z80Flags.Zero, byteResult == 0);
-        registers.SetFlagIf(Z80Flags.Sign, byteResult & 0x80);
+        registers.SetSignFor(byteResult);
         registers.SetFlagIf(Z80Flags.HalfCarry, half_carry);
         registers.SetFlagIf(Z80Flags.ParityOrOverflow, overflow);
         registers.CopyF3F5FlagsFrom(byteResult);
@@ -73,7 +73,6 @@ public static class Z80Alu
         registers.SetFlagIf(Z80Flags.HalfCarry, ((hiFirst & 0x0F) + (hiSecond & 0x0F) > 0xF));
         // For Add16 carry is set if there is a carry from bit 16 to (inexistent) bit 17 
         registers.SetFlagIf(Z80Flags.Carry, result > 0xFFFF);
-        
         // Undocumented Flags - from high byte
         registers.CopyF3F5FlagsFrom(((ushort)result).HiByte());
         // Preserves Sign, Zero, and ParityOrOverflow
@@ -84,11 +83,31 @@ public static class Z80Alu
     public static byte And8(ref Z80GenericRegisters registers, byte first, byte second)
     {
         var result =  (byte)(first & second);
-        registers.ClearFlag(Z80Flags.Substract | Z80Flags.Carry);
-        registers.SetFlag(Z80Flags.Carry);
+        registers.ClearFlag(Z80Flags.Substract | Z80Flags.Carry | Z80Flags.HalfCarry);
         registers.CopyF3F5FlagsFrom(result);
-        // Count the number of bits set to 1
         registers.SetParityFor(result);
+        registers.SetSignFor(result);
         return result;
     }
+
+    public static byte Or8(ref Z80GenericRegisters registers, byte first, byte second)
+    {
+        var result =  (byte)(first | second);
+        registers.ClearFlag(Z80Flags.Substract | Z80Flags.Carry | Z80Flags.HalfCarry);
+        registers.CopyF3F5FlagsFrom(result);
+        registers.SetParityFor(result);
+        registers.SetSignFor(result);
+        return result;
+    }
+    
+    public static byte Xor8(ref Z80GenericRegisters registers, byte first, byte second)
+    {
+        var result =  (byte)(first ^ second);
+        registers.ClearFlag(Z80Flags.Substract | Z80Flags.Carry | Z80Flags.HalfCarry);
+        registers.CopyF3F5FlagsFrom(result);
+        registers.SetParityFor(result);
+        registers.SetSignFor(result);
+        return result;
+    }
+    
 }

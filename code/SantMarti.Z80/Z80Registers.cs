@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -108,21 +109,25 @@ namespace SantMarti.Z80
         [FieldOffset(12)]
         public ushort AF;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void CopyF3F5FlagsFrom(byte data)
         {
             F |= (Z80Flags)(data & (byte)Z80Flags.F3F5);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool HasFlag(Z80Flags flag)
         {
             return (F & flag) != 0x0;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetFlag(Z80Flags flag)
         {
             F |= flag;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ClearFlag(Z80Flags flag)
         {
             F &= ~flag;
@@ -133,6 +138,7 @@ namespace SantMarti.Z80
         /// <para
         /// <param name="flag">Flag to set/clear</param>
         /// <param name="value">Value used to set the flag (if greater than 0) or clear it (if is 0)</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetFlagIf(Z80Flags flag, int value)
         {
             if (value != 0) { SetFlag(flag); }
@@ -144,6 +150,7 @@ namespace SantMarti.Z80
         /// </summary>
         /// <param name="flag">Flag to set/clear</param>
         /// <param name="set">If true flag is set. Otherwise is cleared</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetFlagIf(Z80Flags flag, bool set)
         {
             if (set) { SetFlag(flag); }
@@ -163,6 +170,10 @@ namespace SantMarti.Z80
             }
             SetFlagIf(Z80Flags.ParityOrOverflow,parity);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetSignFor(byte result) => SetFlagIf(Z80Flags.Sign, (result & (byte)0x80) != 0);
+        
     }
 
     public class Z80Registers
