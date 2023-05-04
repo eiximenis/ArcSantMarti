@@ -45,4 +45,44 @@ public class Stack
         registers.SP--;
         processor.MemoryWrite(registers.SP, (byte)registers.Main.C);
     }
+    
+    public static void POPHL(Instruction instruction, Z80Processor processor)
+    {
+        var registers = processor.Registers;
+        registers.Main.L = processor.MemoryRead(registers.SP);
+        registers.SP++;
+        processor.OnTick();
+        registers.Main.H = processor.MemoryRead(registers.SP);
+        registers.SP++;
+    }
+    
+    public static void POPAF(Instruction instruction, Z80Processor processor)
+    {
+        var registers = processor.Registers;
+        registers.Main.F = (Z80Flags)(processor.MemoryRead(registers.SP));
+        registers.SP++;
+        processor.OnTick();
+        registers.Main.A = processor.MemoryRead(registers.SP);
+        registers.SP++;
+    }
+    
+    public static void POPDE(Instruction instruction, Z80Processor processor)
+    {
+        var registers = processor.Registers;
+        registers.Main.E = processor.MemoryRead(registers.SP);
+        registers.SP++;
+        processor.OnTick();
+        registers.Main.D = processor.MemoryRead(registers.SP);
+        registers.SP++;
+    }
+    
+    public static void POPBC(Instruction instruction, Z80Processor processor)
+    {
+        var registers = processor.Registers;
+        registers.Main.C = processor.MemoryRead(registers.SP);
+        registers.SP++;
+        processor.OnTick();
+        registers.Main.B = processor.MemoryRead(registers.SP);
+        registers.SP++;
+    }
 }

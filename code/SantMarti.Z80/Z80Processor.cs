@@ -51,28 +51,39 @@ namespace SantMarti.Z80
         ///  Ticks 1 and 2 are for memory read
         ///  Ticks 3 and 4 are decoding and executing the instruction
         internal void FetchOpcode()
-        {   
-            // T1: Address bus is filled with PC
-            //     Pins M1, MD and MREQ are set
-            //     PC is increased
-            _pins.Address = Registers.PC;
-            _pins.ReplaceOtherPinsWith(OtherPins.M1 | OtherPins.MEMORY_READ);
-            Registers.PC = (ushort)(Registers.PC + 1);
-            OnTick();
-            OnTick();
-            // T2: At this point Memory read has been performed and the data is available in Address Bus
-            //     Instruction register is filled with the data read from memory
-            //     TODO: This is the ONLY point where M1 can be stretched using WAIT states 
-            Registers.InstructionRegister = _pins.Data;            
-            // T3: Memory Refresh (1/2): MREQ and RFSH are set 
-            // TODO: Check WAIT states
-            _pins.ReplaceOtherPinsWith(OtherPins.MREQ | OtherPins.RFSH);
-            OnTick();
-            // T4: Memory Refresh (2/2): RFSH is cleared
-            _pins.DeactivateOtherPins(OtherPins.MREQ);
-            OnTick();
-            // M1 (Opcode fetch) with 4 T-Cycles is completed
-            _pins.ReplaceOtherPinsWith(OtherPins.NONE);
+        {
+            if (_pins.Halted())
+            {
+                OnTick();
+                OnTick();
+                OnTick();
+                OnTick();
+                
+            }
+            else
+            {
+                // T1: Address bus is filled with PC
+                //     Pins M1, MD and MREQ are set
+                //     PC is increasedç
+                _pins.Address = Registers.PC;
+                _pins.ReplaceOtherPinsWith(OtherPins.M1 | OtherPins.MEMORY_READ);
+                Registers.PC = (ushort)(Registers.PC + 1);
+                OnTick();
+                OnTick();
+                // T2: At this point Memory read has been performed and the data is available in Address Bus
+                //     Instruction register is filled with the data read from memory
+                //     TODO: This is the ONLY point where M1 can be stretched using WAIT states 
+                Registers.InstructionRegister = _pins.Data;
+                // T3: Memory Refresh (1/2): MREQ and RFSH are set 
+                // TODO: Check WAIT states
+                _pins.ReplaceOtherPinsWith(OtherPins.MREQ | OtherPins.RFSH);
+                OnTick();
+                // T4: Memory Refresh (2/2): RFSH is cleared
+                _pins.DeactivateOtherPins(OtherPins.MREQ);
+                OnTick();
+                // M1 (Opcode fetch) with 4 T-Cycles is completed
+                _pins.ReplaceOtherPinsWith(OtherPins.NONE);
+            }
         }
 
         /// <summary>

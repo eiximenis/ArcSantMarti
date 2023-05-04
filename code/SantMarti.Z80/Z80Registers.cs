@@ -225,6 +225,8 @@ namespace SantMarti.Z80
         
         // IR register
         public Z80IRRegister IR { get; } = new(); // Instruction Register
+        
+        
 
     }
 }

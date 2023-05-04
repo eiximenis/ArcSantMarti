@@ -20,4 +20,7 @@ static class RandomExtensions
     {
         return (ushort)random.Next(from, ushort.MaxValue + 1);
     }
+
+
+    public static ushort GetRandomUshort(this Random random) => random.GetRandomAddress(0);
 }

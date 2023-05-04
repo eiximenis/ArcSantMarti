@@ -38,7 +38,7 @@ public class PUSHTests :InstructionTestsBase
     {
         const int EXPECTED_TICKS = 11;
         Processor.Registers.SP = 20;
-        var assembler = new Z80AssemblerBuilder();
+        var assembler = new Z80AssemblerBuilder();  
         assembler.PUSH(register);
         SetupProcessorWithProgram(assembler);
         await Processor.RunOnce();

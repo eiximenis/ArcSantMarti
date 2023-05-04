@@ -46,6 +46,29 @@ public class Logical
         var data = processor.MemoryRead(address);
         registers.A = Z80Alu.And8(ref registers, registers.A, data);
     }
+    
+    /// <summary>
+    /// OR (HL): Logically OR value pointed by HL against A, result in A 
+    /// </summary>
+    public static void OR_HLRef(Instruction instruction, Z80Processor processor)
+    {
+        ref var registers = ref processor.Registers.Main;
+        var address = registers.HL;
+        var data = processor.MemoryRead(address);
+        registers.A = Z80Alu.Or8(ref registers, registers.A, data);
+    }
+    
+    /// <summary>
+    /// XOR (HL): Logically XOR value pointed by HL against A, result in A 
+    /// </summary>
+    public static void XOR_HLRef(Instruction instruction, Z80Processor processor)
+    {
+        ref var registers = ref processor.Registers.Main;
+        var address = registers.HL;
+        var data = processor.MemoryRead(address);
+        registers.A = Z80Alu.Xor8(ref registers, registers.A, data);
+    }
+
 
     /// <summary>
     /// AND n: Logically AND n against A, result in A

@@ -1,8 +1,10 @@
+using System.Runtime.CompilerServices;
+
 namespace SantMarti.Z80;
 
 
 [Flags]
-public enum OtherPins
+public enum OtherPins : ushort
 {
     NONE = 0x0,
     MREQ = 0x1,
@@ -14,6 +16,7 @@ public enum OtherPins
     INT = 0x40,
     RESET= 0x80,
     RFSH = 0x100,
+    HALT = 0x200,
     // Standard Combinations
     MEMORY_READ = MREQ | RD,
     MEMORY_WRITE = MREQ | WR,
@@ -45,8 +48,14 @@ public struct Z80Pins
     
     public ushort Others;
     
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void ReplaceOtherPinsWith(OtherPins pins) => Others = (ushort)pins;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void ActivateOtherPins(OtherPins pins) => Others |= (ushort)pins;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void DeactivateOtherPins(OtherPins pins) => Others &= (ushort)~pins;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool OthersAreSet(OtherPins pins) => (Others & (ushort)pins) == (ushort)pins;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool Halted() => (Others & (ushort)OtherPins.HALT) != 0;
 }

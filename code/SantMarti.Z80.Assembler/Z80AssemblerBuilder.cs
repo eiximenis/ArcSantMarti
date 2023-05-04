@@ -55,7 +55,7 @@ namespace SantMarti.Z80.Assembler
 
         public void NOP() => _bytes.Add(Z80Opcodes.NOP);
 
-
+        public void HALT() => _bytes.Add(Z80Opcodes.HALT);
         public void ADD(string source, string target)
         {
             var result = ADDBuilder.ADD(source, target);
@@ -71,6 +71,12 @@ namespace SantMarti.Z80.Assembler
         public void PUSH(string dest)
         {
             var result = PUSHBuilder.PUSH(dest);
+            ProcessParseResult(result);
+        }
+        
+        public void POP(string dest)
+        {
+            var result = POPBuilder.POP(dest);
             ProcessParseResult(result);
         }
 
@@ -111,5 +117,6 @@ namespace SantMarti.Z80.Assembler
                 throw new InvalidOperationException($"Error parsing line: {result.ErrorMessage}");
             }
         }
+        
     }
 }

@@ -10,6 +10,7 @@ namespace SantMarti.Z80.Assembler
     public static class Z80Opcodes
     {
         public const byte NOP = 0x0;                            // NOP
+        public const byte HALT = 0x76;                          // HALT
         public const byte EXX = 0xd9;
         public const byte ADD_A_N = 0xc6;                        // ADD A,n
         public const byte ADD_A_HLRef = 0x86;                       // ADD A,(HL)
@@ -53,6 +54,10 @@ namespace SantMarti.Z80.Assembler
         public const byte PUSH_DE = 0xd5;                      // PUSH DE
         public const byte PUSH_HL = 0xe5;                      // PUSH HL
         public const byte PUSH_AF = 0xf5;                      // PUSH AF
+        public const byte POP_BC = 0xc1;                       // POP BC
+        public const byte POP_DE = 0xd1;                       // POP DE
+        public const byte POP_HL = 0xe1;                       // POP HL
+        public const byte POP_AF = 0xf1;                       // POP AF
         public const byte INC_A = 0x3c;                        // INC A
         public const byte INC_B = 0x4;                         // INC B
         public const byte INC_C = 0xc;                         // INC C
