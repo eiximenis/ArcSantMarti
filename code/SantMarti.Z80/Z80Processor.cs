@@ -25,6 +25,7 @@ namespace SantMarti.Z80
     public class Z80Processor
     {
         private readonly Z80Instructions _instructions;
+        private bool _nextFetchUseWZ = false;
         public Z80Registers Registers { get; }
         private Z80Pins _pins = new();
         private OnTickResponder _onTick = (ref Z80Pins _) => { };
@@ -64,10 +65,19 @@ namespace SantMarti.Z80
             {
                 // T1: Address bus is filled with PC
                 //     Pins M1, MD and MREQ are set
-                //     PC is increasedç
-                _pins.Address = Registers.PC;
+                //     PC is increased
+                if (_nextFetchUseWZ)
+                {
+                    _pins.Address = Registers.WZ;
+                    _nextFetchUseWZ = false;
+                }
+                else
+                {
+                    _pins.Address = Registers.PC;
+                    Registers.PC = (ushort)(Registers.PC + 1);
+                }
+
                 _pins.ReplaceOtherPinsWith(OtherPins.M1 | OtherPins.MEMORY_READ);
-                Registers.PC = (ushort)(Registers.PC + 1);
                 OnTick();
                 OnTick();
                 // T2: At this point Memory read has been performed and the data is available in Address Bus
@@ -122,6 +132,14 @@ namespace SantMarti.Z80
             _pins.DeactivateOtherPins(OtherPins.MEMORY_READ);
             OnTick();
             return _pins.Data;
+        }
+
+        public async Task Run()
+        {
+            while (true)
+            {
+                await RunOnce();
+            }
         }
 
 
@@ -217,6 +235,10 @@ namespace SantMarti.Z80
             OnTick();
             OnTick();
         }
-        
+
+        internal void OnNextFetchUseWZ()
+        {
+            _nextFetchUseWZ = true;
+        }
     }
 }

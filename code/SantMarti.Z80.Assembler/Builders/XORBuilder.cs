@@ -4,7 +4,7 @@ using SantMarti.Z80.Assembler.Tokens.Parsers;
 
 namespace SantMarti.Z80.Assembler.Builders;
 
-public class XORBuilder
+static class XORBuilder
 {
     public static AssemblerLineResult BuildFromLine(TokenizedLine line)
     {

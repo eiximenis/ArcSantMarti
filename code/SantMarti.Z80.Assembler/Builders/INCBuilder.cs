@@ -4,7 +4,7 @@ using SantMarti.Z80.Assembler.Tokens.Parsers;
 
 namespace SantMarti.Z80.Assembler.Builders;
 
-public class INCBuilder
+static class INCBuilder
 {
     public static AssemblerLineResult BuildFromLine(TokenizedLine line)
     {

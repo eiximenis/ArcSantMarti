@@ -4,7 +4,7 @@ using SantMarti.Z80.Assembler.Tokens.Parsers;
 
 namespace SantMarti.Z80.Assembler.Builders;
 
-public class ORBuilder
+static class ORBuilder
 {
     public static AssemblerLineResult BuildFromLine(TokenizedLine line)
     {

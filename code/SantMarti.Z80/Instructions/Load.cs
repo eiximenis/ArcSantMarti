@@ -26,10 +26,11 @@ namespace SantMarti.Z80.Instructions
         /// </summary>
         public static void LD_A_NN(Instruction instruction, Z80Processor processor)
         {
-            var lobyte = processor.MemoryRead();
-            var hibite = processor.MemoryRead();
-            var address = (ushort)((hibite << 8) | lobyte);
+            processor.Registers.Z = processor.MemoryRead();
+            processor.Registers.W = processor.MemoryRead();
+            var address = processor.Registers.WZ;
             processor.Registers.Main.A = processor.MemoryRead(address);
+            processor.Registers.WZ = (ushort)(address + 1);         // MEMPTR behavior
         }
         
         /// <summary>

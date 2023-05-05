@@ -183,6 +183,18 @@ namespace SantMarti.Z80
         private Z80GenericRegisters _alternate;
         
 
+        
+        // Hidden WZ register.
+        // This register is not available to the developer and is used internally by the CPU
+        // Also known as MEMPTR (https://gist.github.com/drhelius/8497817)
+        public byte W { get; set; }
+        public byte Z { get; set; }
+        public ushort WZ
+        {
+            get => (ushort)((W << 8) | Z);
+            set => (W, Z) = ((byte)(value >> 8), (byte)(value & 0xFF));
+        }
+        
         // Generic registers (B,C,D,E,H,L,A,F)
         public ref Z80GenericRegisters Main { get => ref _main; }
         // Generic alternate registers (B',C',D',E',H',L', A',F')

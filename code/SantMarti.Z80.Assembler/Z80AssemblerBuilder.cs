@@ -87,6 +87,12 @@ namespace SantMarti.Z80.Assembler
         }
         
         public void DAA() => _bytes.Add(Z80Opcodes.DAA);
+
+        public void JP(string operand)
+        {
+            var result = JPBuilder.JP(operand);
+            ProcessParseResult(result);
+        }
         
         public void AND(string operand)
         {
