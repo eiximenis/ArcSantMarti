@@ -236,6 +236,10 @@ namespace SantMarti.Z80
             OnTick();
         }
 
+        /// <summary>
+        /// When called, the NEXT opcode will be fetch using WZ instead of PC. This is used by some jump instructions.
+        /// Note that if opcode is fetched using WZ, PC is not incremented.
+        /// </summary>
         internal void OnNextFetchUseWZ()
         {
             _nextFetchUseWZ = true;

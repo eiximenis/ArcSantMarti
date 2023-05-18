@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using FluentAssertions;
 using SantMarti.Z80.Assembler;
 
@@ -7,13 +8,15 @@ public class JPTests :  InstructionTestsBase
 {
     [Fact]
     public async Task JP_NN_Should_Set_WZ_And_PC_Accordingly()
-    { 
+    {
+        const int EXPECTED_TICKS = 10;
         var assembler = new Z80AssemblerBuilder();
         assembler.JP("$2002");
         SetupProcessorWithProgram(assembler);   
         await Processor.RunOnce();
         Processor.Registers.WZ.Should().Be(0x2002);
         Processor.Registers.PC.Should().Be(0x2002 + 1);
+        TickHandler.TotalTicks.Should().Be(EXPECTED_TICKS);
     }
     [Fact]
     public async Task JP_NN_Should_Make_A_Jump()
