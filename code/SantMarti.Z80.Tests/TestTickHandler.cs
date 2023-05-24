@@ -59,13 +59,16 @@ public class TestTickHandler
         processorUnderTest.SetTickHandler(OnTick);
     }
 
-    private void OnTick(ref Z80Pins pins)
+    private void OnTick(ref Z80Pins pins, int ticks)
     {
-        _tickData.Add(new TickData(pins));
-        
+        for (int tdata = 0; tdata < ticks; tdata++)
+        {
+            _tickData.Add(new TickData(pins));
+        }
+
         if (pins.OthersAreSet(OtherPins.MEMORY_READ))
         {
-            DoReadMemory(ref pins);
+            DoReadMemory(ref pins, ticks);
         }
         else if (pins.OthersAreSet(OtherPins.MEMORY_WRITE))
         {
@@ -73,9 +76,9 @@ public class TestTickHandler
         }
     }
     
-    private void DoReadMemory(ref Z80Pins pins)
+    private void DoReadMemory(ref Z80Pins pins, int ticks)
     {
-        _writeTicks++;
+        _writeTicks += ticks;
         if (_writeTicks < 2) return;            // We are slow writer, and we need TWO ticks
         _writeTicks = 0;
         _memoryReads.Add(pins.Address);

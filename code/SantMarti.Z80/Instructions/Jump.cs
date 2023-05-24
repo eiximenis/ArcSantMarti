@@ -44,17 +44,22 @@ static class Jump
         processor.OnTick();                         // Extra TState inserted
         var offset = processor.MemoryRead();
         registers.B--;
-        var operand = processor.MemoryRead();
         if (registers.B != 0)
         {
             // 5 extra TStates added if jump is taken
-            processor.OnTick();   
-            processor.OnTick();   
-            processor.OnTick();   
-            processor.OnTick();   
-            processor.OnTick();
+            processor.OnTick(5);
+            // offset is a signed byte (negative if bit 7 is set)
+            if ((offset & BitConstants.MSB) != 0)
+            {
+                var offsetTwoComplement = (byte)(~offset + 1);
+                processor.Registers.WZ = (ushort)(processor.Registers.PC - offsetTwoComplement);
+            }
+            else
+            {
+                processor.Registers.WZ = (ushort)(processor.Registers.PC +  offset);
+            }
+            processor.Registers.PC = (ushort)(processor.Registers.WZ + 1);
+            processor.OnNextFetchUseWZ();            
         }
-        
-        
     }
 }

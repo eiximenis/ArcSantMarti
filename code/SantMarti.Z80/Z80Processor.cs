@@ -20,7 +20,7 @@ namespace SantMarti.Z80
         FDCB = 6
     }
     
-    public delegate void OnTickResponder (ref Z80Pins pins);
+    public delegate void OnTickResponder (ref Z80Pins pins, int ticks);
     
     public class Z80Processor
     {
@@ -28,7 +28,7 @@ namespace SantMarti.Z80
         private bool _nextFetchUseWZ = false;
         public Z80Registers Registers { get; }
         private Z80Pins _pins = new();
-        private OnTickResponder _onTick = (ref Z80Pins _) => { };
+        private OnTickResponder _onTick = (ref Z80Pins _, int _) => { };
         
         private OpcodePrefix _currentPrefix = OpcodePrefix.None;
 
@@ -40,9 +40,9 @@ namespace SantMarti.Z80
             _instructions = new Z80Instructions();
         }
 
-        internal void OnTick()
+        internal void OnTick(int ticks = 1)
         {
-            _onTick(ref _pins);
+            _onTick(ref _pins,  ticks);
         }
 
     
@@ -55,11 +55,7 @@ namespace SantMarti.Z80
         {
             if (_pins.Halted())
             {
-                OnTick();
-                OnTick();
-                OnTick();
-                OnTick();
-                
+                OnTick(4);
             }
             else
             {

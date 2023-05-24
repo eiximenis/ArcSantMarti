@@ -69,6 +69,7 @@ namespace SantMarti.Z80.Assembler
         public const byte AND_HLRef = 0xa6;                     // AND (HL)
         public const byte AND_N = 0xe6;                        // AND n
         public const byte JP_NN = 0xc3;                        // JP nn
+        public const byte DJNZ_N = 0x10;                       // DJNZ n
         
         // DD prefixed opcodes
         public const byte DD_AND_IXH = 0xa4;                   // AND IXH

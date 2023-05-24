@@ -21,7 +21,7 @@ namespace SantMarti.Spectrum
             _processor.SetTickHandler(OnTick);
         }
         
-        private void OnTick(ref Z80Pins pins)
+        private void OnTick(ref Z80Pins pins, int ticks)
         {
 
             if (pins.OthersAreSet(OtherPins.MEMORY_READ))

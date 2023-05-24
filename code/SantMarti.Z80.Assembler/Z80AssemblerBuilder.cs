@@ -88,6 +88,12 @@ namespace SantMarti.Z80.Assembler
         
         public void DAA() => _bytes.Add(Z80Opcodes.DAA);
 
+        public void DJNZ(string operand)
+        {
+            var result = DJNZBuilder.JP(operand);
+            ProcessParseResult(result);
+            
+        }
         public void JP(string operand)
         {
             var result = JPBuilder.JP(operand);
