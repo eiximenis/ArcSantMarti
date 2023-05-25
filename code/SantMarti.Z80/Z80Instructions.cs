@@ -70,7 +70,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0x15, "DEC D", 4));
             unprefixed.Add(new Instruction(0x16, "LD D,n", 7));
             unprefixed.Add(new Instruction(0x17, "RLA", 4));
-            unprefixed.Add(new Instruction(0x18, "JR d", 12));
+            unprefixed.Add(new Instruction(0x18, "JR d", 12, Jump.JR_D));
             unprefixed.Add(new Instruction(0x19, "ADD HL,DE", 11));
             unprefixed.Add(new Instruction(0x1a, "LD A,(DE)", 7));
             unprefixed.Add(new Instruction(0x1b, "DEC DE", 6));

@@ -99,6 +99,12 @@ namespace SantMarti.Z80.Assembler
             var result = JPBuilder.JP(operand);
             ProcessParseResult(result);
         }
+
+        public void JR(string operand)
+        {
+            var result = JRBuilder.JR(operand);
+            ProcessParseResult(result);
+        }
         
         public void AND(string operand)
         {

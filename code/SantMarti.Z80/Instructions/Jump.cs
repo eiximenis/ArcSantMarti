@@ -48,18 +48,33 @@ static class Jump
         {
             // 5 extra TStates added if jump is taken
             processor.OnTick(5);
-            // offset is a signed byte (negative if bit 7 is set)
-            if ((offset & BitConstants.MSB) != 0)
-            {
-                var offsetTwoComplement = (byte)(~offset + 1);
-                processor.Registers.WZ = (ushort)(processor.Registers.PC - offsetTwoComplement);
-            }
-            else
-            {
-                processor.Registers.WZ = (ushort)(processor.Registers.PC +  offset);
-            }
-            processor.Registers.PC = (ushort)(processor.Registers.WZ + 1);
-            processor.OnNextFetchUseWZ();            
+            RelativeJump(processor, offset);
         }
+    }
+
+    /// <summary>
+    /// JR d: Unconditional relative jump (PC = PC + d)
+    /// </summary>
+    public static void JR_D(Instruction instruction, Z80Processor processor)
+    {
+        var offset = processor.MemoryRead();
+        processor.OnTick(5);
+        RelativeJump(processor, offset);
+    }
+
+
+    private static void RelativeJump(Z80Processor processor, byte offset)
+    {
+        if ((offset & BitConstants.MSB) != 0)
+        {
+            var offsetTwoComplement = (byte)(~offset + 1);
+            processor.Registers.WZ = (ushort)(processor.Registers.PC - offsetTwoComplement - 2);        // -2 because PC was already incremented twice and jump is relative to opcode addr
+        }
+        else
+        {
+            processor.Registers.WZ = (ushort)(processor.Registers.PC +  offset - 2);                    // -2 because PC was already incremented twice and jump is relative to opcode addr
+        }
+        processor.Registers.PC = (ushort)(processor.Registers.WZ + 1);
+        processor.OnNextFetchUseWZ();                
     }
 }

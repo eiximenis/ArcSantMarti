@@ -33,6 +33,9 @@ namespace SantMarti.Z80
         private OpcodePrefix _currentPrefix = OpcodePrefix.None;
 
         public ref Z80Pins Pins => ref _pins;
+        
+        
+        public bool NextFetchUsesWZ => _nextFetchUseWZ; 
 
         public Z80Processor()
         {

@@ -16,6 +16,7 @@ public class JPTests :  InstructionTestsBase
         await Processor.RunOnce();
         Processor.Registers.WZ.Should().Be(0x2002);
         Processor.Registers.PC.Should().Be(0x2002 + 1);
+        Processor.NextFetchUsesWZ.Should().BeTrue();
         TickHandler.TotalTicks.Should().Be(EXPECTED_TICKS);
     }
     [Fact]

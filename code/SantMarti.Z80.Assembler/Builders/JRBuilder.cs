@@ -3,31 +3,31 @@ using SantMarti.Z80.Assembler.Tokens.Parsers;
 
 namespace SantMarti.Z80.Assembler.Builders;
 
-static class DJNZBuilder
+static class JRBuilder
 {
     public static AssemblerLineResult BuildFromLine(TokenizedLine line)
     {
         var first = line.Operands[0];
-        return DJNZ(first);
+        return JR(first);
     }
     
-    public static AssemblerLineResult JP(string operand)
+    public static AssemblerLineResult JR(string operand)
     {
         var token = AnyParser.ParseToken(operand);
-        return DJNZ(token);
+        return JR(token);
     }
     
-    public static AssemblerLineResult DJNZ(BaseToken token)
+    public static AssemblerLineResult JR(BaseToken token)
     {
         return token switch
         {
-            NumericValue { IsByte: true } value => DJNZ_N(value),
+            NumericValue { IsByte: true } value => JR_D(value),
             _ => AssemblerLineResult.Error($"Invalid operand {token.StrValue}", token)
         };
     }
-    
-    private static AssemblerLineResult DJNZ_N(NumericValue value)
+
+    private static AssemblerLineResult JR_D(NumericValue value)
     {
-        return AssemblerLineResult.Success(Z80Opcodes.DJNZ_N, value.AsByte());
+        return AssemblerLineResult.Success(Z80Opcodes.JR_D, value.AsByte());
     }
 }
