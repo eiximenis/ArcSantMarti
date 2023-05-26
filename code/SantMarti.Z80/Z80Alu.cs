@@ -59,6 +59,26 @@ public static class Z80Alu
         registers.CopyF3F5FlagsFrom(byteResult);
         return byteResult;
     }
+    
+    public static byte Dec8(ref Z80GenericRegisters registers, byte first)
+    {        
+        int result = first - 1;
+        int no_carry_sum = first ^ 1;
+        int carry_into = result ^ no_carry_sum;
+        int half_carry = carry_into & BitConstants.BIT5;
+        var byteResult = (byte)result;
+
+        // For addition, operands with different signs never cause overflow.
+        // When adding operands with similar signs and the result contains a different sign, the Overflow Flag is set.
+        var overflow = ((no_carry_sum & BitConstants.MSB) == 0) && (((byteResult & BitConstants.MSB) ^ (first & BitConstants.MSB)) != 0);
+        registers.SetFlag(Z80Flags.Substract);
+        registers.SetFlagIf(Z80Flags.Zero, byteResult == 0);
+        registers.SetSignFor(byteResult);
+        registers.SetFlagIf(Z80Flags.HalfCarry, half_carry);
+        registers.SetFlagIf(Z80Flags.ParityOrOverflow, overflow);
+        registers.CopyF3F5FlagsFrom(byteResult);
+        return byteResult;
+    }
 
     public static ushort Add16(ref Z80GenericRegisters registers, ushort first, ushort second, byte cflag = 0)
     {
