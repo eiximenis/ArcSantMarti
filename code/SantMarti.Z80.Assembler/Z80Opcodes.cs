@@ -65,6 +65,16 @@ namespace SantMarti.Z80.Assembler
         public const byte INC_E = 0x1c;                        // INC E
         public const byte INC_H = 0x24;                        // INC H
         public const byte INC_L = 0x2c;                        // INC L
+        public const byte DEC_A = 0x3d;                        // DEC A
+        public const byte DEC_B = 0x5;                         // DEC B
+        public const byte DEC_C = 0xd;                         // DEC C
+        public const byte DEC_D = 0x15;                        // DEC D
+        public const byte DEC_E = 0x1d;                        // DEC E
+        public const byte DEC_H = 0x25;                        // DEC H
+        public const byte DEC_L = 0x2d;                        // DEC L
+
+        
+        
         public const byte DAA = 0x27;                          // DAA
         public const byte AND_HLRef = 0xa6;                     // AND (HL)
         public const byte AND_N = 0xe6;                        // AND n

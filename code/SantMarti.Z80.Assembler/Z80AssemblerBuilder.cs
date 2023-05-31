@@ -85,6 +85,12 @@ namespace SantMarti.Z80.Assembler
             var result = INCBuilder.INC(dest);
             ProcessParseResult(result);
         }
+
+        public void DEC(string dest)
+        {
+            var result = DECBuilder.DEC(dest);
+            ProcessParseResult(result);
+        }
         
         public void DAA() => _bytes.Add(Z80Opcodes.DAA);
 

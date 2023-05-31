@@ -20,6 +20,7 @@ namespace SantMarti.Z80.Assembler.Builders
             _builders.Add("ADD", ADDBuilder.BuildFromLine);
             _builders.Add("PUSH", PUSHBuilder.BuildFromLine);
             _builders.Add("INC", INCBuilder.BuildFromLine);
+            _builders.Add("DEC", DECBuilder.BuildFromLine);
             _builders.Add("NOP", l => AssemblerLineResult.Success(Z80Opcodes.NOP));
             _builders.Add("DAA", l => AssemblerLineResult.Success(Z80Opcodes.DAA));
             _builders.Add("AND", ANDBuilder.BuildFromLine);
