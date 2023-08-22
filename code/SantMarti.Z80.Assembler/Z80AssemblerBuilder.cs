@@ -30,7 +30,7 @@ namespace SantMarti.Z80.Assembler
         {
             var tokenizedLine = _lineBuilder.Parse(line);
 
-            var anyUnkwon = tokenizedLine.Tokens.FirstOrDefault(t => t is UnknownToken);
+            var anyUnkwon = tokenizedLine.Tokens.FirstOrDefault(t => t is GenericLabel);
             if (anyUnkwon is not null)
             {
                 return AssemblerLineResult.Error($"Unkonwn token found: {anyUnkwon.StrValue}");

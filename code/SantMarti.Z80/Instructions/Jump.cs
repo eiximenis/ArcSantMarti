@@ -1,5 +1,6 @@
 using System.Reflection.Emit;
 using System.Text.Json;
+using SantMarti.Z80.Extensions;
 
 namespace SantMarti.Z80.Instructions;
 
@@ -61,13 +62,37 @@ static class Jump
         processor.OnTick(5);
         RelativeJump(processor, offset);
     }
+    
+    /// <summary>
+    /// CALL nn: Pushes PC to stack and jumps to address nn
+    ///  
+    public static void CALL_NN(Instruction instruction, Z80Processor processor)
+    {
+        var registers = processor.Registers;
+        registers.Z = processor.MemoryRead();
+        registers.W = processor.MemoryRead();
+        // extra clock cycle here
+        processor.OnTick();
+        registers.SP--;
+        processor.MemoryWrite(registers.SP, (byte)(registers.PC >> 8));
+        registers.SP--;
+        processor.MemoryWrite(registers.SP, (byte)(registers.PC & 0xFF));
+        processor.Registers.PC = (ushort)(processor.Registers.WZ + 1);
+        processor.OnNextFetchUseWZ();
+    }
+
+    public static void CALL_CC_NN(Instruction instruction, Z80Processor processor)
+    {
+        
+    }
+    
 
 
     private static void RelativeJump(Z80Processor processor, byte offset)
     {
         if ((offset & BitConstants.MSB) != 0)
         {
-            var offsetTwoComplement = (byte)(~offset + 1);
+            var offsetTwoComplement = offset.TwoComplement();
             processor.Registers.WZ = (ushort)(processor.Registers.PC - offsetTwoComplement - 2);        // -2 because PC was already incremented twice and jump is relative to opcode addr
         }
         else
@@ -77,4 +102,5 @@ static class Jump
         processor.Registers.PC = (ushort)(processor.Registers.WZ + 1);
         processor.OnNextFetchUseWZ();                
     }
+
 }

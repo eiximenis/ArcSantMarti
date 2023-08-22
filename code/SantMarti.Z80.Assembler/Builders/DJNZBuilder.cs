@@ -13,7 +13,7 @@ static class DJNZBuilder
     
     public static AssemblerLineResult JP(string operand)
     {
-        var token = AnyParser.ParseToken(operand);
+        var token = AnyParser.ParseToken(operand, ParsersEnabled.ParametersToken);
         return DJNZ(token);
     }
     

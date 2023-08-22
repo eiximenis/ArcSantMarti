@@ -6,6 +6,9 @@ public static class BitConstants
     public const byte MSB = 0x80;
     public const byte LSB = 0x01;
     
+    public const byte LOW_NIBBLE = 0x0F;
+    public const byte HI_NIBBLE = 0xF0;
+    
     // Individual bits
     public const byte BIT1 = 0x01;
     public const byte BIT2 = 0x02;

@@ -14,7 +14,7 @@ static class DECBuilder
     
     public static AssemblerLineResult DEC(string operand)
     {
-        var token = AnyParser.ParseToken(operand);
+        var token = AnyParser.ParseToken(operand, ParsersEnabled.ParametersToken);
         return DEC(token);
     }
 

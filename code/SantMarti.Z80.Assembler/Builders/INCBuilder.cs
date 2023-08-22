@@ -14,7 +14,7 @@ static class INCBuilder
     
     public static AssemblerLineResult INC(string operand)
     {
-        var token = AnyParser.ParseToken(operand);
+        var token = AnyParser.ParseToken(operand, ParsersEnabled.ParametersToken);
         return INC(token);
     }
 

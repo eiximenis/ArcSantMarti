@@ -13,7 +13,7 @@ static class JRBuilder
     
     public static AssemblerLineResult JR(string operand)
     {
-        var token = AnyParser.ParseToken(operand);
+        var token = AnyParser.ParseToken(operand, ParsersEnabled.ParametersToken);
         return JR(token);
     }
     

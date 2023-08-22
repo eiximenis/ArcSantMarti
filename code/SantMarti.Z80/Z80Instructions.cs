@@ -240,7 +240,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xb5, "OR L", 4, Logical.OR_R));
             unprefixed.Add(new Instruction(0xb6, "OR (HL)", 7, Logical.OR_HLRef));
             unprefixed.Add(new Instruction(0xb7, "OR A", 4, Logical.OR_R));
-            unprefixed.Add(new Instruction(0xb8, "CP B", 4));
+            unprefixed.Add(new Instruction(0xb8, "CP B", 4, Logical.CP_R));
             unprefixed.Add(new Instruction(0xb9, "CP C", 4));
             unprefixed.Add(new Instruction(0xba, "CP D", 4));
             unprefixed.Add(new Instruction(0xbb, "CP E", 4));
@@ -262,7 +262,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xca, "JP Z,nn", 10, 10));
             unprefixed.Add(new Instruction(0xcb, "-- CB --", 0));           // CB Prefix
             unprefixed.Add(new Instruction(0xcc, "CALL Z,nn", 17));
-            unprefixed.Add(new Instruction(0xcd, "CALL nn", 17));
+            unprefixed.Add(new Instruction(0xcd, "CALL nn", 17, Jump.CALL_NN));
             unprefixed.Add(new Instruction(0xce, "ADC A,n", 7, Add.Adc_N));
             unprefixed.Add(new Instruction(0xcf, "RST 08", 11));
 

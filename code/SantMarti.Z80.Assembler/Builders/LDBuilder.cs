@@ -17,8 +17,8 @@ namespace SantMarti.Z80.Assembler.Builders
         /// </summary>
         public static AssemblerLineResult LD(string dest, string source)
         {
-            var destToken = AnyParser.ParseToken(dest);
-            var srcToken = AnyParser.ParseToken(source);
+            var destToken = AnyParser.ParseToken(dest, ParsersEnabled.ParametersToken);
+            var srcToken = AnyParser.ParseToken(source, ParsersEnabled.ParametersToken);
             return LD(destToken, srcToken);
         }
         

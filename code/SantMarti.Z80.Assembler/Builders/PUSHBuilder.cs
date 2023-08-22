@@ -13,7 +13,7 @@ static class PUSHBuilder
     
     public static AssemblerLineResult PUSH(string operand)
     {
-        var token = AnyParser.ParseToken(operand);
+        var token = AnyParser.ParseToken(operand, ParsersEnabled.ParametersToken);
         return PUSH(token);
     }
     

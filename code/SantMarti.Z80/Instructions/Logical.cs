@@ -106,4 +106,13 @@ public class Logical
         registers.A = Z80Alu.And8(ref registers, registers.A, data);
     }
     
+    public static void CP_R (Instruction instruction, Z80Processor processor)
+    {
+        var opcode = instruction.Opcode;
+        var source = opcode & 0b00_000_111;
+        var value = processor.GetByteRegisterMask(source);
+        ref var registers = ref processor.Registers.Main;
+        Z80Alu.Cp8(ref registers, value);
+    }
+    
 }

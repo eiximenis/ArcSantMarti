@@ -12,7 +12,10 @@ public class TokenizedLine : IEnumerable<BaseToken>
 
     public ReadOnlySpan<BaseToken> Operands => CollectionsMarshal.AsSpan(_tokens).Slice(1);
 
-    internal void AddToken(BaseToken token) => _tokens.Add(token);
+    internal void AddToken(BaseToken token)
+    {
+        _tokens.Add(token);
+    }
     internal void AddRange(IEnumerable<BaseToken> tokens) => _tokens.AddRange(tokens);
 
     public TokenizedLine(string line)
@@ -24,12 +27,5 @@ public class TokenizedLine : IEnumerable<BaseToken>
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public Opcode? GetOpcode()
-    {
-        if (_tokens.Any() &&  _tokens[0] is Opcode opcode)
-        {
-            return opcode;
-        }
-        return null;
-    }
+    public Opcode? GetOpcode() => _tokens.SingleOrDefault(t => t is Opcode) as Opcode;
 }

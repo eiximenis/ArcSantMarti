@@ -13,7 +13,7 @@ static class POPBuilder
     
     public static AssemblerLineResult POP(string operand)
     {
-        var token = AnyParser.ParseToken(operand);
+        var token = AnyParser.ParseToken(operand, ParsersEnabled.ParametersToken);
         return POP(token);
     }
     

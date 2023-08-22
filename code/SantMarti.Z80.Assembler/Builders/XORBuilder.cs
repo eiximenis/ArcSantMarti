@@ -14,7 +14,7 @@ static class XORBuilder
     
     public static AssemblerLineResult XOR(string operand)
     {
-        var token = AnyParser.ParseToken(operand);
+        var token = AnyParser.ParseToken(operand, ParsersEnabled.ParametersToken);
         return XOR(token);
     }
     

@@ -21,7 +21,7 @@ public static class Z80Alu
         int carry = carry_into & 0x100;
         var byteResult = (byte)result;
         
-        var overflow = ((no_carry_sum & 0x80) == 0) && (((byteResult & 0x80) ^ (first & 0x80)) != 0);
+        var overflow = ((no_carry_sum & BitConstants.MSB) == 0) && (((byteResult & BitConstants.MSB) ^ (first & BitConstants.MSB)) != 0);
         registers.ClearFlag(Z80Flags.Substract);
         registers.SetFlagIf(Z80Flags.Zero, byteResult == 0);
         registers.SetFlagIf(Z80Flags.HalfCarry, half_carry);
@@ -129,5 +129,16 @@ public static class Z80Alu
         registers.SetSignFor(result);
         return result;
     }
-    
+
+    public static void Cp8(ref Z80GenericRegisters registers,  byte value)
+    {
+        var acc = registers.A;
+        var diff = acc - value;
+        registers.SetFlag(Z80Flags.Substract);
+        registers.SetFlagIf(Z80Flags.Carry, diff < 0);
+        registers.SetFlagIf(Z80Flags.Zero, diff == 0);
+        registers.SetFlagIf(Z80Flags.HalfCarry, (acc & BitConstants.LOW_NIBBLE)  < (value & BitConstants.LOW_NIBBLE));
+        registers.SetSignFor((byte)diff);
+        registers.CopyF3F5FlagsFrom((byte)diff);
+    }
 }

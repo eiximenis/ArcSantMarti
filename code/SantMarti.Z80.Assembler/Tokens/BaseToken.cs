@@ -8,6 +8,7 @@ public enum TokenType
     Comment,            // A comment like ; This is a comment
     Displacement,       // A displacement like (IX + 10)
     MemoryReference,    // A memory reference like ($10) or (10)
+    Label,              // A label like MyLabel:
     Unknown             // An unknown token
 }
 

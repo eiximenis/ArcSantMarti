@@ -14,7 +14,7 @@ static class ORBuilder
     
     public static AssemblerLineResult OR(string operand)
     {
-        var token = AnyParser.ParseToken(operand);
+        var token = AnyParser.ParseToken(operand, ParsersEnabled.ParametersToken);
         return OR(token);
     }
     

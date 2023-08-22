@@ -24,8 +24,8 @@ namespace SantMarti.Z80.Assembler.Builders
         
         public static AssemblerLineResult ADD(string operand1, string operand2)
         {
-            var token1 = AnyParser.ParseToken(operand1);
-            var token2 = AnyParser.ParseToken(operand2);
+            var token1 = AnyParser.ParseToken(operand1, ParsersEnabled.ParametersToken);
+            var token2 = AnyParser.ParseToken(operand2, ParsersEnabled.ParametersToken);
 
             return ADD(token1, token2);
         }
