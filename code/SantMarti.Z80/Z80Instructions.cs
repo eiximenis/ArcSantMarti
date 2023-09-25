@@ -241,13 +241,13 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xb6, "OR (HL)", 7, Logical.OR_HLRef));
             unprefixed.Add(new Instruction(0xb7, "OR A", 4, Logical.OR_R));
             unprefixed.Add(new Instruction(0xb8, "CP B", 4, Logical.CP_R));
-            unprefixed.Add(new Instruction(0xb9, "CP C", 4));
-            unprefixed.Add(new Instruction(0xba, "CP D", 4));
-            unprefixed.Add(new Instruction(0xbb, "CP E", 4));
-            unprefixed.Add(new Instruction(0xbc, "CP H", 4));
-            unprefixed.Add(new Instruction(0xbd, "CP L", 4));
+            unprefixed.Add(new Instruction(0xb9, "CP C", 4, Logical.CP_R));
+            unprefixed.Add(new Instruction(0xba, "CP D", 4, Logical.CP_R));
+            unprefixed.Add(new Instruction(0xbb, "CP E", 4, Logical.CP_R));
+            unprefixed.Add(new Instruction(0xbc, "CP H", 4, Logical.CP_R));
+            unprefixed.Add(new Instruction(0xbd, "CP L", 4, Logical.CP_R));
             unprefixed.Add(new Instruction(0xbe, "CP (HL)", 7));
-            unprefixed.Add(new Instruction(0xbf, "CP A", 4));
+            unprefixed.Add(new Instruction(0xbf, "CP A", 4, Logical.CP_R));
 
             unprefixed.Add(new Instruction(0xc0, "RET NZ", 11, 5));   
             unprefixed.Add(new Instruction(0xc1, "POP BC", 10, Stack.POPBC));
