@@ -18,4 +18,10 @@ WIP, WIP, WIP, WIP. Everything is on WIP
 
 Who knows... This is a pet project, developed in my spare time, so, to be honest, I don't know :)
 
+## Current status (doing now)...
+
+Start using [Allegro](https://liballeg.org/) for creating the emulator frontend. Idea is to have a dotnet console app that launch an Allegro window with the emulated screen. In 1st versions all emulator-controls will be through the console app probably.
+
+I am using [AllegroDotNet]/(https://github.com/sub-c/AllegroDotNet) for interacting with Allegro. In 1st iterations  i will use AllegroDotNet as-is, but I suspect that I will need to add some features to it to handle all my needs... Sure will be a nice trip :)
+
 
