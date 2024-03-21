@@ -62,7 +62,23 @@ static class Jump
         processor.OnTick(5);
         RelativeJump(processor, offset);
     }
-    
+
+    /// <summary>
+    /// JP PE,nn: Jump to nn if P/E (parity/even) is set
+    /// </summary>
+    public static void JP_PE_NN(Instruction instruction, Z80Processor processor)
+    {
+        var registers = processor.Registers;
+        registers.Z = processor.MemoryRead();
+        registers.W = processor.MemoryRead();
+        registers.PC = (ushort)(registers.WZ + 1);
+
+        if (processor.Registers.Main.HasFlag(Z80Flags.ParityOrOverflow))
+        {
+            processor.OnNextFetchUseWZ();
+        }
+    }
+
     /// <summary>
     /// CALL nn: Pushes PC to stack and jumps to address nn
     ///  

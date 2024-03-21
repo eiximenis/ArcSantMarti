@@ -11,10 +11,11 @@ public enum ParsersEnabled
     Number = 0x8,
     Displacement = 0x10,
     MemoryReference = 0x20,
+    FlagReference = 0x40,
     // Combinations
     FirstValidToken = Label | Opcode, // Lines can only start with a label, opcode
     OpcodeOrParameters = All & ~Label, // All except Label
-    ParametersToken = All & ~Opcode & ~Label, // All except Label and Opcode
+    ParametersToken = All & ~Opcode & ~Label, // All except Label, Opcode
     All = 0xFF
 }
 
@@ -56,6 +57,12 @@ public class AnyParser
         {
             var displacement = DisplacementParser.TryGetDisplacement(token);
             if (displacement.HasValue) return displacement.ParsedToken!;
+        }
+
+        if ((parsersToUse & ParsersEnabled.FlagReference) != 0)
+        {
+            var fref = FlagReferenceParser.TryGetFlagReference(token);
+            if (fref.HasValue) return fref.ParsedToken!;
         }
         
         return new GenericLabel(token);

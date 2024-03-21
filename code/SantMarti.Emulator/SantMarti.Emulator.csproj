@@ -9,13 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SubC.AllegroDotNet" Version="0.9.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="allegro_monolith-5.2.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <PackageReference Include="SFML.Net" Version="2.5.1" />
   </ItemGroup>
 
 </Project>

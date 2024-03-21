@@ -33,6 +33,13 @@ public class JPTests :  InstructionTestsBase
         await Processor.RunOnce();
         TickHandler.MemoryReads.Should().Contain(0x2003);
         Processor.Registers.PC.Should().Be(0x2004);             // 0x2003 executed, ready to run next
-
     }
+
+    [Fact]
+    public async Task JP_PE_NN_Should_Make_A_Jump_Given_Parity_Flat_Is_Set()
+    {
+        var assembler = new Z80AssemblerBuilder();
+        assembler.JP("$2002");
+    }
+
 }

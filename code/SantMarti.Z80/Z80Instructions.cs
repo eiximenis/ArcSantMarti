@@ -293,7 +293,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xe7, "RST 20", 11));
             unprefixed.Add(new Instruction(0xe8, "RET PE", 11, 5));
             unprefixed.Add(new Instruction(0xe9, "JP (HL)", 4, Jump.JP_HL));
-            unprefixed.Add(new Instruction(0xea, "JP PE,nn", 10));
+            unprefixed.Add(new Instruction(0xea, "JP PE,nn", 10, Jump.JP_PE_NN));
             unprefixed.Add(new Instruction(0xeb, "EX DE,HL", 4, Exchange.EXDEHL));
             unprefixed.Add(new Instruction(0xec, "CALL PE,nn", 17));
             unprefixed.Add(new Instruction(0xed, "-- ED --", 0));       // ED Prefix

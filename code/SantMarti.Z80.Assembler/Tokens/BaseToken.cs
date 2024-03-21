@@ -9,6 +9,7 @@ public enum TokenType
     Displacement,       // A displacement like (IX + 10)
     MemoryReference,    // A memory reference like ($10) or (10)
     Label,              // A label like MyLabel:
+    FlagReference,      // A FlagReference
     Unknown             // An unknown token
 }
 
