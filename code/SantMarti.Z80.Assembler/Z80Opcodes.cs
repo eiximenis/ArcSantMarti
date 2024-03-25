@@ -72,6 +72,7 @@ namespace SantMarti.Z80.Assembler
         public const byte DEC_E = 0x1d;                        // DEC E
         public const byte DEC_H = 0x25;                        // DEC H
         public const byte DEC_L = 0x2d;                        // DEC L
+        public const byte CP_N = 0xfe;                         // CP n
 
         
         
@@ -80,6 +81,7 @@ namespace SantMarti.Z80.Assembler
         public const byte AND_N = 0xe6;                        // AND n
         public const byte JP_NN = 0xc3;                        // JP nn
         public const byte JP_PE_NN = 0xea;                     // JP PE,nn
+        public const byte JP_PO_NN = 0xe2;                     // JP PO,nn
         public const byte DJNZ_N = 0x10;                       // DJNZ n
         public const byte JR_D = 0x18;                         // JR d
         
@@ -90,6 +92,8 @@ namespace SantMarti.Z80.Assembler
         public const byte FD_AND_IYL = 0xa5;                   // AND IYL
         public static class Bases
         {
+            public const byte CP_R = 0b10111000;                    // Base for CP r opcodes
+
             public const byte LD_R_R = 0b01000000;                // Base for LD r,r' opcodes   
             public const byte LD_R_N = 0b00000110;                // Base for LD r,n opcodes
             public const byte LD_R_NN = 0b00000001;               // Base for LD r,nn opcodes

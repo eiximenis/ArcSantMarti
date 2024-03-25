@@ -39,7 +39,14 @@ public class JPTests :  InstructionTestsBase
     public async Task JP_PE_NN_Should_Make_A_Jump_Given_Parity_Flat_Is_Set()
     {
         var assembler = new Z80AssemblerBuilder();
-        assembler.JP("$2002");
+        Processor.Registers.Main.SetFlag(Z80Flags.ParityOrOverflow);
+        assembler.JP("PE", "$2002");
+        TickHandler.OnMemoryRead(0x2002, Z80Opcodes.NOP);
+        SetupProcessorWithProgram(assembler);
+        await Processor.RunOnce();      // Run the JP. Next instruction should be NOP (0x2002)
+        await Processor.RunOnce();
+        TickHandler.MemoryReads.Should().Contain(0x2002);
+
     }
 
 }

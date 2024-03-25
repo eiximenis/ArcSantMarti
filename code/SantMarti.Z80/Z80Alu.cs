@@ -138,6 +138,7 @@ public static class Z80Alu
         registers.SetFlagIf(Z80Flags.Carry, diff < 0);
         registers.SetFlagIf(Z80Flags.Zero, diff == 0);
         registers.SetFlagIf(Z80Flags.HalfCarry, (acc & BitConstants.LOW_NIBBLE)  < (value & BitConstants.LOW_NIBBLE));
+        registers.SetOverflowForComparison(value, (byte)diff);
         registers.SetSignFor((byte)diff);
         registers.CopyF3F5FlagsFrom((byte)diff);
     }

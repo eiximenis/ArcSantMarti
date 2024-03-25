@@ -106,6 +106,13 @@ namespace SantMarti.Z80.Assembler
             ProcessParseResult(result);
         }
 
+        public void JP(string first, string second)
+        {
+            var result = JPBuilder.JP(first, second);
+            ProcessParseResult(result);
+        }
+
+
         public void JR(string operand)
         {
             var result = JRBuilder.JR(operand);
@@ -127,6 +134,12 @@ namespace SantMarti.Z80.Assembler
         public void XOR(string operand)
         {
             var result = XORBuilder.XOR(operand);
+            ProcessParseResult(result);
+        }
+
+        public void CP(string operand)
+        {
+            var result = CPBuilder.CP(operand);
             ProcessParseResult(result);
         }
 

@@ -8,8 +8,9 @@ static class JPBuilder
 {
     public static AssemblerLineResult BuildFromLine(TokenizedLine line)
     {
+        var count = line.Operands.Length;
         var first = line.Operands[0];
-        return JP(first);
+        return count < 2 ? JP(first) : JP(first, line.Operands[1]);
     }
     
     public static AssemblerLineResult JP(string operand)
@@ -21,7 +22,7 @@ static class JPBuilder
     public static AssemblerLineResult JP(string first, string second)
     {
         var firstToken = AnyParser.ParseToken(first, ParsersEnabled.ParametersToken);
-        var secondToken = AnyParser.ParseToken(first, ParsersEnabled.ParametersToken);
+        var secondToken = AnyParser.ParseToken(second, ParsersEnabled.ParametersToken);
         return JP(firstToken, secondToken);
     }
 
@@ -29,7 +30,8 @@ static class JPBuilder
     {
         return (firstToken, secondToken) switch
         {
-            (FlagReference { Flag: Z80ReferencedFlag.ParityOrOverflow, IsSet: true }, NumericValue { IsWord: true } nv) => JP_Opcode_NN(Z80Opcodes.JP_PE_NN, nv),
+            (FlagReference { Flag: Z80ReferencedFlag.ParityOrOverflow, IsSet: true }, NumericValue nv) => JP_Opcode_NN(Z80Opcodes.JP_PE_NN, nv),
+            (FlagReference { Flag: Z80ReferencedFlag.ParityOrOverflow, IsSet: false }, NumericValue nv) => JP_Opcode_NN(Z80Opcodes.JP_PO_NN, nv),
             _ => AssemblerLineResult.Error($"Invalid operand {firstToken.StrValue}", firstToken)
         };
     }

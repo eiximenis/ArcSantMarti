@@ -78,6 +78,21 @@ static class Jump
             processor.OnNextFetchUseWZ();
         }
     }
+    /// <summary>
+    /// JP PO,nn: Jump to nn if P/E (parity/even) is unset
+    /// </summary>
+    public static void JP_PO_NN(Instruction instruction, Z80Processor processor)
+    {
+        var registers = processor.Registers;
+        registers.Z = processor.MemoryRead();
+        registers.W = processor.MemoryRead();
+        registers.PC = (ushort)(registers.WZ + 1);
+
+        if (!processor.Registers.Main.HasFlag(Z80Flags.ParityOrOverflow))
+        {
+            processor.OnNextFetchUseWZ();
+        }
+    }
 
     /// <summary>
     /// CALL nn: Pushes PC to stack and jumps to address nn
@@ -118,5 +133,6 @@ static class Jump
         processor.Registers.PC = (ushort)(processor.Registers.WZ + 1);
         processor.OnNextFetchUseWZ();                
     }
+
 
 }

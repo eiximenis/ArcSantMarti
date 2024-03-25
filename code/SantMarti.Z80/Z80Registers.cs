@@ -173,7 +173,23 @@ namespace SantMarti.Z80
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetSignFor(byte result) => SetFlagIf(Z80Flags.Sign, (result & (byte)0x80) != 0);
-        
+
+        public void SetOverflowForComparison(byte value, byte diff)
+        {
+            // Overflow in comparison is done when:
+            //  A and value are of different sign  
+            //  AND
+            //  value and (A - value) are of the same sign.
+            if ((((A ^ value) & 0x80) != 0)              
+                && (((value ^ diff) & 0x80) == 0)) 
+            {
+                SetFlag(Z80Flags.ParityOrOverflow);
+            }
+            else
+            {
+                ClearFlag(Z80Flags.ParityOrOverflow);
+            }
+        }
     }
 
     public class Z80Registers

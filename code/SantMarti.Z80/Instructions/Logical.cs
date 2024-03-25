@@ -109,10 +109,16 @@ public class Logical
     public static void CP_R (Instruction instruction, Z80Processor processor)
     {
         var opcode = instruction.Opcode;
-        var source = opcode & 0b00_000_111;
+        var source = opcode & 0b00_111_000;
         var value = processor.GetByteRegisterMask(source);
         ref var registers = ref processor.Registers.Main;
         Z80Alu.Cp8(ref registers, value);
     }
-    
+
+    public static void CP_N(Instruction instruction, Z80Processor processor)
+    {
+        var value = processor.MemoryRead();
+        ref var registers = ref processor.Registers.Main;
+        Z80Alu.Cp8(ref registers, value);
+    }
 }

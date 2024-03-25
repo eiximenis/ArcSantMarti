@@ -7,7 +7,7 @@ var config = new ConfigurationBuilder()
     .AddJsonFile("z80asm.json", optional: true)
     .AddEnvironmentVariables().Build();
 
-var paths = config["Loader:InputPaths"].Split(";");
+var paths = config["Loader:InputPaths"]?.Split(";") ?? ["."];
 foreach (var path in paths)
 {
     repl.Context.Loader.AddInputPath(path);

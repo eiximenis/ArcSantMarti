@@ -20,7 +20,18 @@ namespace SantMarti.Z80.Instructions
             var dest = (opcode & 0b00_111_000) >> 3;
             processor.SetByteRegisterByMask(dest, processor.GetByteRegisterMask(source));
         }
-        
+
+        /// <summary>
+        /// LD R, n: Loads n (byte) into R
+        /// </summary>
+        public static void LD_R_N (Instruction instruction, Z80Processor processor)
+        {
+            var opcode = instruction.Opcode;
+            var target = (opcode & 0b00_111_000) >> 3;
+            var source = processor.MemoryRead();
+            processor.SetByteRegisterByMask(target, source);
+        }
+
         /// <summary>
         /// LD A, (nn): Loads memory address nn into A 
         /// </summary>

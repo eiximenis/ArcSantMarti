@@ -26,6 +26,8 @@ namespace SantMarti.Z80.Assembler.Builders
             _builders.Add("AND", ANDBuilder.BuildFromLine);
             _builders.Add("OR", ORBuilder.BuildFromLine);
             _builders.Add("XOR", XORBuilder.BuildFromLine);
+            _builders.Add("JP", JPBuilder.BuildFromLine);
+            _builders.Add("CP", CPBuilder.BuildFromLine);
 
             _parser = new AssemblerLineParser();
         }

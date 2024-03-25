@@ -51,6 +51,7 @@ class LoadCommand : IReplCommand
                 TokenType.Displacement => ConsoleColor.DarkYellow,
                 TokenType.Register => ConsoleColor.Magenta,
                 TokenType.MemoryReference => ConsoleColor.Cyan,
+                TokenType.FlagReference => ConsoleColor.DarkMagenta,
                 _ => ConsoleColor.Red
             };
             var oldcolor = Console.ForegroundColor;

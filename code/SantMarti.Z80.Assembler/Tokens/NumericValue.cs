@@ -18,6 +18,6 @@ public class NumericValue : BaseToken
 
     public byte[] AsLoHiBytes()
     {
-        return new[] {LoByte(), HiByte()};
+        return [LoByte(), HiByte()];
     }
 }

@@ -1,4 +1,6 @@
 LD A,B   ;Test
+JP PE,10
+JP PO,$AADD
 LD B,C
 INC D
 AND IXH
