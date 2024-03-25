@@ -138,8 +138,22 @@ public static class Z80Alu
         registers.SetFlagIf(Z80Flags.Carry, diff < 0);
         registers.SetFlagIf(Z80Flags.Zero, diff == 0);
         registers.SetFlagIf(Z80Flags.HalfCarry, (acc & BitConstants.LOW_NIBBLE)  < (value & BitConstants.LOW_NIBBLE));
-        registers.SetOverflowForComparison(value, (byte)diff);
+        registers.SetOverflowForSub(value, (byte)diff);
         registers.SetSignFor((byte)diff);
         registers.CopyF3F5FlagsFrom((byte)diff);
+    }
+
+    public static byte Sub8(ref Z80GenericRegisters registers, byte first, byte second, byte cflag = 0)
+    {
+        var diff = first - second - cflag;
+
+        registers.SetFlag(Z80Flags.Substract);
+        registers.SetSignFor((byte)diff);
+        registers.SetFlagIf(Z80Flags.Zero, (byte)diff == 0);
+        registers.SetFlagIf(Z80Flags.HalfCarry, ((first & 0x0F) < ((second + cflag) & 0x0F)));
+        registers.SetOverflowForSub((byte)(second + cflag), (byte)diff);
+        registers.CopyF3F5FlagsFrom((byte)diff);
+        registers.SetFlagIf(Z80Flags.Carry, diff < 0);
+        return (byte)diff;
     }
 }

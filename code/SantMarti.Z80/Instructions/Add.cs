@@ -57,5 +57,12 @@ namespace SantMarti.Z80.Instructions
             processor.Registers.Main.HL = Z80Alu.Add16(ref processor.Registers.Main, processor.Registers.Main.HL, value);
             
         }
+
+        public static void Sub_N(Instruction instruction, Z80Processor processor)
+        {
+            var data = processor.MemoryRead();
+            ref var registers = ref processor.Registers.Main;
+            processor.Registers.Main.A = Z80Alu.Sub8(ref registers, processor.Registers.Main.A, data);
+        }
     }
 }

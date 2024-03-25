@@ -272,7 +272,7 @@ namespace SantMarti.Z80
             unprefixed.Add(new Instruction(0xd3, "OUT (n),A", 11));
             unprefixed.Add(new Instruction(0xd4, "CALL NC,nn", 17));
             unprefixed.Add(new Instruction(0xd5, "PUSH DE", 11, Stack.PUSHDE));
-            unprefixed.Add(new Instruction(0xd6, "SUB n", 7));
+            unprefixed.Add(new Instruction(0xd6, "SUB n", 7, Add.Sub_N));
             unprefixed.Add(new Instruction(0xd7, "RST 10", 11));
             unprefixed.Add(new Instruction(0xd8, "RET C", 11, 5));
             unprefixed.Add(new Instruction(0xd9, "EXX", 4, Exchange.EXX));
