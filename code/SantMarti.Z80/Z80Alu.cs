@@ -130,30 +130,41 @@ public static class Z80Alu
         return result;
     }
 
+
+    public static byte Sub8(ref Z80GenericRegisters registers, byte first, byte second, byte cflag = 0)
+    {
+        var operand = second + cflag;
+        var diff = first - operand;
+        SetSub8Flags(ref registers, first, (byte)operand, diff);
+        return (byte)diff;
+    }
+
     public static void Cp8(ref Z80GenericRegisters registers,  byte value)
     {
         var acc = registers.A;
         var diff = acc - value;
-        registers.SetFlag(Z80Flags.Substract);
-        registers.SetFlagIf(Z80Flags.Carry, diff < 0);
-        registers.SetFlagIf(Z80Flags.Zero, diff == 0);
-        registers.SetFlagIf(Z80Flags.HalfCarry, (acc & BitConstants.LOW_NIBBLE)  < (value & BitConstants.LOW_NIBBLE));
-        registers.SetOverflowForSub(value, (byte)diff);
-        registers.SetSignFor((byte)diff);
-        registers.CopyF3F5FlagsFrom((byte)diff);
+        SetSub8Flags(ref registers, registers.A, value, diff);        
     }
 
-    public static byte Sub8(ref Z80GenericRegisters registers, byte first, byte second, byte cflag = 0)
-    {
-        var diff = first - second - cflag;
 
+    /// <summary>
+    /// Set the Flags after a Substraction operation (first - operand = diff)
+    /// - Substract Flag: Set
+    /// - Carry: Set if result is negative
+    /// - Sign: Set based on sign bit of result
+    /// - Zero: Set based on result
+    /// - HalfCarry: Set if HC is produced
+    /// - Overflow: Set if overflow is produced
+    /// - F3/F5: Copied from result
+    /// </summary>
+    private static void SetSub8Flags(ref Z80GenericRegisters registers, byte first, byte operand, int diff)
+    {
         registers.SetFlag(Z80Flags.Substract);
+        registers.SetFlagIf(Z80Flags.Carry, diff < 0);
         registers.SetSignFor((byte)diff);
         registers.SetFlagIf(Z80Flags.Zero, (byte)diff == 0);
-        registers.SetFlagIf(Z80Flags.HalfCarry, ((first & 0x0F) < ((second + cflag) & 0x0F)));
-        registers.SetOverflowForSub((byte)(second + cflag), (byte)diff);
+        registers.SetFlagIf(Z80Flags.HalfCarry, (first & BitConstants.LOW_NIBBLE) < (operand & BitConstants.LOW_NIBBLE));
+        registers.SetOverflowForSub(operand, (byte)diff);
         registers.CopyF3F5FlagsFrom((byte)diff);
-        registers.SetFlagIf(Z80Flags.Carry, diff < 0);
-        return (byte)diff;
     }
 }

@@ -5,11 +5,20 @@ namespace SantMarti.Z80.Assembler.Tokens;
 /// </summary>
 public class Displacement : BaseToken
 {
-    public short Value { get; }
+    public byte Value { get; }
     public string Register { get; }
+
+    public bool UseIX { get; }
+
+    public bool UseIY => !UseIX;
+
+    public bool IsNegative { get; }
+
     public Displacement(string str, string register, short value ) : base(str, TokenType.Displacement)
     {
-        Value = value;
-        Register = register;
+        Value = (byte)value;
+        IsNegative = value < 0;
+        Register = register.ToUpperInvariant();
+        UseIX = Register == "IX";
     }
 }

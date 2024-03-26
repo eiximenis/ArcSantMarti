@@ -9,14 +9,16 @@ public class FlagReferenceParser
 {
     public static TokenParseResult<FlagReference> TryGetFlagReference(string operand)
     {
-        if (string.Equals(operand, "PE", StringComparison.InvariantCultureIgnoreCase))
+        var upperOp = operand.ToUpperInvariant();
+
+        if (string.Equals(upperOp, "PE", StringComparison.InvariantCultureIgnoreCase))
         {
-            return TokenParseResult<FlagReference>.Success(new FlagReference(operand, Z80ReferencedFlag.ParityOrOverflow, isSet: true));
+            return TokenParseResult<FlagReference>.Success(new FlagReference(upperOp, Z80ReferencedFlag.ParityOrOverflow, isSet: true));
         }
 
-        if (string.Equals(operand, "PO", StringComparison.InvariantCultureIgnoreCase))
+        if (string.Equals(upperOp, "PO", StringComparison.InvariantCultureIgnoreCase))
         {
-            return TokenParseResult<FlagReference>.Success(new FlagReference(operand, Z80ReferencedFlag.ParityOrOverflow, isSet: false));
+            return TokenParseResult<FlagReference>.Success(new FlagReference(upperOp, Z80ReferencedFlag.ParityOrOverflow, isSet: false));
         }
             
         return TokenParseResult<FlagReference>.Error($"Value '{operand}' can't be parsed as a Flag Reference");

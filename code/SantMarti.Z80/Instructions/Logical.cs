@@ -37,7 +37,7 @@ public class Logical
     
 
     /// <summary>
-    /// AND (HL): Logically AND value pointed by HL against A, result in A
+    /// AND (HL): Logically *HL AND HL A, result in A
     /// </summary>
     public static void AND_HLRef(Instruction instruction, Z80Processor processor)
     {
@@ -48,7 +48,7 @@ public class Logical
     }
     
     /// <summary>
-    /// OR (HL): Logically OR value pointed by HL against A, result in A 
+    /// OR (HL): Logically *HL OR A, result in A 
     /// </summary>
     public static void OR_HLRef(Instruction instruction, Z80Processor processor)
     {
@@ -59,7 +59,7 @@ public class Logical
     }
     
     /// <summary>
-    /// XOR (HL): Logically XOR value pointed by HL against A, result in A 
+    /// XOR (HL): Logically *HL XOR A, result in A 
     /// </summary>
     public static void XOR_HLRef(Instruction instruction, Z80Processor processor)
     {

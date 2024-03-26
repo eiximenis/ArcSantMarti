@@ -38,10 +38,10 @@ namespace SantMarti.Z80.Assembler.Builders
                 case RegisterReference {StrValue: "A" }:
                     return second switch
                     {
-                        RegisterReference { RegisterType: RegisterType.GenericByte } r => ADD_A_R(r),
-                        NumericValue { IsByte: true } num => ADD_A_N(num),
-                        MemoryReference { SourceRegisterName: "HL" } => ADD_A_HLRef(),
-                        Displacement d => ADD_A_IX_IYDisp(d),
+                        RegisterReference { RegisterType: RegisterType.GenericByte } r => ADD_R(r),
+                        NumericValue { IsByte: true } num => ADD_N(num),
+                        MemoryReference { SourceRegisterName: "HL" } => ADD_HLRef(),
+                        Displacement d => ADD_IX_IYDisp(d),
                         _ => AssemblerLineResult.Error($"Invalid second operand {second.StrValue}", second)
                     };
                 case RegisterReference { StrValue: "HL" }:
@@ -58,38 +58,30 @@ namespace SantMarti.Z80.Assembler.Builders
             }
         }
         
-        public static AssemblerLineResult ADD_A_N(NumericValue value)
+        public static AssemblerLineResult ADD_N(NumericValue value)
         {
             return AssemblerLineResult.Success(Z80Opcodes.ADD_A_N, value.AsByte());
         }
 
-        private static AssemblerLineResult ADD_A_R(RegisterReference target)
+        private static AssemblerLineResult ADD_R(RegisterReference target)
         {
             var regValue = RegistersEncoder.ByteRegisterNameToBinaryValue(target.StrValue);
-            return AssemblerLineResult.Success((byte)(Z80Opcodes.Bases.ADD_A_R | regValue));
+            return AssemblerLineResult.Success((byte)(Z80Opcodes.Bases.ADD_R | regValue));
         }
         
         // Builds:
         // 1. ADD A,(IX + d)
         // 2. ADD A,(IY + d)
-        private static AssemblerLineResult ADD_A_IX_IYDisp(Displacement displacement)
+        private static AssemblerLineResult ADD_IX_IYDisp(Displacement displacement)
         {
-            var opcodes =  displacement.Register switch
-            {
-                "IX" => new byte[] { Z80Opcodes.Prefixes.DD, Z80Opcodes.ADD_AIXIY, (byte)displacement.Value },
-                "IY" => new byte[] { Z80Opcodes.Prefixes.FD, Z80Opcodes.ADD_AIXIY, (byte)displacement.Value },
-                _ => null
-            };
-                        
-            return opcodes != null 
-                ?  AssemblerLineResult.Success(opcodes) 
-                : AssemblerLineResult.Error($"Invalid displacement {displacement.StrValue}",displacement);
+            var prefix = displacement.UseIX ? Z80Opcodes.Prefixes.DD : Z80Opcodes.Prefixes.FD;
+            return AssemblerLineResult.Success(prefix, Z80Opcodes.ADD_AIXIY, displacement.Value);
         }
         
         // ADD A,(HL)
-        public static AssemblerLineResult ADD_A_HLRef()
+        public static AssemblerLineResult ADD_HLRef()
         {
-            return AssemblerLineResult.Success(new [] {Z80Opcodes.ADD_A_HLRef}); 
+            return AssemblerLineResult.Success(Z80Opcodes.ADD_A_HLRef); 
         }
     }
 }

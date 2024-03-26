@@ -23,7 +23,7 @@ public class CPTests : InstructionTestsBase
     [InlineData("250", "251", false)]          // sign(250) = 1, sign(251) = 1 => sign(250-251) = 1
 
     [InlineData("250", "127", true)]          // sign(250) = 1, sign(127) = 0 => sign(250-127) = 0 --> Overflow
-    public async Task CP_Should_Set_Parity_Flag_Based_On_Acc_Diff_Parity(string acc, string substract, bool parityExpected)
+    public async Task CP_Should_Set_Overflow_Flag_Accordingly(string acc, string substract, bool parityExpected)
     {
         var assembler = new Z80AssemblerBuilder();
         assembler.LD("A", acc);

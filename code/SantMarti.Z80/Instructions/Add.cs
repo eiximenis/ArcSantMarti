@@ -18,7 +18,7 @@ namespace SantMarti.Z80.Instructions
             ref var registers = ref processor.Registers.Main;
             processor.Registers.Main.A = Z80Alu.Add8(ref registers, processor.Registers.Main.A, data);
         }
-        
+
         /// <summary>
         ///  ADC A,n: Adds n + carry flag to A
         /// </summary>
@@ -38,14 +38,14 @@ namespace SantMarti.Z80.Instructions
             ref var registers = ref processor.Registers.Main;
             // Add A,r opcode is 10000RRR where RRR is the register to add
             var value = processor.GetByteRegisterMask(instruction.Opcode & 0b00000111);
-            processor.Registers.Main.A = Z80Alu.Add8(ref registers, processor.Registers.Main.A, value);
+            registers.A = Z80Alu.Add8(ref registers, registers.A, value);
         }
 
-        // ADD A,(HL): Adds value of memory address pointed by HL to A
+        // ADD A,(HL): Adds *HL to A
         public static void Add_HLRef(Instruction instruction, Z80Processor processor)
         {
             ref var registers = ref processor.Registers.Main;
-            var value = processor.MemoryRead(processor.Registers.Main.HL);
+            var value = processor.MemoryRead(registers.HL);
             processor.Registers.Main.A = Z80Alu.Add8(ref registers, processor.Registers.Main.A, value);
         }
 
@@ -55,14 +55,37 @@ namespace SantMarti.Z80.Instructions
             // Register Pair is encoded in the opcode as 00RRR1001
             var value = processor.GetWordRegisterMask(instruction.Opcode & 0b00110000);
             processor.Registers.Main.HL = Z80Alu.Add16(ref processor.Registers.Main, processor.Registers.Main.HL, value);
-            
+
         }
 
+        /// <summary>
+        ///  SUB n: Substracts n from A
+        /// </summary>
         public static void Sub_N(Instruction instruction, Z80Processor processor)
         {
             var data = processor.MemoryRead();
             ref var registers = ref processor.Registers.Main;
             processor.Registers.Main.A = Z80Alu.Sub8(ref registers, processor.Registers.Main.A, data);
+        }
+
+        /// <summary>
+        /// SUB r: Substracts value of R from A
+        /// </summary>
+        public static void Sub_R(Instruction instruction, Z80Processor processor)
+        {
+            var operand = processor.GetByteRegisterMask(instruction.Opcode & 0b00000111);
+            ref var registers = ref processor.Registers.Main;
+            registers.A = Z80Alu.Sub8(ref registers, registers.A, operand, 0);
+        }
+
+        /// <summary>
+        /// SUB (HL): Substracts *HL from A
+        /// </summary>
+        public static void Sub_HLRef(Instruction instruction, Z80Processor processor)
+        {
+            ref var registers = ref processor.Registers.Main;
+            var value = processor.MemoryRead(registers.HL);
+            processor.Registers.Main.A = Z80Alu.Sub8(ref registers, processor.Registers.Main.A, value);
         }
     }
 }

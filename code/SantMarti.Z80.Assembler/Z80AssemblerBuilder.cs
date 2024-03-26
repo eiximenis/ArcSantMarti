@@ -143,6 +143,18 @@ namespace SantMarti.Z80.Assembler
             ProcessParseResult(result);
         }
 
+        public void SUB(string operand)
+        {
+            var result = SUBBuilder.SUB(operand);
+            ProcessParseResult(result);
+        }
+
+        public void BIT (string first, string second)
+        {
+            var result = BITBuilder.BIT(first, second);
+            ProcessParseResult(result);
+        }
+
         private void ProcessParseResult(AssemblerLineResult result)
         {
             if (result.HasResult)

@@ -33,7 +33,7 @@ namespace SantMarti.Z80.Instructions
         }
 
         /// <summary>
-        /// LD A, (nn): Loads memory address nn into A 
+        /// LD A, (nn): Loads memory address *nn into A 
         /// </summary>
         public static void LD_A_NN(Instruction instruction, Z80Processor processor)
         {
@@ -45,7 +45,7 @@ namespace SantMarti.Z80.Instructions
         }
         
         /// <summary>
-        /// LD (HL), R: Loads R into memory address pointed by HL
+        /// LD (HL), R: Loads R into *HL
         /// </summary>
         public static void LD_HLRef_R(Instruction instruction, Z80Processor processor)
         {
@@ -55,7 +55,7 @@ namespace SantMarti.Z80.Instructions
             processor.MemoryWrite(processor.Registers.Main.HL, value);
         }
         
-        // LD R, (HL): Loads memory address pointed by HL into R
+        // LD R, (HL): Loads *HL into R 
         public static void LD_R_HLRef(Instruction instruction, Z80Processor processor)
         {
             var opcode = instruction.Opcode;
@@ -64,7 +64,7 @@ namespace SantMarti.Z80.Instructions
             processor.SetByteRegisterByMask(target, data);
         }
 
-        // LD A, (HL): Loads memory address pointed by HL into A
+        // LD A, (HL): Loads *HL into A
         // Cant use LD_R_HLRef because opcode does not follow the mask (000_111_000) for A
         public static void LD_A_HLRef(Instruction instruction, Z80Processor processor)
         {

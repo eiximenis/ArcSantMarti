@@ -28,6 +28,8 @@ namespace SantMarti.Z80.Assembler.Builders
             _builders.Add("XOR", XORBuilder.BuildFromLine);
             _builders.Add("JP", JPBuilder.BuildFromLine);
             _builders.Add("CP", CPBuilder.BuildFromLine);
+            _builders.Add("SUB", SUBBuilder.BuildFromLine);
+            _builders.Add("BIT", BITBuilder.BuildFromLine);
 
             _parser = new AssemblerLineParser();
         }

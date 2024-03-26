@@ -27,8 +27,8 @@ namespace SantMarti.Z80.Assembler
         public const byte ADD_IYIY = 0x29;                      // ADD IY,IY
         public const byte ADD_IYSP = 0x39;                      // ADD IY,SP
 
-        public const byte ADD_AIXIY = 0x8e;                     // ADD A,(IX + n) or ADD A,(IY + n)
-
+        public const byte ADD_AIXIY = 0x8e;                     // ADD A,(IX + n) or ADD A,(IY + n) (prefixed)
+            
 
         public const byte LD_AI = 0x57;                         // LD A,I
         public const byte LD_AR = 0x5f;                         // LD A,R
@@ -73,9 +73,10 @@ namespace SantMarti.Z80.Assembler
         public const byte DEC_H = 0x25;                        // DEC H
         public const byte DEC_L = 0x2d;                        // DEC L
         public const byte CP_N = 0xfe;                         // CP n
+        public const byte SUB_N = 0xd6;                        // SUB n
+        public const byte SUB_HLRef = 0x96;                    // SUB (HL)
+        public const byte SUB_IX_IY = 0x96;                    // SUB (IX + d), SUB (IY + d) (prefixed)
 
-        
-        
         public const byte DAA = 0x27;                          // DAA
         public const byte AND_HLRef = 0xa6;                     // AND (HL)
         public const byte AND_N = 0xe6;                        // AND n
@@ -108,12 +109,16 @@ namespace SantMarti.Z80.Assembler
             public static byte OR_R = 0b10110000;                // Base for OR r
             public static byte XOR_R = 0b10101000;                // Base for XOR r
 
-            public const byte ADD_A_R = 0b10000000;               // Base for ADD A,r
+            public const byte ADD_R = 0b10000000;                 // Base for ADD A,r
+            public const byte SUB_R = 0b10010000;                 // Base for SUB r
             public const byte ADD_HL_RR = 0b00001001;             // Base for ADD HL,BC|DE|HL|SP
+            public const byte BIT_N_R = 0b01000000;               // Base for BIT n, r
+            public const byte BIT_N_Others = 0b01000110;          // Base for BI n, (HL) | (IX + d) | (IY + d)
         }
         
         public static class Prefixes
         {
+            public const byte CB = 0xcb;
             public const byte DD = 0xdd;
             public const byte FD = 0xfd;
             public const byte ED = 0xed;

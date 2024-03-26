@@ -161,14 +161,14 @@ namespace SantMarti.Z80.Assembler.Builders
         private static AssemblerLineResult LD_R_Displacement(RegisterReference targetReg, Displacement srcDis)
         {
             var opcode = (byte)(Z80Opcodes.Bases.LD_R_Displacement | RegistersEncoder.ByteRegisterNameToBinaryValue(targetReg.StrValue) << 3);
-            return AssemblerLineResult.Success(srcDis.Register == "IX" ?  Z80Opcodes.Prefixes.DD : Z80Opcodes.Prefixes.FD, opcode, (byte)srcDis.Value);
+            return AssemblerLineResult.Success(srcDis.Register == "IX" ?  Z80Opcodes.Prefixes.DD : Z80Opcodes.Prefixes.FD, opcode, srcDis.Value);
         }
         
         // Generates LD (IX + d),r  or LD (IY + d),r where r is A, B, C, D, E, H, L
         private static AssemblerLineResult LD_Displacement_R(Displacement targetDis, RegisterReference srcReg)
         {
             var opcode = (byte)(Z80Opcodes.Bases.LD_Displacement_R | RegistersEncoder.ByteRegisterNameToBinaryValue(srcReg.StrValue));
-            return AssemblerLineResult.Success(targetDis.Register == "IX" ? Z80Opcodes.Prefixes.DD : Z80Opcodes.Prefixes.FD, opcode, (byte)targetDis.Value);
+            return AssemblerLineResult.Success(targetDis.Register == "IX" ? Z80Opcodes.Prefixes.DD : Z80Opcodes.Prefixes.FD, opcode, targetDis.Value);
         }
 
         // Generate LD r,(HL) where r is A, B, C, D, E, H, L

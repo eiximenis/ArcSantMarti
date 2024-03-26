@@ -5,3 +5,8 @@ LD B,C
 INC D
 AND IXH
 AND IXL
+BIT 0, A
+BIT 2, D
+BIT 3, (HL)
+BIT 3, (IX + 10)
+BIT 0, (IY + 10)
