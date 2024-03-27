@@ -30,10 +30,10 @@ public enum OtherPins : ushort
 /// </summary>
 public struct Z80Pins
 {
-    // A0..A15: this is the 16 bit address-bus, used for addressing 64 KBytes of memory or as port number for
+    // A0..A15 (AB, address bus): this is the 16 bit address-bus, used for addressing 64 KBytes of memory or as port number for
     // communicating with other chips and hardware devices
     public ushort Address;
-    // D0..D7: this is the 8 bit data-bus, the address bus says ‘where’ to read or write something,
+    // D0..D7 (DB, data bus): this is the 8 bit data-bus, the address bus says ‘where’ to read or write something,
     // and the data bus says ‘what’
     public byte Data;
     // Other pins encoded as bits. Currenty only those will be implemented:

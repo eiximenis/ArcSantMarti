@@ -197,15 +197,16 @@ namespace SantMarti.Z80
 
         private Z80GenericRegisters _main;
         private Z80GenericRegisters _alternate;
+        private Z80IRRegister _ir;
         
 
-        
         // Hidden WZ register.
         // This register is not available to the developer and is used internally by the CPU
+        // but needs to be implemented because some instructions can leak part of its value :)
         // Also known as MEMPTR (https://gist.github.com/drhelius/8497817)
         public byte W { get; set; }
         public byte Z { get; set; }
-        public ushort WZ
+        public ushort WZ                
         {
             get => (ushort)((W << 8) | Z);
             set => (W, Z) = ((byte)(value >> 8), (byte)(value & 0xFF));
@@ -252,7 +253,7 @@ namespace SantMarti.Z80
         public ushort SP { get; set; }          // Stack Pointer
         
         // IR register
-        public Z80IRRegister IR { get; } = new(); // Instruction Register
+        public Z80IRRegister IR => _ir; // Instruction Register
         
         
 

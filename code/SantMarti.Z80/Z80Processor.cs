@@ -87,6 +87,9 @@ namespace SantMarti.Z80
                 // TODO: Check WAIT states
                 _pins.ReplaceOtherPinsWith(OtherPins.MREQ | OtherPins.RFSH);
                 OnTick();
+                // Increment R register while preserving its MSB
+                var ir = Registers.IR;
+                ir.R = (byte)(((ir.R + 1) & 0b0111_1111) | (ir.R & 0b1000_0000));
                 // T4: Memory Refresh (2/2): RFSH is cleared
                 _pins.DeactivateOtherPins(OtherPins.MREQ);
                 OnTick();
@@ -149,8 +152,26 @@ namespace SantMarti.Z80
             while (instruction.IsPrefix)
             {
                 MoveCurrentPrefixTo(instruction.Opcode);
-                FetchOpcode();
+
+                if (_currentPrefix == OpcodePrefix.DDCB || _currentPrefix == OpcodePrefix.FDCB)
+                {
+                    // DDCB and FDCB have displacement byte **BETWEEN** prefix and opcode (DD CB bb <opcode>)
+                    // This displacement byte ALWAYS exists even thought in DDCB FDCB instructions that don't use it
+                    // So we need to do an extra memory read to read the displacement byte
+                    // This updates the Z of MEMPTR (WZ)
+                    Registers.Z = MemoryRead();
+                    // Next should be read the opcode (standard FetchOpcode) but things go weird at this point
+                    // because opcode is *NOT* fetched in the standard (4 TStates) way, but using a normal memory read (3 TStates)
+                    Registers.InstructionRegister = MemoryRead();           // TODO: We update IR here... is this correct? Its updated or not???
+                    OnTick(2);                                        // Extra ticks added
+                }
+                else
+                {
+                    FetchOpcode();
+                }
                 instruction = _instructions[Registers.InstructionRegister, _currentPrefix];
+
+
             }
             instruction.Action!(instruction, this);
             _currentPrefix = OpcodePrefix.None;

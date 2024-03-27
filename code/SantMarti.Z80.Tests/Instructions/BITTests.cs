@@ -18,6 +18,5 @@ public class BITTests : InstructionTestsBase
         SetupProcessorWithProgram(assembler);
         await Processor.RunOnce();
         TickHandler.TotalTicks.Should().Be(EXPECTED_TICKS);
-
     }
 }

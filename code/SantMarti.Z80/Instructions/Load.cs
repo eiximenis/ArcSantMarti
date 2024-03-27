@@ -41,7 +41,7 @@ namespace SantMarti.Z80.Instructions
             processor.Registers.W = processor.MemoryRead();
             var address = processor.Registers.WZ;
             processor.Registers.Main.A = processor.MemoryRead(address);
-            processor.Registers.WZ = (ushort)(address + 1);         // MEMPTR behavior
+            processor.Registers.WZ = (ushort)(address + 1);
         }
         
         /// <summary>
